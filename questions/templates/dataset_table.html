@@ -1,0 +1,40 @@
+
+<table id="{{ dataset.prefix }}-table" class="dataset">
+{% for form in dataset.forms %}
+    {% if forloop.first %}
+    <thead><tr>
+        {% for field in form.visible_fields %}
+        <th
+        {% if field.label == "Delete" %} 
+            class="delete"
+        {% else %}
+            class="data-label"
+        {% endif %}
+        >{{ field.label|capfirst }}</th>
+        {% endfor %}
+    </tr></thead>
+    {% endif %}
+    <tr class="{% cycle row1,row2 %}" id="tr-{{ dataset.prefix }}-{{ forloop.counter0 }}">
+    {% for field in form.visible_fields %}
+        <td
+        {% if field.label == "Delete" %} 
+            class="delete"
+        {% else %}
+            class="data"
+        {% endif %}
+        >
+        {# Include the hidden fields in the form #}
+        {% if forloop.first %}
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+            {% endfor %}
+        {% endif %}
+            {{ field.errors }}
+            {{ field.value }}
+        </td>
+    {% endfor %}
+    </tr>
+{% endfor %}
+</table>
+
+

@@ -1,0 +1,13 @@
+{% extends "questions/base.html" %}
+{% block title %}Foo List{% endblock %}
+{% block head %}Foo List{% endblock %}
+{% block content %}
+
+<ul>
+    {% for foo in foo_list %}
+        <li><a href="{% url 'editfoo' foo.id %}">{{ foo.name }}</a></li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

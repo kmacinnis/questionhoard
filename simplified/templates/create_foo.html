@@ -1,0 +1,10 @@
+{% extends "questions/base.html" %}
+{% block title %}Create Foo{% endblock %}
+{% block head %}Create Foo{% endblock %}
+{% block external %}
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/formset_handler.js"></script>
+{% endblock %}
+{% block content %}
+{% include "foo_form.html" with action="Create" %}
+{% endblock %}

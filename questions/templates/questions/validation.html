@@ -1,0 +1,27 @@
+{% extends "questions/base.html" %}
+{% block title %}Attempting to Validate Question…{% endblock %}
+{% block external %}
+    <script type="text/javascript" src="/static/jquery.js"></script>
+    <script type="text/javascript" src="/static/formset_handler.js"></script>
+{% endblock %}
+{% block content %}
+
+<!-- Get below the nav element-->
+<div class="clear"></div>
+
+{% if is_validated %}
+    {% include "questions/question_details.html" %}
+    
+    This question has been succesfully validated.
+
+
+{% else %}
+    <div id="validation-edit">
+        {% include "questions/question_form.html" with action="Edit" %}
+    </div>
+
+    <div id="validation-details">
+        {% include "questions/validation_errors.html" %}
+    </div>
+{% endif %}
+{% endblock %}

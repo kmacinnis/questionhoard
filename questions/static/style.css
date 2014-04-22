@@ -1,0 +1,230 @@
+/* ################### COLOR CHART ################### */
+/*      Green:       #9DC45F                           */
+/*      Dark Gray:   #98A2A3                           */
+/*      Light Gray:  #E5EAEA                           */
+
+
+
+#nav {
+    float: right;
+}
+
+
+/*######## Smart Green ########*/
+.smart-green {
+    width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    background: #FFF;
+    padding: 30px;
+    box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    -webkit-box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    font: 12px Arial, Helvetica, sans-serif;
+    color: #666;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.smart-green h1 {
+    font: 24px "Trebuchet MS", Arial, Helvetica, sans-serif;
+    padding: 20px 0px 20px 40px;
+    display: block;
+    margin: -30px -30px 10px -30px;
+    color: #FFF;
+    background: #9DC45F;
+    text-shadow: 1px 1px 1px #949494;
+    border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-bottom:1px solid #89AF4C;
+
+}
+.smart-green h1>span {
+    display: block;
+    font-size: 11px;
+    color: #FFF;
+}
+
+.smart-green label {
+    display: block;
+    margin: 0px 0px 5px;
+}
+.smart-green label>span {
+    float: left;
+    margin-top: 10px;
+    color: #5E5E5E;
+}
+.smart-green input[type="text"], .smart-green input[type="email"], .smart-green textarea {
+    color: #555;
+    height:24px;
+    padding: 3px 3px 3px 10px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    border: 1px solid #E5E5E5;
+    background: #FBFBFB;
+    outline: 0;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
+    box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
+    font: normal 14px/14px Inconsolata, Monaco, "Courier New", Courier, monospace;
+}
+.smart-green input[type="text"]:not([id$="varname"]), .smart-green input[type="email"], .smart-green textarea, .smart-green select {
+    width: 98%;
+}
+.smart-green textarea{
+    height:100px;
+    padding-top: 10px;
+}
+.smart-green select {
+    background: url('down-arrow.png') no-repeat right, -moz-linear-gradient(top, #FBFBFB 0%, #E9E9E9 100%);
+    background: url('down-arrow.png') no-repeat right, -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FBFBFB), color-stop(100%,#E9E9E9));
+   appearance:none;
+    -webkit-appearance:none;
+   -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    width:100%;
+    height:30px;
+}
+.smart-green .button {
+    background-color: #9DC45F;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-border-radius: 5px;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    text-shadow: 1px 1px 1px #949494;
+}
+.smart-green .button:hover {
+    background-color:#80A24A;
+}
+
+.smart-green table {
+    background: none repeat scroll 0 0 #9DC45F;
+    border: 1px solid #9DC45F;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.smart-green th {
+    font-weight: normal;
+    text-align: left;
+}
+
+.smart-green td {
+    padding: 0px 6px;
+    height: 45px;
+    vertical-align: middle;
+}
+
+input[id$="varname"] {
+    width: 5em;
+}
+
+div.formset {
+    display: inline;
+}
+div#randvar-div {
+    float:left;
+}
+div#condition-div {
+    float:right;
+}
+div#validation-edit {
+    float:left;
+}
+div#validation-details {
+    float:right;
+}
+.clear {
+    clear: both;
+}
+
+.question-details {
+    width: 550px;
+    margin-right: auto;
+    margin-left: auto;
+    background: #FFF;
+    padding: 30px;
+    box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    -webkit-box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    font: 12px Arial, Helvetica, sans-serif;
+    color: #666;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.question-details h1 {
+    font: 24px "Trebuchet MS", Arial, Helvetica, sans-serif;
+    padding: 20px 0px 20px 40px;
+    display: block;
+    margin: -30px -30px 10px -30px;
+    color: #FFF;
+    background: #98A2A3;
+    text-shadow: 1px 1px 1px #949494;
+    border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-bottom:1px solid #89AF4C;
+
+}
+.question-details h1>span {
+    display: block;
+    font-size: 11px;
+    color: #FFF;
+}
+
+.question-details label {
+    display: block;
+    margin: 0px 0px 5px;
+}
+.question-details label>span {
+    float: left;
+    margin-top: 10px;
+    color: #5E5E5E;
+}
+
+.question-details textarea{
+    height:100px;
+    padding-top: 10px;
+}
+.question-details table {
+    background: none repeat scroll 0 0 #98A2A3;
+    border: 1px solid #98A2A3;
+    border-radius: 5px;
+    padding: 5px;
+}
+.data {
+    background: #E5EAEA;
+    font: 11px/11px Inconsolata,Monaco,"Courier New",Courier,monospace;
+    padding: 6px;
+}
+
+.delete {
+    display: none;
+}
+div#question-preview {
+    width: 250px;
+    margin-right: auto;
+    margin-left: auto;
+    background: #FFF;
+    padding: 30px;
+    box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    -webkit-box-shadow: rgba(194, 194, 194, 0.7) 0 3px 10px -1px;
+    font: 12px Arial, Helvetica, sans-serif;
+    color: #666;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+ol.choices-preview li {
+    font:  12px/14px STIX,Palatino,Times,serif;
+}
+
+ul.question-list-links, ul.question-list-links li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font-size: 80%;
+}

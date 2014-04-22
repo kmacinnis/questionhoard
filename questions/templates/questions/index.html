@@ -1,0 +1,34 @@
+{% extends "questions/base.html" %}
+{% block title %}Question List{% endblock %}
+{% block head %}Question List{% endblock %}
+{% block content %}
+
+{% if user.username %}
+    {% if question_list %}
+        <ul class="none">
+        {% for question in question_list %}
+        <li> {{ question.name }}
+            <ul class="question-list-links">
+                <li>[<a href="{% url 'detail' question.id %}">Details</a>]</li>
+                <li>[<a href="{% url 'edit' question.id %}">Edit</a>]</li>
+                
+                {% if question.validated %}
+                
+                    <li>[<a href="{% url 'preview' question.id %}">Preview</a>]</li>
+                {% endif %}
+            </ul></li>
+        {% endfor %}
+        </ul>
+        
+        <a href="{% url 'create' %}">Create Question</a>
+        
+    {% else %}
+        <p>No questions are available.</p>
+    {% endif %}
+{% else %}
+    <p>You must <a href="/login/">login</a> 
+        before you can do anything useful.</p>
+        
+{% endif %}
+
+{% endblock %}

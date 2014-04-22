@@ -1,0 +1,9 @@
+{% extends "questions/base.html" %}
+{% block title %}Edit Question{% endblock %}
+{% block external %}
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/formset_handler.js"></script>
+{% endblock %}
+{% block content %}
+{% include "questions/question_form.html" with action="Edit" %}
+{% endblock %}

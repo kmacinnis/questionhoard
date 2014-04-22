@@ -1,0 +1,147 @@
+from django.db import models
+import picklefield
+from django.contrib.auth.models import User
+
+
+class Question(models.Model):
+    name = models.CharField(unique=True, max_length=240)
+    code = models.TextField(blank=True, null=True)
+    prompt = models.CharField(max_length=240, blank=True, null=True)
+    body = models.CharField(max_length=240)
+    symbol_vars = models.CharField(max_length=240, blank=True, null=True)
+    date_added = models.DateField(auto_now_add=True)
+    created_by = models.ForeignKey(User)
+    last_updated = models.DateTimeField(auto_now=True)
+    comment = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return self.name
+    def get_absolute_url(self):
+        return "/questions/%i/" % self.id
+
+
+class Validated(models.Model):
+    question = models.OneToOneField(Question)
+    last_verified = models.DateTimeField(null=True)
+    vardicts = picklefield.PickledObjectField(null=True)
+    num_poss = models.IntegerField(default=0)
+    validated_by = models.ForeignKey(User)
+    def __str__(self):
+        return 'Validation of  «{0}»'.format(self.question)
+
+
+class RandVar(models.Model):
+    question = models.ForeignKey(Question, db_index=True)
+    varname = models.CharField(max_length=10, verbose_name="Variable")
+    varposs = models.CharField(max_length=240, verbose_name="Set of possibile values")
+    def __str__(self):
+        return "Variable «{0}» in Question {1}".format(
+                                    self.varname, self.question)
+
+
+class Condition(models.Model):
+    question = models.ForeignKey(Question, db_index=True)
+    condition_text = models.CharField(max_length=240)
+    def __str__(self):
+        return "Condition «{0}» in Question {1}".format(
+                                    self.condition_text, self.question)
+
+
+class AnswerChoice(models.Model):
+    question = models.ForeignKey(Question, db_index=True)
+    choice_text = models.CharField(max_length=240, default='${choice_expr}$')
+    choice_expr = models.CharField(max_length=240)
+    CORRECT = 'CORR'
+    TOP3 = 'TOP3'
+    TOP4 = 'TOP4'
+    DISTRACT = 'DIST'
+    OTHER = 'OTHR'
+    VARIANT = 'VANS'
+    CHOICE_TYPES = (      
+        (CORRECT, 'Correct Answer'),
+        (TOP3, 'Distractor (Top 3)'),
+        (TOP4, 'Distractor (Top 4)'),
+        (DISTRACT, 'Distractor'),
+        (OTHER, 'Unknown'),
+        (VARIANT, 'Variant of Correct Answer'),
+        )
+    choice_type = models.CharField(max_length=20, choices=CHOICE_TYPES, default=DISTRACT)
+    comment = models.CharField(max_length=240, blank=True, null=True)
+    def __str__(self):
+        return "Answer Choice «{0}» in Question {1}".format(
+                                    self.choice_expr, self.question)
+
+
+
+class BadCodeWarning(models.Model):
+    question = models.ForeignKey(Question)
+    user = models.ForeignKey(User)
+    warn_datetime = models.DateTimeField()
+    field_name = models.CharField(max_length=50)
+    code = models.TextField()
+    
+    DOUBLE_UNDERSCORE = 1
+    OVER_NESTING = 2
+    BYTE_STRINGS = 3
+    
+    ERROR_TYPES = (
+        (DOUBLE_UNDERSCORE, 'Has double underscore'),
+        (OVER_NESTING, 'Too many parentheses'),
+        (BYTE_STRINGS, 'Uses explicit bytestrings'),
+    )
+    error_type = models.IntegerField()
+    admin_comment = models.CharField(max_length=240, blank=True, null=True)
+    def __str__(self):
+        return "{user} at {time}".format(user=user, time=warn_datetime.isoformat())
+
+
+
+# Document creation classes:
+
+class DocumentRecipe(models.Model):
+    title = models.CharField(max_length=60)
+    created_by = models.ForeignKey(User)
+    date_created = models.DateField(auto_now_add=True)
+    def __str__(self):
+        return self.title
+
+
+class BlockRecipe(models.Model):
+    '''
+    A block is a set of exercises created from the same question.
+    '''
+    document = models.ForeignKey(DocumentRecipe)
+    order = models.IntegerField()
+    question = models.ForeignKey(Question, db_index=True)
+    num_exercises = models.IntegerField()
+    num_columns = models.IntegerField(default=1)
+    space_after = models.CharField(max_length=30)
+
+
+class Document(models.Model):
+    title = models.CharField(max_length=60)
+    recipe = models.ForeignKey(DocumentRecipe)
+    date_created = models.DateField(auto_now_add=True)
+    created_by = models.ForeignKey(User)
+    def __str__(self):
+        return self.title
+
+
+class Block(object):
+    document = models.ForeignKey(Document)
+    order = models.IntegerField()
+    recipe = models.ForeignKey(BlockRecipe)
+
+
+class Exercise(models.Model):
+    question = models.ForeignKey(Question, db_index=True)
+    vardict = picklefield.PickledObjectField()
+    def __str__(self):
+        return "Exercise «{0}»".format(self.id)
+
+
+
+
+
+
+
+

@@ -1,0 +1,105 @@
+<div id="detail-group" class="question-details">
+
+    <h1>Validation Errors</h1>
+
+    {% if validation_errors.name %}
+        <p class="data-label">  
+            Question Name:
+        </p>
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.name %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if validation_errors.randvar %}
+        <p class="data-label">  
+            Issues with Random Variables:
+        </p>
+
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.randvar %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if validation_errors.condition %}
+    <p class="data-label">  
+        Issues with Conditions:
+    </p>
+    
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.condition %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if validation_errors.symbvar %}
+    <p class="data-label">  
+        Issues with Symbolic Variables:
+    </p>
+    
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.symbvar %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if validation_errors.code %}
+    <p class="data-label">  
+        Issues with Main Code Block:
+    </p>
+    
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.code %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if validation_errors.body %}
+    <p class="data-label">  
+        Issues with Question Body:
+    </p>
+    
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.body %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
+    {% if validation_errors.anschoice %}
+    <p class="data-label">  
+        Issues with Answer Choices:
+    </p>
+    
+        <div class="validation_errors">
+            <ul>
+            {% for error in validation_errors.anschoice %}
+                <li>{{ error|linebreaksbr }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
+
+</div>

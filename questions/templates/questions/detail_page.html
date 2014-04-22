@@ -1,0 +1,15 @@
+{% extends "questions/base.html" %}
+{% block title %}Question Details{% endblock %}
+{% block content %}
+{% include "questions/question_details.html" %}
+{% if is_validated %}
+    This question has been successfully validated.
+    <a href="{% url 'preview' question.id %}">See preview.</a>
+{% else %}
+    This question has not yet been successfully validated.
+    <br/>
+    <a href="{% url 'validate' question.id %}">
+        Attempt to validate this question now.
+    </a>
+{% endif %}
+{% endblock %}

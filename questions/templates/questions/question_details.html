@@ -1,0 +1,54 @@
+<div id="detail-group" class="question-details">
+
+    <h1>Question Details</h1>
+
+    <p class="data-label">  
+        Question Name:
+    </p>
+    <div class="data">   
+        {{ question.name }}
+    </div>
+
+    <p>
+        <div id="randvar-div" class="dataset">
+            {% include "dataset_table.html" with dataset=randvar_dataset %}
+        </div>
+        <div id="condition-div" class="dataset">
+            {% include "dataset_table.html" with dataset=condition_dataset %}
+        </div>
+    </p>
+
+    <!-- Clearing Floating Elements-->
+    <div class="clear"></div>
+
+    <p class="data-label">   
+        Symbolic Variables:
+    </p>
+    <div class="data">   
+        {{ question.symbol_vars }}
+    </div>
+    <p class="data-label">   
+        Question Code:
+    </p>
+    <div class="data">   
+        {{ question.code|linebreaksbr }}
+    </div>
+    <p class="data-label">   
+        Question Prompt:
+    </p>
+    <div class="data">   
+        {{ question.prompt }}
+    </div>
+    <p class="data-label">   
+        Main Question:
+    </p>
+    <div class="data">   
+        {{ question.body }}
+    </div>
+
+    <p>
+        {% include "dataset_table.html" with dataset=answerchoices_dataset %}
+    </p>
+
+    <a href=" {% url 'edit'  question.id  %}">Edit Question</a>
+</div>

@@ -1,0 +1,32 @@
+<div id="question-preview">
+
+    {# <h1>Question Preview</h1> #}
+
+    {# <p class="data-label">   #}
+    {#     Question Name: #}
+    {# </p> #}
+    {# <div class="data">    #}
+    {#     {{ question.name }} #}
+    {# </div> #}
+
+    <div id="question-text">
+        {{ questiontext|linebreaks }}
+    </div>
+    
+    <div id="question-choices">
+        
+        <ol type="A" class="choices-preview">
+            {% for choice in choices %}
+            
+            <li class='{{ choice.class }}'> {{ choice.text }} </li>
+            
+            
+            {% endfor %}
+        </ol>
+        
+    </div>
+
+
+
+
+</div>

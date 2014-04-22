@@ -1,0 +1,72 @@
+from django import forms
+from django.forms.models import inlineformset_factory
+from questions.models import Question, RandVar, Condition, AnswerChoice
+import re
+import keyword
+
+valid_varname = re.compile(r'[A-Za-z]\w*')
+
+
+
+
+class RandVarsInlineForm(forms.ModelForm):
+    class Meta:
+        model = RandVar
+    
+    def run_validators(self):
+        return
+    
+    def clean_varname(self):
+        '''
+        TODO: Figure out why this doesn't work.  
+        In the meantime, we will check for errors when validating the question.
+        '''
+        vname = self.cleaned_data['varname']
+        if not valid_varname.match(vname):
+            err_mess = '''
+                Random Variable names must start with a letter and 
+                can contain only letters, digits, and underscores
+                '''
+            raise forms.ValidationError(err_mess)
+        if vname in keyword.kwlist:
+            err_mess = 'Random Variable names cannot be a reserved python keyword'
+            raise forms.ValidationError(err_mess)
+            
+        return vname
+        
+        
+
+RandVarsInline = inlineformset_factory(
+    Question,
+    RandVar,
+    form = RandVarsInlineForm,
+    extra = 1,
+    )
+RandVarsInline.description = "Random Variable"
+
+ConditionsInline = inlineformset_factory(
+    Question,
+    Condition,
+    extra = 1,
+    )
+ConditionsInline.description = "Condtion"
+
+AnswerChoicesInline = inlineformset_factory(
+    Question,
+    AnswerChoice,
+    extra = 1,
+    )
+AnswerChoicesInline.description = "AnswerChoice"
+
+
+
+
+class QuestionEntryForm(forms.ModelForm):
+    FROM_EDIT = 1
+    FROM_VALIDATE = 2
+    called_from = forms.IntegerField(#widget=forms.HiddenInput(),
+                                        initial=0)
+    
+    class Meta:
+        model = Question
+        exclude = ('created_by',)

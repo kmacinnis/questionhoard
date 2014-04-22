@@ -1,0 +1,10 @@
+{% extends "questions/base.html" %}
+{% block title %}User Registration{% endblock %}
+{% block head %}User Registration{% endblock %}
+{% block content %}
+    <form method="post" action=".">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" name="submit" value="register" id="submit" />
+    </form>
+{% endblock %}

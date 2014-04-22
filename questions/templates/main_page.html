@@ -1,0 +1,17 @@
+{% extends "questions/base.html" %}
+{% block title %}Main Page{% endblock %}
+{% block head %}Main Page{% endblock %}
+{% block content %}
+
+{% if user.username %}
+    <ul>
+        <li> <a href='/questions/'>Question List</a> </li>
+        <li> <a href='/questions/create/'>Create New Question</a> </li>
+    </ul>
+{% else %}
+    <p>You must <a href="/login/">login</a> 
+        before you can do anything useful.</p>
+        
+{% endif %}
+
+{% endblock %}
