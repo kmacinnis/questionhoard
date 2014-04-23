@@ -18,7 +18,9 @@
         <ol type="A" class="choices-preview">
             {% for choice in choices %}
             
-            <li class='{{ choice.class }}'> {{ choice.text }} </li>
+            <li {% if choice.correct %}class="correct"{% endif %}> 
+                {{ choice.text }} 
+            </li>
             
             
             {% endfor %}

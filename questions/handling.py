@@ -70,7 +70,6 @@ def condense_list_of_dicts(dicts,key):
                 temp_dict[k] = [d[k] for d in matching_dicts]
         result.append(temp_dict)
     return result
-    
 
 
 def latex(thing):
@@ -106,8 +105,10 @@ def preview_question(question):
     for ans in question.answerchoice_set.all():
         exec('choice_expr = {}'.format(ans.choice_expr),safeglobals,safelocals)
         choice = ans.choice_text.format(**latex(safelocals))
-        choices.append({'text':choice,'class':ans.choice_type})
+        choices.append({'text':choice,'type':ans.choice_type})
     choices = condense_list_of_dicts(choices,'text')
+    for choice in choices:
+        choice['correct'] = (AnswerChoice.CORRECT in choice['type'])
     return {'questiontext':questiontext,'choices':choices,'locals':safelocals}
 
 
