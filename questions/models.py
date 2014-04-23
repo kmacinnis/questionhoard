@@ -47,9 +47,6 @@ class Condition(models.Model):
 
 
 class AnswerChoice(models.Model):
-    question = models.ForeignKey(Question, db_index=True)
-    choice_text = models.CharField(max_length=240, default='${choice_expr}$')
-    choice_expr = models.CharField(max_length=240)
     CORRECT = 'CORR'
     TOP3 = 'TOP3'
     TOP4 = 'TOP4'
@@ -64,7 +61,25 @@ class AnswerChoice(models.Model):
         (OTHER, 'Unknown'),
         (VARIANT, 'Variant of Correct Answer'),
         )
+    
+    RANDOM = 'random'
+    LAST = 'last'
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    E = 'E'
+    PIN_TYPES = (
+        (RANDOM, 'Random'),
+        (LAST, 'Last'),
+        (A,'A'),(B,'B'),(C,'C'),(D,'D'),(E,'E'),
+    )
+    
+    question = models.ForeignKey(Question, db_index=True)
+    choice_text = models.CharField(max_length=240, default='${choice_expr}$')
+    choice_expr = models.CharField(max_length=240)
     choice_type = models.CharField(max_length=20, choices=CHOICE_TYPES, default=DISTRACT)
+    pin = models.CharField(max_length=6, choices=PIN_TYPES, default=RANDOM)
     comment = models.CharField(max_length=240, blank=True, null=True)
     def __str__(self):
         return "Answer Choice «{0}» in Question {1}".format(
@@ -92,56 +107,6 @@ class BadCodeWarning(models.Model):
     admin_comment = models.CharField(max_length=240, blank=True, null=True)
     def __str__(self):
         return "{user} at {time}".format(user=user, time=warn_datetime.isoformat())
-
-
-
-# Document creation classes:
-
-class DocumentRecipe(models.Model):
-    title = models.CharField(max_length=60)
-    created_by = models.ForeignKey(User)
-    date_created = models.DateField(auto_now_add=True)
-    def __str__(self):
-        return self.title
-
-
-class BlockRecipe(models.Model):
-    '''
-    A block is a set of exercises created from the same question.
-    '''
-    document = models.ForeignKey(DocumentRecipe)
-    order = models.IntegerField()
-    question = models.ForeignKey(Question, db_index=True)
-    num_exercises = models.IntegerField()
-    num_columns = models.IntegerField(default=1)
-    space_after = models.CharField(max_length=30)
-
-
-class Document(models.Model):
-    title = models.CharField(max_length=60)
-    recipe = models.ForeignKey(DocumentRecipe)
-    date_created = models.DateField(auto_now_add=True)
-    created_by = models.ForeignKey(User)
-    def __str__(self):
-        return self.title
-
-
-class Block(object):
-    document = models.ForeignKey(Document)
-    order = models.IntegerField()
-    recipe = models.ForeignKey(BlockRecipe)
-
-
-class Exercise(models.Model):
-    question = models.ForeignKey(Question, db_index=True)
-    vardict = picklefield.PickledObjectField()
-    def __str__(self):
-        return "Exercise «{0}»".format(self.id)
-
-
-
-
-
 
 
 
