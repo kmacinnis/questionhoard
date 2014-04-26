@@ -62,11 +62,6 @@ AnswerChoicesInline.description = "AnswerChoice"
 
 
 class QuestionEntryForm(forms.ModelForm):
-    FROM_EDIT = 1
-    FROM_VALIDATE = 2
-    called_from = forms.IntegerField(#widget=forms.HiddenInput(),
-                                        initial=0)
-    
     class Meta:
         model = Question
         exclude = ('created_by',)
