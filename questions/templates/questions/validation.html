@@ -13,6 +13,8 @@
     {% include "questions/question_details.html" %}
     
     This question has been succesfully validated.
+    <a href="{% url 'preview' question.id %}">See preview.</a>
+    
 
 
 {% else %}
