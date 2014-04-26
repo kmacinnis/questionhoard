@@ -28,14 +28,5 @@ class QuestionAdmin(admin.ModelAdmin):
         AnswerChoiceInline,
     ]
 
-class BlockRecipeInline(admin.StackedInline):
-    model = BlockRecipe
-    extra = 3
-
-class DocumentRecipeAdmin(admin.ModelAdmin):
-    fields = ['title']
-    inlines = [BlockRecipeInline]
-
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(DocumentRecipe, DocumentRecipeAdmin)
