@@ -64,11 +64,11 @@ class AnswerChoice(models.Model):
     
     RANDOM = 'random'
     LAST = 'last'
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
+    A = '0'
+    B = '1'
+    C = '2'
+    D = '3'
+    E = '4'
     PIN_TYPES = (
         (RANDOM, 'Random'),
         (LAST, 'Last'),
@@ -77,7 +77,7 @@ class AnswerChoice(models.Model):
     
     question = models.ForeignKey(Question, db_index=True)
     choice_text = models.CharField(max_length=240, default='${choice_expr}$')
-    choice_expr = models.CharField(max_length=240)
+    choice_expr = models.CharField(max_length=240, blank=True, null=True)
     choice_type = models.CharField(max_length=20, choices=CHOICE_TYPES, default=DISTRACT)
     pin = models.CharField(max_length=6, choices=PIN_TYPES, default=RANDOM)
     comment = models.CharField(max_length=240, blank=True, null=True)
