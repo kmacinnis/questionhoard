@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 import random
 from itertools import product as iterproduct
+from operator import itemgetter
 
 import questions.mathness as mathness
 from collections import defaultdict
@@ -67,9 +68,34 @@ def condense_list_of_dicts(dicts,key):
         all_keys = set(sympy.flatten([list(d.keys()) for d in matching_dicts]))
         for k in all_keys:
             if k != key:
-                temp_dict[k] = [d[k] for d in matching_dicts]
+                temp_dict[k] = set([d[k] for d in matching_dicts])
         result.append(temp_dict)
     return result
+
+
+def handle_ordering(choice_list, correct_position=None):
+    # correct_answer = [c for c in choice_list 
+    #                         if c['type']==AnswerChoice.CORRECT][0]
+    open_positions = list(range(len(choice_list)))
+    print(open_positions)
+    if correct_position != None:
+        correct_answer['position'] = int(correct_position)
+        open_positions.remove(int(correct_position))
+    pinned_choices = [c for c in choice_list 
+                            if c['pin'] != AnswerChoice.RANDOM]
+    for choice in pinned_choices:
+        if choice['pin'] == AnswerChoice.LAST:
+            choice['position'] = len(choice_list) - 1
+        else:
+            choice['position'] = int(choice['pin'])
+        print(choice['position'])
+        open_positions.remove(choice['position'])
+    randomized_choices = [c for c in choice_list 
+                            if c['pin'] == AnswerChoice.RANDOM]
+    random.shuffle(open_positions)
+    for pos, choice in zip(open_positions,randomized_choices):
+        choice['position'] = pos
+    return sorted(choice_list, key=itemgetter('position'))
 
 
 def latex(thing):
@@ -81,23 +107,25 @@ def latex(thing):
     return thing
 
 
-def preview_question(question):
-    try:
-        vardicts = question.validated.vardicts
-    except ObjectDoesNotExist:
-        return {'err_mess':"ERROR! Question has not been validated."}
-    
-    # For now, preview just takes the first possible option.
-    safelocals = vardicts[0]
-    
+
+def output_question(question, vardict):
+    """
+    question should be a Question object, and 
+    vardict should be a dictionary mapping the random variables
+    in that question to the values to be used.
+    """
+    safelocals = vardict.copy()
+
     # Bring in the symbolic variables
     separator = re.compile(r'[\,\;\s|]')
     sym_vars = separator.split(question.symbol_vars)
     sym_vars = [v for v in sym_vars if v]
     for v in sym_vars:
         exec('{v} = Symbol("{v}")'.format(v=v), safeglobals, safelocals)
-    
-    
+
+    # Run code to establish all variable values
+    exec(question.code, safeglobals, safelocals)
+
     questiontext = question.prompt + NEWLINE*2
     questiontext += question.body.format(**latex(safelocals))
     
@@ -105,11 +133,29 @@ def preview_question(question):
     for ans in question.answerchoice_set.all():
         exec('choice_expr = {}'.format(ans.choice_expr),safeglobals,safelocals)
         choice = ans.choice_text.format(**latex(safelocals))
-        choices.append({'text':choice,'type':ans.choice_type})
+        choices.append({'text':choice,'type':ans.choice_type,'pin':ans.pin})
     choices = condense_list_of_dicts(choices,'text')
     for choice in choices:
         choice['correct'] = (AnswerChoice.CORRECT in choice['type'])
+        if len(choice['pin']) == 1:
+            choice['pin'] = list(choice['pin'])[0]
+        else:
+            raise ValueError('Pin conflict!!!')
+    choices = handle_ordering(choices)
+
     return {'questiontext':questiontext,'choices':choices,'locals':safelocals}
+
+
+
+def preview_question(question):
+    try:
+        vardicts = question.validated.vardicts
+    except ObjectDoesNotExist:
+        return {'err_mess':"ERROR! Question has not been validated."}
+    
+    # For now, preview just takes the first possible option.
+    
+    return output_question(question, vardicts[0])
 
 
 
@@ -118,7 +164,7 @@ def preview_question(question):
 
 
 def validate_question(question, user):
-
+# TODO: Items with *
     """
     Checks for the following things:
         * Question name should be unique to user
@@ -127,15 +173,18 @@ def validate_question(question, user):
           If not, logs warning in bad_code model.
         ✓ Every varposs returns an iterable when eval'ed
         ✓ Conditions should evaluate to a boolean
-        * Code runs without errors
+        ✓ Code runs without errors
         ✓ Symbolic variables can all be symbol()ed
         ✓ Any random or symbolic variables are actually used in 
           either the question_code or the question_body. 
-        ✓ There is exactly one answer choice with choice_type == CORRECT
+        ✓ There is exactly one answer choice with choice_type == AnswerChoice.CORRECT
         ✓ At most 3 answer choices have choice_type == TOP3
         ✓ At most 4 answer choices have choice_type == TOP3 or TOP4
+        * Check for conflicting AnswerChoice pin values
     
     """
+    
+    
     
 
     def code_probably_safe(code=None, question=None,
@@ -236,7 +285,7 @@ def validate_question(question, user):
     # Handle answer-choice checking.  
     
     num_correct = question.answerchoice_set.filter(
-                        choice_type=AnswerChoice.CORRECT).count()
+                        choice_type=AnswerChoice.AnswerChoice.CORRECT).count()
     num_top3 = question.answerchoice_set.filter(
                         choice_type=AnswerChoice.TOP3).count()
     num_top4 = question.answerchoice_set.filter(
@@ -345,7 +394,7 @@ def validate_question(question, user):
     # and check for errors in the following:
     #           * exec(code)
     #           * eval(choice_expr) for each answer choice
-    safelocals = vardicts[0]
+    safelocals = vardicts[5].copy()
     
     for v in sym_vars:
         exec('{v} = Symbol("{v}")'.format(v=v), safeglobals, safelocals)
