@@ -1,0 +1,11 @@
+{% extends "questions/base.html" %}
+
+{% block content %}
+    <h2>Document Recipes</h2>
+    <ul>
+        {% for recipe in object_list %}
+            <li><a href="{% url 'DocRecipeDetail' recipe.id %}">{{ recipe.title }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

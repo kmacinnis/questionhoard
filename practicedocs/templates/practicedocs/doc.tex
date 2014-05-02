@@ -1,0 +1,58 @@
+{% autoescape off %}
+
+\documentclass[12pt]{article}
+\usepackage[margin=.75in]{geometry}
+\usepackage{exsheets}
+\usepackage{amsmath}
+\usepackage{mathpazo}
+\usepackage{titlesec}
+
+\setlength\parindent{0in}
+
+\titleformat{\section}[block]{\large\bfseries\filcenter}{}{1em}{}
+\setcounter{secnumdepth}{0}
+
+\newlength{\spacing}
+\setlength{\spacing}{1in plus 1fil}
+
+\settasks{
+    counter-format	= tsk. ,
+    item-indent		= 2em ,
+    label-width		= 2 em,
+    resume			= true,
+    after-item-skip	= \spacing,
+    after-skip		= \spacing
+    }
+
+
+\newcommand{\resetspacing}[1]{
+	\setlength{\spacing}{#1 plus 1fil}
+	\settasks{after-item-skip = \spacing,after-skip=\spacing}
+	}
+
+
+
+
+\begin{document}
+
+\section{  {{ doc.title }}  }
+
+
+
+{% for task_set in task_sets %}
+
+
+	\resetspacing{ {{task_set.space_after}} }
+
+	{{ task_set.prompt }}
+	\begin{tasks}( {{ task_set.num_columns }} )
+		{% for exercise in task_set.tasks %}
+			\task {{ exercise.Q }}
+		{% endfor %}
+
+	\end{tasks}
+
+{% endfor %}
+
+\end{document}
+{% endautoescape %}

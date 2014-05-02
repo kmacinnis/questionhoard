@@ -1,0 +1,14 @@
+{% extends "questions/base.html" %}
+
+{% block content %}
+    <h2>Documents</h2>
+    <ul>
+        {% for doc in docs %}
+            <li> {{ doc.title }} 
+                <a href="{% url 'ViewDoc' doc.id 'tex' %}"> [tex] </a> 
+                <a href="{% url 'ViewDoc' doc.id 'pdf' %}"> [pdf] </a> 
+                
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

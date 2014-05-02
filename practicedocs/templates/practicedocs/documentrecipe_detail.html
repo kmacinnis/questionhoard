@@ -1,0 +1,21 @@
+{% extends "questions/base.html" %}
+
+
+{% block content %}
+<h2>{{ object.title }}</h2>
+
+<ul>
+    {% for chunk in object.blockrecipe_set.all %}
+        <li>
+            {{ chuck.num_exercises }}
+            questions based on
+            {{ chunk.question }}
+        </li>
+    {% endfor %}
+</ul> 
+    
+    
+    <a href="{% url 'GenerateDoc' object.id %}">Generate Document</a>
+    
+{% endblock content %}
+    

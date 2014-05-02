@@ -8,5 +8,16 @@ class BlockRecipeInline(admin.StackedInline):
 class DocumentRecipeAdmin(admin.ModelAdmin):
     fields = ['title']
     inlines = [BlockRecipeInline]
+    
+    def save_model(self, request, obj, form, change): 
+        obj.created_by = request.user
+        obj.save()
+    
+    
 
 admin.site.register(DocumentRecipe, DocumentRecipeAdmin)
+admin.site.register(Document)
+admin.site.register(BlockRecipe)
+admin.site.register(Block)
+admin.site.register(Exercise)
+

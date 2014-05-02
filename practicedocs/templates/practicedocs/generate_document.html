@@ -1,0 +1,13 @@
+{% extends "questions/base.html" %}
+
+{% block content %}
+
+<form action="{% url 'GenerateDoc' document_recipe.id %}" method="post">
+{% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="Generate" />
+</form>
+
+
+{% endblock content %}
