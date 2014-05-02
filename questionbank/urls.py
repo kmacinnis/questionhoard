@@ -19,4 +19,5 @@ urlpatterns = patterns('',
         TemplateView.as_view(template_name='registration/register_success.html')),
     
     url(r'simp/', include('simplified.urls')),
+    url(r'practicedocs/', include('practicedocs.urls')),
 )

@@ -88,7 +88,6 @@ def handle_ordering(choice_list, correct_position=None):
             choice['position'] = len(choice_list) - 1
         else:
             choice['position'] = int(choice['pin'])
-        print(choice['position'])
         open_positions.remove(choice['position'])
     randomized_choices = [c for c in choice_list 
                             if c['pin'] == AnswerChoice.RANDOM]
@@ -107,6 +106,13 @@ def latex(thing):
     return thing
 
 
+def make_inline(latex):
+    '''
+    Takes a latex string, which may contain display math, and returns it
+    with all math expressions as inline math.
+    '''
+    return latex.replace(r'\[',r'\(').replace(r'\]',r'\)')
+
 
 def output_question(question, vardict):
     """
@@ -114,6 +120,7 @@ def output_question(question, vardict):
     vardict should be a dictionary mapping the random variables
     in that question to the values to be used.
     """
+
     safelocals = vardict.copy()
 
     # Bring in the symbolic variables
@@ -126,8 +133,10 @@ def output_question(question, vardict):
     # Run code to establish all variable values
     exec(question.code, safeglobals, safelocals)
 
+    problem = question.body.format(**latex(safelocals))
+
     questiontext = question.prompt + NEWLINE*2
-    questiontext += question.body.format(**latex(safelocals))
+    questiontext += problem
     
     choices = []
     for ans in question.answerchoice_set.all():
@@ -137,13 +146,21 @@ def output_question(question, vardict):
     choices = condense_list_of_dicts(choices,'text')
     for choice in choices:
         choice['correct'] = (AnswerChoice.CORRECT in choice['type'])
+        if choice['correct']:
+            answer = choice['text']
         if len(choice['pin']) == 1:
             choice['pin'] = list(choice['pin'])[0]
         else:
             raise ValueError('Pin conflict!!!')
     choices = handle_ordering(choices)
-
-    return {'questiontext':questiontext,'choices':choices,'locals':safelocals}
+    output = {
+        'questiontext' : questiontext,
+        'choices' : choices,
+        'locals' : safelocals,
+        'Q' : make_inline(problem),
+        'A' : make_inline(answer),
+    }
+    return output
 
 
 
