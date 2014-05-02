@@ -198,7 +198,6 @@ class ValidateQuestion(EditQuestion):
             if context['validation_errors'] == None:
                 is_validated = True
         context['is_validated'] = is_validated
-        context['called_from'] = 2
         
         return context
 
