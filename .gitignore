@@ -55,3 +55,6 @@ docs/_build/
 # Databases and Migrations
 migrations/
 *.sqlite3
+
+# pycharm
+.idea/

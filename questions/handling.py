@@ -10,7 +10,7 @@ import keyword
 import datetime
 import sympy
 
-from questions.models import *
+
 
 
 
@@ -19,6 +19,25 @@ safelocals = {}
 safeglobals = {key : value for key, value 
                     in mathness.__dict__.items() if key[:2] != '__'}
 NEWLINE = '\n'
+
+
+
+# TODO:  Fix this!!!! This class is here to prevent circular imports
+class AnswerChoice(object):
+    CORRECT = 'CORR'
+    TOP3 = 'TOP3'
+    TOP4 = 'TOP4'
+    DISTRACT = 'DIST'
+    OTHER = 'OTHR'
+    VARIANT = 'VANS'
+    RANDOM = 'random'
+    LAST = 'last'
+    A = '0'
+    B = '1'
+    C = '2'
+    D = '3'
+    E = '4'
+
 
 
 
@@ -77,7 +96,6 @@ def handle_ordering(choice_list, correct_position=None):
     # correct_answer = [c for c in choice_list 
     #                         if c['type']==AnswerChoice.CORRECT][0]
     open_positions = list(range(len(choice_list)))
-    print(open_positions)
     if correct_position != None:
         correct_answer['position'] = int(correct_position)
         open_positions.remove(int(correct_position))
@@ -168,7 +186,8 @@ def preview_question(question):
     try:
         vardicts = question.validated.vardicts
     except ObjectDoesNotExist:
-        return {'err_mess':"ERROR! Question has not been validated."}
+        
+        return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
     # For now, preview just takes the first possible option.
     

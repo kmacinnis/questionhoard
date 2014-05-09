@@ -4,7 +4,7 @@ from questions.views import *
 
 urlpatterns = patterns('',
     # ex: /questions/
-    url(r'^$', index, name='index'),
+    url(r'^$', index, name='QuestionList'),
     # ex: /questions/mathjax
     url(r'^mathjax$', mathjaxtest, name='mathjaxtest'),
     # ex: /questions/5/

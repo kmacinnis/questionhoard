@@ -6,6 +6,12 @@ from django.template import RequestContext
 from zother.forms import RegistrationForm
 
 
+def temp(request):
+    return render_to_response(
+            'temp.html',
+            RequestContext(request)
+            )
+
 
 
 

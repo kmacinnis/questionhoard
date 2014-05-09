@@ -17,7 +17,10 @@ urlpatterns = patterns('',
     url(r'^register/$', zviews.register_page),
     url(r'^register/success/$',
         TemplateView.as_view(template_name='registration/register_success.html')),
+    url(r'^temp/', zviews.temp),
     
     url(r'simp/', include('simplified.urls')),
     url(r'practicedocs/', include('practicedocs.urls')),
+    url(r'organization/', include('organization.urls')),
+    url(r'org/', include('organization.urls')),
 )

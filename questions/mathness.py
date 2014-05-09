@@ -1,4 +1,9 @@
 from sympy import *
+from math import copysign
+
+
+
+
 
 posneg = [S(1),S(-1)]
 one_digit_primes = [S(2),S(3),S(5),S(7)]
@@ -27,4 +32,8 @@ def is_rel_prime(*args):
 
 def has_duplicates(*args):
     return len(args) != len(set(args))
+
+def round(x, d=0):
+    p = 10**d
+    return floor((x * p) + copysign(0.5, x))/p
 

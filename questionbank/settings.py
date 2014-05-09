@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'questions',
+    'organization',
     'practicedocs',
     'zother',
     'simplified',

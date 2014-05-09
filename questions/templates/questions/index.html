@@ -1,7 +1,11 @@
-{% extends "questions/base.html" %}
+{% extends "base.html" %}
 {% block title %}Question List{% endblock %}
-{% block head %}Question List{% endblock %}
 {% block content %}
+
+<div class="container">
+<div class="jumbotron">
+
+<h1>Question List</h1>
 
 {% if user.username %}
     {% if question_list %}
@@ -30,5 +34,7 @@
         before you can do anything useful.</p>
         
 {% endif %}
+
+</div></div>
 
 {% endblock %}

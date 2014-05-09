@@ -1,7 +1,7 @@
 from django.db import models
 import picklefield
 from django.contrib.auth.models import User
-
+from questions.handling import preview_question
 
 class Question(models.Model):
     name = models.CharField(unique=True, max_length=240)
@@ -17,6 +17,10 @@ class Question(models.Model):
         return self.name
     def get_absolute_url(self):
         return "/questions/%i/" % self.id
+    def preview(self):
+        # TODO: questions with graphics will need a graphic preview
+        preview_dict = preview_question(self)
+        return preview_dict['questiontext']
 
 
 class Validated(models.Model):
