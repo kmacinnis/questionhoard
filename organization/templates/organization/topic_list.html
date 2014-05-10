@@ -101,12 +101,7 @@ hello
 </div>
 
 
-{% load static %}
 
-
-<script src="{% static 'jquery.js' %}"></script>
-<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-
-
+{% include "scripts_bootstrap.html" %}
 {% include "scripts_mathjax.html" %}
 {% endblock content %}
