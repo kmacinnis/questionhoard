@@ -6,10 +6,10 @@ from practicedocs.models import DocumentRecipe, BlockRecipe
 class DocumentGenreationForm(forms.Form):
     title = forms.CharField()
 
-class DocRecipeCreateForm(forms.ModelForm):
+class DocRecipeNameForm(forms.ModelForm):
     class Meta:
         model = DocumentRecipe
-        exclude = ('created_by','date_created')
+        fields = ('title',)
 
 BlockRecipeFormSet = inlineformset_factory(
     DocumentRecipe,

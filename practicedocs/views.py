@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render_to_response
-from vanilla import ListView, DetailView, CreateView
+from vanilla import ListView, DetailView, CreateView, UpdateView
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
@@ -31,7 +31,7 @@ class DocList(ListView):
 
 class CreateDocRecipe(CreateView):
     model = DocumentRecipe
-    form_class = DocRecipeCreateForm
+    form_class = DocRecipeNameForm
     template_name = 'practicedocs/create_docrecipe.html'
 
     def post(self, request):
@@ -58,7 +58,8 @@ def view_document(request, document_id, filetype):
             ts.space_after = block.space_after
             task_sets.append(ts)
         for exercise in block.exercises.all():
-            ts.tasks.append(output_question(exercise.question, exercise.vardict))
+            ts.tasks.append(
+                    output_question(exercise.question, exercise.vardict))
     variables = {'doc':doc, 'task_sets':task_sets,}
     if filetype == "pdf":
         return return_pdf(request, 
@@ -72,7 +73,28 @@ def view_document(request, document_id, filetype):
 
 class EditRecipe(UpdateView):
     model = DocumentRecipe
+    template_name = 'practicedocs/edit_recipe.html'
+    form_class = DocRecipeNameForm
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['blockrecipe_formset'] = BlockRecipeFormSet(
+                                                instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        
+        blockrecipe_formset = BlockRecipeFormSet(
+                self.request.POST, instance=self.object)
+        if blockrecipe_formset.is_valid():
+            form.save()
+            blockrecipe_formset.save()
+            return HttpResponseRedirect(self.object.get_absolute_url())
+        else:
+            context['form'] = form
+            context['blockrecipe_formset'] = blockrecipe_formset
+            return self.render_to_response(context)
 
 
 def edit_recipe(request, recipe_id):
