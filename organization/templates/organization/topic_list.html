@@ -36,6 +36,9 @@
 								<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
 									<div class="panel-inner">
 
+										Objectives:
+										<!-- objective accordion -->
+
 										<div class="panel-group" id="accordion-subtopic-{{ subtopic.id }}">
 											{% for objective in subtopic.objectives.all %}
 
@@ -67,7 +70,6 @@
 																{% endfor %}   {# question loop #}
 															
 															</div>
-															{{ objective.long }}
 														</div>
 													</div>
 												</div>
@@ -88,17 +90,15 @@
 
 </div>
 
-<div class="col-md-4">
+<div class="col-md-2">
 
 hello
 
 
 </div>
-
-
 </div>
 </div>
-
+</div>
 
 
 {% load static %}

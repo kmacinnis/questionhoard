@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 import picklefield
 from questions.models import Question
 
@@ -17,6 +18,8 @@ class DocumentRecipe(models.Model):
     date_created = models.DateField(auto_now_add=True)
     def __str__(self):
         return self.title
+    def get_absolute_url(self):
+        return reverse('EditDocRecipe', args=[str(self.id)])
 
 
 class BlockRecipe(models.Model):

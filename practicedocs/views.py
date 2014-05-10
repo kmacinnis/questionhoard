@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render_to_response
-from vanilla import ListView, DetailView
+from vanilla import ListView, DetailView, CreateView
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
@@ -19,40 +19,26 @@ from zother.handle_latex import return_pdf, return_tex
 class DocRecipeList(ListView):
     model = DocumentRecipe
 
+
 class DocRecipeDetail(DetailView):
     model = DocumentRecipe
+
 
 class DocList(ListView):
     model = Document
     context_object_name = 'docs'
 
 
-class ViewDocument(DetailView):
-    model = Document
-    template_name = "practicedocs/doc.tex"
-    
-    def get_context_data(self, **kwargs):
-        
-        def mergeable(a,b):
-            return ((a.prompt == b.prompt) and (a.num_columns == b.num_columns)
-                    and (a.space_after == b.space_after))
-        
-        context = super(ViewDocument, self).get_context_data(**kwargs)
-        doc = self.object
-        task_sets = []
-        ts = TaskSet()
-        for block in doc.block_set.order_by('order'):
-            if not mergeable(block,ts):
-                ts = TaskSet()
-                ts.prompt = block.prompt
-                ts.num_columns = block.num_columns
-                ts.space_after = block.space_after
-                task_sets.append(ts)
-            for exercise in block.exercises.all():
-                ts.tasks.append(output_question(exercise.question, exercise.vardict))
-        context['task_sets'] = task_sets
-        context['doc'] = doc
-        return context
+class CreateDocRecipe(CreateView):
+    model = DocumentRecipe
+    form_class = DocRecipeCreateForm
+    template_name = 'practicedocs/create_docrecipe.html'
+
+    def post(self, request):
+        recipe = DocumentRecipe(created_by=request.user)
+        form = DocRecipeCreateForm(request.POST, instance=recipe)
+        if form.is_valid():
+            return self.form_valid(form)
 
 
 def view_document(request, document_id, filetype):
@@ -82,10 +68,20 @@ def view_document(request, document_id, filetype):
             "practicedocs/doc.tex", variables, filename="latex_test.tex")
     else:
         raise Http404
-        
+
+
+class EditRecipe(UpdateView):
+    model = DocumentRecipe
     
-    
-    
+
+
+def edit_recipe(request, recipe_id):
+    topics = Topic.objects.all()
+    recipe = get_object_or_404(DocumentRecipe, id=recipe_id)
+    form = 0
+
+
+
 
 
 @login_required
