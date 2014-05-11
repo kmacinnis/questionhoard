@@ -3,101 +3,11 @@
 
 {% block content %}
 
-<div class="container">
 
 <div class="row">
-
-
-<div class="col-md-5 .col-md-offset-1">
-
-<div class="panel-group" id="accordion1">
-	{% for topic in topics %}
-		
-		<div class="panel panel-default">
-			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion1" data-target="#panel-topic-{{ topic.id }}">    
-				<h4 class="panel-title panel-toggle">
-					{{ topic.name }}
-				</h4>
-			</div>
-			<div id="panel-topic-{{ topic.id }}" class="panel-body collapse">
-				<div class="panel-inner">
-				
-					<!-- subtopic accordion --> 
-
-					<div class="panel-group" id="accordion-topic-{{ topic.id }}">
-						{% for subtopic in topic.subtopic_set.all %}
-
-							<div class="panel panel-default">
-								<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-topic-{{ topic.id }}" data-target="#panel-subtopic-{{ subtopic.id }}">     
-									<h4 class="panel-title panel-toggle">    
-										{{ subtopic.name }}
-									</h4>
-								</div>
-								<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
-									<div class="panel-inner">
-
-										Objectives:
-										<!-- objective accordion -->
-
-										<div class="panel-group" id="accordion-subtopic-{{ subtopic.id }}">
-											{% for objective in subtopic.objectives.all %}
-
-												<div class="panel panel-default">
-													<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ subtopic.id }}-{{ objective.id }}">
-														<h4 class="panel-title panel-toggle">
-															{{ objective.short }}
-														</h4>
-													</div>
-													<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
-														<div class="panel-inner">
-															
-															<div class="panel-group" id="accordion-objective-{{ subtopic.id }}-{{ objective.id }}">
-																{% for question in objective.questions.all %}
-
-																	<div class="panel panel-default">
-																		<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
-																			<h4 class="panel-title panel-toggle">
-																				{{ question.name }}
-																			</h4>
-																		</div>
-																		<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
-																			<div class="panel-inner">
-																				{{ question.preview }}
-																			</div>
-																		</div>
-																	</div>
-
-																{% endfor %}   {# question loop #}
-															
-															</div>
-														</div>
-													</div>
-												</div>
-
-											{% endfor %}  {# objective loop #}
-										</div>
-									</div>
-								</div>
-							</div>
-						{% endfor %} {# subtopic loop #}
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endfor %} {# topic loop #}
-
-
-
-</div>
-
-<div class="col-md-2">
-
-hello
-
-
-</div>
-</div>
-</div>
+	<div class="col-md-5 .col-md-offset-1">
+		{% include "organization/topic_accordion.html" with question_display="simple_preview" %}
+	</div>
 </div>
 
 

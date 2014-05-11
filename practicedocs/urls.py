@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^(?P<recipe_id>\d+)/generate/$', generate_document, name='GenerateDoc'),
 
     # ex: /practicedocs/5/edit/
-    url(r'^(?P<recipe_id>\d+)/edit/$', edit_recipe, name='EditRecipe'),
+    url(r'^(?P<pk>\d+)/edit/$', EditRecipe.as_view(), name='EditRecipe'),
     
     # ex: /practicedocs/create/
     url(r'^create/$', CreateDocRecipe.as_view(), name='CreateDocRecipe'),

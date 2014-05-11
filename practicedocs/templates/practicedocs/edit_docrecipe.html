@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Topic List{% endblock title %}
+
+{% block content %}
+
+
+<div class="row">
+  <div class="col-md-4">
+    {% include "organization/topic_accordion.html" with question_display="simple_preview" %}
+  </div>
+  <div class="col-md-8">
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        {% include "formset_sortable.html" with formset=blockrecipe_formset %}
+        <input type="submit" value="Save" />
+    </form>
+  </div>
+</div>
+
+
+
+{% include "scripts_bootstrap.html" %}
+{% include "scripts_mathjax.html" %}
+{% endblock content %}

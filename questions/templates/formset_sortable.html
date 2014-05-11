@@ -1,0 +1,56 @@
+{{ request.path }}
+
+{{ formset.management_form }}
+{{ formset.non_form_errors.as_ul }}
+<div id="{{ formset.prefix }}-formsetdiv" class="formset">
+	{% for form in formset.forms %}
+		{% if forloop.first %}
+			<div id="{{ formset.prefix }}-header" class="row">
+					{% for field in form.visible_fields %}
+							<span {% if field.label == "Delete" %} class="delete-header col-md-2" {% else %} class="col-md-2" {% endif %} >
+									{{ field.label|capfirst }}
+							</span>
+					{% endfor %}
+			</div>
+		{% endif %}
+
+		<div class="panel panel-default">
+			<div class="formrow row panel-heading" id="row-{{ formset.prefix }}-{{ forloop.counter0 }}">
+			{% for field in form.visible_fields %}
+				<div class="col-md-2">
+					{# Include the hidden fields in the form #}
+					{% if forloop.first %}
+						{% for hidden in form.hidden_fields %}
+							{{ hidden }}
+						{% endfor %}
+					{% endif %}
+					{{ field.errors }}
+					{{ field }}
+				</div>
+			{% endfor %} {# field loop #}
+		</div>
+	{% endfor %} {# form loop #}
+	</div>
+</div>
+<a href="" id="add-{{ formset.prefix }}-button" class="add-item">Add {{ formset.description }}</a>
+
+
+<script type="text/html" id="{{ formset.prefix }}-template">
+		<div class="newrow" id="row-{{ formset.prefix }}-__prefix__">
+		{% for field in formset.empty_form.visible_fields %}
+				<span>
+				{# Include the hidden fields in the form #}
+				{% if forloop.first %}
+						{% for hidden in form.hidden_fields %}
+						{{ hidden }}
+						{% endfor %}
+				{% endif %}
+						{{ field.errors.as_ul }}
+						{{ field }}
+				</span>
+		{% endfor %}
+		</div>
+</script>
+
+{# From Django Snippet 1442 #}
+{# https://djangosnippets.org/snippets/1442/ #}
