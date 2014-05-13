@@ -19,7 +19,7 @@ class DocumentRecipe(models.Model):
     def __str__(self):
         return self.title
     def get_absolute_url(self):
-        return reverse('EditDocRecipe', args=[str(self.id)])
+        return reverse('EditRecipe', args=[str(self.id)])
 
 
 class BlockRecipe(models.Model):
@@ -27,11 +27,16 @@ class BlockRecipe(models.Model):
     A block is a set of exercises created from the same question.
     '''
     document = models.ForeignKey(DocumentRecipe)
-    order = models.IntegerField()
+    order = models.IntegerField(default=999)
     question = models.ForeignKey(Question, db_index=True)
     num_exercises = models.IntegerField()
     num_columns = models.IntegerField(default=1)
     space_after = models.CharField(max_length=30)
+    class Meta:
+        ordering = ['order']
+    def __str__(self):
+        return 'Block {order} of {doc}'.format(
+                    order=self.order, doc=self.document)
 
 
 class Document(models.Model):

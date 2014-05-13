@@ -51,7 +51,7 @@ def return_tex(request, template, dictionary, filename):
     latex = render_to_string(template, dictionary, context_instance=None)
     
     
-    response = HttpResponse(mimetype='text/plain')
+    response = HttpResponse(content_type='text/plain')
     response['Content-Disposition'] = 'inline; filename="%s.txt"' % filename
     response.write(latex)
 

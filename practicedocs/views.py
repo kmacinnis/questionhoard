@@ -37,7 +37,7 @@ class CreateDocRecipe(CreateView):
 
     def post(self, request):
         recipe = DocumentRecipe(created_by=request.user)
-        form = DocRecipeCreateForm(request.POST, instance=recipe)
+        form = DocRecipeNameForm(request.POST, instance=recipe)
         if form.is_valid():
             return self.form_valid(form)
 
@@ -91,6 +91,7 @@ class EditRecipe(UpdateView):
                 self.request.POST, instance=self.object)
         if blockrecipe_formset.is_valid():
             form.save()
+            print('hello')
             blockrecipe_formset.save()
             return HttpResponseRedirect(self.object.get_absolute_url())
         else:
@@ -99,10 +100,6 @@ class EditRecipe(UpdateView):
             return self.render_to_response(context)
 
 
-def edit_recipe(request, recipe_id):
-    topics = Topic.objects.all()
-    recipe = get_object_or_404(DocumentRecipe, id=recipe_id)
-    form = 0
 
 
 
