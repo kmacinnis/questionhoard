@@ -1,1 +1,2 @@
 TM_PYTHON = "$HOME/.envs/dragon/bin/python"
+excludeDirectories = "{migrations,__pycache__}"
