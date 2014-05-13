@@ -1,0 +1,7 @@
+<ul class="sortable list" id="sort-items">
+    {% for pet in pets %}
+    <li id="{{ pet.id }}">
+        {{ pet.name }} - {{ pet.breed }}
+    </li>
+    {% endfor %}
+</ul>

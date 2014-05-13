@@ -15,7 +15,7 @@
 		{% endif %}
 
 		<div class="panel panel-default">
-			<div class="formrow row panel-heading" id="row-{{ formset.prefix }}-{{ forloop.counter0 }}">
+			<div class="formrow panel-heading no-js" id="row-{{ formset.prefix }}-{{ forloop.counter0 }}">
 			{% for field in form.visible_fields %}
 				<div class="col-md-2">
 					{# Include the hidden fields in the form #}
@@ -28,10 +28,11 @@
 					{{ field }}
 				</div>
 			{% endfor %} {# field loop #}
+			</div>
 		</div>
 	{% endfor %} {# form loop #}
 	</div>
-</div>
+
 <a href="" id="add-{{ formset.prefix }}-button" class="add-item">Add {{ formset.description }}</a>
 
 
