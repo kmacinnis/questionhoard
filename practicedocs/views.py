@@ -100,6 +100,8 @@ class EditRecipe(UpdateView):
             return self.render_to_response(context)
 
 
+def ajax_add_blockrecipe(request, question_id):
+    pass
 
 
 

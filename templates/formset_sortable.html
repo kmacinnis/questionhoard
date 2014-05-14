@@ -51,30 +51,7 @@
 	</div>
 	<div id="sortable">
 		{% for form in formset.forms %}
-			<div class="thingy" id="row-{{ formset.prefix }}-{{ forloop.counter0 }}">
-				{% for hidden in form.hidden_fields %}
-					{{ hidden }}
-				{% endfor %}
-				<div class="col-md-2 order">
-					{{ form.order.errors }}
-					{{ form.order }}
-				</div>
-				<div class="col-md-6">
-					<h4>{{ form.instance.question.name }} </h4>
-				</div>
-				<div class="col-md-2">
-					{{ form.num_exercises.errors }}
-					{{ form.num_exercises }}
-				</div>
-				<div class="col-md-2">
-					{{ form.num_columns.errors }}
-					{{ form.num_columns }}
-				</div>
-				<div class="col-md-2">
-					{{ form.space_after.errors }}
-					{{ form.space_after }}
-				</div>
-			</div>
+			{% include "practicedocs/blockrecipe_element.html" with form_num=forloop.counter0 %}
 		{% endfor %} {# form loop #}
 	</div>
 </div>

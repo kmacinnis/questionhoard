@@ -23,7 +23,10 @@ urlpatterns = patterns('',
     # ex: /practicedocs/create/
     url(r'^create/$', CreateDocRecipe.as_view(), name='CreateDocRecipe'),
     
-    # ex: /practicedocs/viewdoc/5
+    # ex: /practicedocs/viewdoc/5/
     url(r'^viewdoc/(?P<document_id>\d+)/(?P<filetype>\w+)/$', view_document, name='ViewDoc'),
+
+    # ex: /practicedocs/ajax/new_blockrecipe_form/5/
+    url(r'^ajax/new_blockrecipe_form/(?P<question_id>\d+)/$', ajax_add_blockrecipe),
 )
 
