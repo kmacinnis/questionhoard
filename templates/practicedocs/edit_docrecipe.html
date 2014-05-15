@@ -4,9 +4,14 @@
 {% block external %}
 	{% include "scripts_jquery_ui_bootstrap.html" %}
 	{% include "scripts_mathjax.html" %}
+	{% load static %}
+	<script src="{% static 'add-form.js' %}"></script>
+	
 {% endblock external %}
 
 {% block content %}
+
+<div id="doc-recipe-id" class="hidden">{{ object.id }}</div>
 
 <div class="row">
 	<div class="col-md-4">

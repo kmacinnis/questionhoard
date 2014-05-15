@@ -1,13 +1,13 @@
-<div class="blockform" id="row-{{ formset.prefix }}-{{ form_num }}">
+<div class="blockform" id="row-{{ form.prefix }}">
 	{% for hidden in form.hidden_fields %}
 		{{ hidden }}
 	{% endfor %}
-	<div class="col-md-2 order">
+	<div class="col-md-2 order hidden">
 		{{ form.order.errors }}
 		{{ form.order }}
 	</div>
-	<div class="col-md-6">
-		<h4>{{ form.instance.question.name }} </h4>
+	<div class="col-md-5">
+		<h5>{{ form.instance.question.name }} </h5>
 	</div>
 	<div class="col-md-2">
 		{{ form.num_exercises.errors }}
@@ -20,6 +20,9 @@
 	<div class="col-md-2">
 		{{ form.space_after.errors }}
 		{{ form.space_after }}
+	</div>
+	<div class="col-md-1 delete-link small">
+		Delete
 	</div>
 </div>
 

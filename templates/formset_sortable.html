@@ -73,7 +73,7 @@ $(document).ready(function(){
             // redo all of the order numbers in multiples of 10
             for( i = 0; i < item_order.length; i++ ) {
                 var item = item_order[i];
-                var new_order = (i + 1) * 10;
+                var new_order = (i + 1);
                 var selector = '#'+item+' div.order input';
                 $(selector).val(new_order);
             }

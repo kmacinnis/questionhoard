@@ -100,9 +100,22 @@ class EditRecipe(UpdateView):
             return self.render_to_response(context)
 
 
-def ajax_add_blockrecipe(request, question_id):
-    pass
-
+def ajax_add_blockrecipe(request):
+    question_id = request.GET['question_id']
+    question = get_object_or_404(Question,id=question_id)
+    docrecipe_id = request.GET['docrecipe_id']
+    document = get_object_or_404(DocumentRecipe,id=docrecipe_id)
+    form_num = request.GET['form_num']
+    new_block = BlockRecipe(question=question, document=document)
+    form = BlockRecipeFormSet().empty_form
+    form.instance = new_block
+    form.prefix = 'blockrecipe_set-{}'.format(form_num)
+    form.initial = {
+        'question' : question_id,
+        'document' : docrecipe_id,
+    }
+    variables = RequestContext(request, {'form' : form, 'form_num':form_num})
+    return render_to_response('practicedocs/blockrecipe_element.html',variables)
 
 
 

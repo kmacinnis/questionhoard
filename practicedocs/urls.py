@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     # ex: /practicedocs/viewdoc/5/
     url(r'^viewdoc/(?P<document_id>\d+)/(?P<filetype>\w+)/$', view_document, name='ViewDoc'),
 
-    # ex: /practicedocs/ajax/new_blockrecipe_form/5/
-    url(r'^ajax/new_blockrecipe_form/(?P<question_id>\d+)/$', ajax_add_blockrecipe),
+    # ex: /practicedocs/new_blockrecipe_form/
+    url(r'^new_blockrecipe_form/$', ajax_add_blockrecipe),
 )
 

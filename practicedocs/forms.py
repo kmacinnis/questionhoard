@@ -28,11 +28,12 @@ class BlockRecipeInlineForm(forms.ModelForm):
             'num_exercises',
             'order',
             'space_after',
+            'question',
             ]
         widgets = {
+            'question':forms.HiddenInput(),
             'order': forms.TextInput(attrs=CLASS_CONTROL),
             'num_exercises': forms.TextInput(attrs=CLASS_CONTROL),
-            'question':forms.Select(attrs=CLASS_CONTROL),
             'num_columns': forms.TextInput(attrs=CLASS_CONTROL),
             'space_after': forms.TextInput(attrs=CLASS_CONTROL),
             'ORDER': forms.TextInput(attrs=CLASS_CONTROL),
