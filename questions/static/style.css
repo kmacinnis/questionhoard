@@ -2,6 +2,7 @@
 /*      Green:       #9DC45F                           */
 /*      Dark Gray:   #98A2A3                           */
 /*      Light Gray:  #E5EAEA                           */
+/*      Blue:        #2D6CA2                           */
 
 
 /*######## Smart Green ########*/
@@ -25,7 +26,7 @@
     display: block;
     margin: -30px -30px 10px -30px;
     color: #FFF;
-    background: #9DC45F;
+    background: #2D6CA2;
     text-shadow: 1px 1px 1px #949494;
     border-radius: 5px 5px 0px 0px;
     -webkit-border-radius: 5px 5px 0px 0px;
@@ -80,7 +81,7 @@
     height:30px;
 }
 .smart-green .button {
-    background-color: #9DC45F;
+    background-color: #2D6CA2;
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-border-radius: 5px;
@@ -94,8 +95,8 @@
 }
 
 .smart-green table {
-    background: none repeat scroll 0 0 #9DC45F;
-    border: 1px solid #9DC45F;
+    background: none repeat scroll 0 0 #2D6CA2;
+    border: 1px solid #2D6CA2;
     border-radius: 5px;
     padding: 5px;
 }
@@ -192,6 +193,17 @@ div#validation-details {
     background: #E5EAEA;
     font: 11px/11px Inconsolata,Monaco,"Courier New",Courier,monospace;
     padding: 6px;
+}
+
+.smart-green div.formset  {
+    color: #F0F0F0;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;}
+
+table.formset  {
+    border-collapse: separate;
+    
 }
 
 .delete {

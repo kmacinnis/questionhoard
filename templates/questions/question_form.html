@@ -1,37 +1,47 @@
 {% if form.errors %}
     {{ form.errors }}
 {% endif %}
-<form method="post" action="." class="smart-green">
-    {% csrf_token %}
-    <h1>{{ action }} Question</h1>
-    <p><label for="id_name">Question Name:</label>
-        {{ form.name }}</p>
+<div class="col-md-9">
+		<form method="post" action="." class="smart-green">
+			<h1>
+				{{ action }} Question
+			</h1>
+			{% csrf_token %}
+			<p><label for="id_name">Question Name:</label>
+				{{ form.name }}
+			</p>
 
-    <p>
-        <div id="randvar-div" class="formset">
-            {% include "formset_table.html" with formset=randvar_formset %}
-        </div>
-        <div id="condition-div" class="formset">
-            {% include "formset_table.html" with formset=condition_formset %}
-        </div>
-    </p>
+			<p>
+				<div id="randvar-div" class="formset">
+					{% include "formset_table.html" with formset=randvar_formset %}
+				</div>
+				<div id="condition-div" class="formset">
+					{% include "formset_table.html" with formset=condition_formset %}
+				</div>
+			</p>
 
-<!-- Clearing Floating Elements-->
-<div class="clear"></div>
+			<!-- Clearing Floating Elements-->
+			<div class="clear"></div>
 
-    <p><label for="id_symbol_vars">Symbolic Variables:</label>
-        {{ form.symbol_vars }}</p>
-    <p><label for="id_code">Question Code:</label>
-        {{ form.code }}</p>
-    <p><label for="id_prompt">Question Prompt:</label>
-        {{ form.prompt }}</p>
-    <p><label for="id_body">Main Question:</label>
-        {{ form.body }}</p>
+			<p><label for="id_symbol_vars">Symbolic Variables:</label>
+				{{ form.symbol_vars }}
+			</p>
+			<p><label for="id_code">Question Code:</label>
+				{{ form.code }}
+			</p>
+			<p><label for="id_prompt">Question Prompt:</label>
+				{{ form.prompt }}
+			</p>
+			<p><label for="id_body">Main Question:</label>
+				{{ form.body }}
+			</p>
 
-    <p>
-        {% include "formset_table.html" with formset=answerchoices_formset %}
-    </p>
+			<p>
+				{% include "formset_table.html" with formset=answerchoices_formset %}
+			</p>
 
 
-    <input type="submit" name="submit" value="Save" id="submit">
-</form>
+			<input type="submit" name="submit" value="Save" id="submit">
+		</form>
+</div>
+

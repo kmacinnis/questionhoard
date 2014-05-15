@@ -1,4 +1,4 @@
-<div class="blockform" id="row-{{ form.prefix }}">
+<div class="blockform" id="id_{{ form.prefix }}">
 	{% for hidden in form.hidden_fields %}
 		{{ hidden }}
 	{% endfor %}
@@ -22,7 +22,8 @@
 		{{ form.space_after }}
 	</div>
 	<div class="col-md-1 delete-link small">
-		Delete
+		<a href="#" class="small delete-block">Delete</a>
+		<span class="hidden">{{ form.DELETE }}</span>
 	</div>
 </div>
 

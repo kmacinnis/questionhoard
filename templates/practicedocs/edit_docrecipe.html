@@ -5,7 +5,7 @@
 	{% include "scripts_jquery_ui_bootstrap.html" %}
 	{% include "scripts_mathjax.html" %}
 	{% load static %}
-	<script src="{% static 'add-form.js' %}"></script>
+	<script src="{% static 'blockrecipeformset_handler.js' %}"></script>
 	
 {% endblock external %}
 
@@ -14,18 +14,20 @@
 <div id="doc-recipe-id" class="hidden">{{ object.id }}</div>
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		{% include "organization/topic_accordion.html" with question_display="addable" %}
 	</div>
-	<div class="col-md-8">
-		<form action="" method="post">
-			{{ form.non_field_errors }}
-			{% csrf_token %}
-			{{ form.errors }}
-			{{ form.as_p }}
-			{% include "formset_sortable.html" with formset=blockrecipe_formset %}
-			<input type="submit" value="Save" />
-		</form>
+	<div class="col-md-9">
+		<div class="well well-sm">
+			<form action="" method="post" class="form-horizontal">
+				{{ form.non_field_errors }}
+				{% csrf_token %}
+				{{ form.errors }}
+				{{ form.as_p }}
+				{% include "formset_sortable.html" with formset=blockrecipe_formset %}
+				<input type="submit" value="Save" />
+			</form>
+		</div>
 	</div>
 </div>
 
