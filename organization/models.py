@@ -21,6 +21,7 @@ class Objective(models.Model):
 
 
 class Topic(models.Model):
+    schema = models.ForeignKey(Schema)
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
