@@ -19,8 +19,9 @@ class QuestionAdmin(admin.ModelAdmin):
         # 'name',
         # 'symbol_vars',
         # 'code',
+        # 'question_text',
         # 'prompt',
-        # 'body',
+        # 'short_version',
         ]
     inlines = [
         RandVarInline,

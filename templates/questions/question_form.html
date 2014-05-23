@@ -2,10 +2,13 @@
     {{ form.errors }}
 {% endif %}
 <div class="col-md-9">
-		<form method="post" action="." class="smart-green">
+		<form method="post" action="." class="question-form">
 			<h1>
 				{{ action }} Question
 			</h1>
+			{% for hidden in form.hidden_fields %}
+				{{ hidden }}
+			{% endfor %}
 			{% csrf_token %}
 			<p><label for="id_name">Question Name:</label>
 				{{ form.name }}
@@ -13,9 +16,11 @@
 
 			<p>
 				<div id="randvar-div" class="formset">
+				<label for="randvar_set-table">Random Variables:</label>
 					{% include "formset_table.html" with formset=randvar_formset %}
 				</div>
 				<div id="condition-div" class="formset">
+				<label for="condition_set-table">Conditions on Random Variables:</label>
 					{% include "formset_table.html" with formset=condition_formset %}
 				</div>
 			</p>
@@ -29,12 +34,21 @@
 			<p><label for="id_code">Question Code:</label>
 				{{ form.code }}
 			</p>
-			<p><label for="id_prompt">Question Prompt:</label>
-				{{ form.prompt }}
+			<p>
+				<label for="id_question_text">Question text:</label> 
+				{{ form.question_text }}
+				<a href="" id="toggle-well-prompt-short">Add short version</a>
 			</p>
-			<p><label for="id_body">Main Question:</label>
-				{{ form.body }}
-			</p>
+			<div id="well-prompt-short" class="well row hidden">
+				<div class="col-md-6">
+				<label for="id_prompt">Prompt:</label>
+					{{ form.prompt }}
+				</div>
+				<div class="col-md-6">
+					<label for="id_body">Short Version:</label>
+					{{ form.short_version }}
+				</div>
+			</div>
 
 			<p>
 				{% include "formset_table.html" with formset=answerchoices_formset %}

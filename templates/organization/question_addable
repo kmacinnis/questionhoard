@@ -6,7 +6,7 @@
 </div>
 <div class="row">
 	<div class="col-md-6">
-		<p>{{ question.validated.num_poss }} variants</p>
+		<p>{{ question.validation.num_poss }} variants</p>
 	</div>
 	<div class="col-md-6 text-right">
 		<a href="#" id="add-question-{{ question.id }}" class="add-question">Add to Document</a>

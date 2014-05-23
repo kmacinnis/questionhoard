@@ -3,10 +3,11 @@
 /*      Dark Gray:   #98A2A3                           */
 /*      Light Gray:  #E5EAEA                           */
 /*      Blue:        #2D6CA2                           */
+/*      Whitish:             */
 
 
 /*######## Smart Green ########*/
-.smart-green {
+.question-form {
     width: 800px;
     margin-right: auto;
     margin-left: auto;
@@ -20,7 +21,7 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
-.smart-green h1 {
+.question-form h1 {
     font: 24px "Trebuchet MS", Arial, Helvetica, sans-serif;
     padding: 20px 0px 20px 40px;
     display: block;
@@ -34,22 +35,22 @@
     border-bottom:1px solid #89AF4C;
 
 }
-.smart-green h1>span {
+.question-form h1>span {
     display: block;
     font-size: 11px;
     color: #FFF;
 }
 
-.smart-green label {
+.question-form label {
     display: block;
     margin: 0px 0px 5px;
 }
-.smart-green label>span {
+.question-form label>span {
     float: left;
     margin-top: 10px;
     color: #5E5E5E;
 }
-.smart-green input[type="text"], .smart-green input[type="email"], .smart-green textarea {
+.question-form input[type="text"], .question-form input[type="email"], .question-form textarea {
     color: #555;
     height:24px;
     padding: 3px 3px 3px 10px;
@@ -60,16 +61,22 @@
     outline: 0;
     -webkit-box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
     box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
-    font: normal 14px/14px Inconsolata, Monaco, "Courier New", Courier, monospace;
+    font: normal 10px/14px Inconsolata, Monaco, "Courier New", Courier, monospace;
 }
-.smart-green input[type="text"]:not([id$="varname"]), .smart-green input[type="email"], .smart-green textarea, .smart-green select {
-    width: 98%;
+.question-form input[type="text"]:not([id$="varname"]):not([id$="varposs"]):not([id$="condition_text"]),
+.question-form input[type="email"], .question-form textarea, .question-form select {
+    width: 100%;
 }
-.smart-green textarea{
+
+/*.question-form .well input[type="text"] {
+    width: 46%;
+}*/
+
+.question-form textarea#id_code {
     height:100px;
     padding-top: 10px;
 }
-.smart-green select {
+.question-form select {
     background: url('down-arrow.png') no-repeat right, -moz-linear-gradient(top, #FBFBFB 0%, #E9E9E9 100%);
     background: url('down-arrow.png') no-repeat right, -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FBFBFB), color-stop(100%,#E9E9E9));
    appearance:none;
@@ -80,7 +87,7 @@
     width:100%;
     height:30px;
 }
-.smart-green .button {
+.question-form .button {
     background-color: #2D6CA2;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -90,23 +97,25 @@
     color: #FFF;
     text-shadow: 1px 1px 1px #949494;
 }
-.smart-green .button:hover {
+.question-form .button:hover {
     background-color:#80A24A;
 }
 
-.smart-green table {
+.question-form table {
     background: none repeat scroll 0 0 #2D6CA2;
     border: 1px solid #2D6CA2;
     border-radius: 5px;
     padding: 5px;
 }
 
-.smart-green th {
+.question-form .formset th {
     font-weight: normal;
     text-align: left;
+    color: #F0F0F0;
+    
 }
 
-.smart-green td {
+.question-form td {
     padding: 0px 6px;
     height: 45px;
     vertical-align: middle;
@@ -114,6 +123,16 @@
 
 input[id$="varname"] {
     width: 5em;
+}
+
+.question-form input[id$="varposs"], input[id$="condition_text"] {
+    width: 25em;
+}
+
+
+
+textarea#id_question_text {
+    height: 24px;
 }
 
 div.formset {
@@ -195,8 +214,11 @@ div#validation-details {
     padding: 6px;
 }
 
-.smart-green div.formset  {
-    color: #F0F0F0;
+p.data-label {
+    margin: 11px 2px 1px;
+}
+
+.question-form div.formset  {
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;}
@@ -233,4 +255,8 @@ ul.question-list-links, ul.question-list-links li {
     margin: 0;
     padding: 0;
     font-size: 80%;
+}
+
+div.end-space {
+    height: 100ex;
 }

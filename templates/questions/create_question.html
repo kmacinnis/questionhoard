@@ -6,5 +6,13 @@
 <script type="text/javascript" src="/static/formset_handler.js"></script>
 {% endblock %}
 {% block content %}
-{% include "questions/question_form.html" with action="Create" %}
+
+{{ objective }}
+
+{% include "questions/question_form.html" %}
+
+<div class="clear"></div>
+
+<p>:-)</p>
+
 {% endblock %}

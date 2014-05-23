@@ -27,6 +27,20 @@ function delrow (event) {
 }
 
 
+function toggleviewshortwell (event) {
+    event.preventDefault();
+    var shortwell = $("#well-prompt-short")
+    if ($(shortwell).hasClass("hidden")) {
+        $(shortwell).removeClass("hidden");
+        $(this).html("Hide prompt & short version");
+    }
+    else {
+        $(shortwell).addClass("hidden");
+        $(this).html("Show prompt & short version");
+    }
+}
+
+
 
 $(document).ready(function () {
     $('.add-item').click(addrow);
@@ -34,4 +48,5 @@ $(document).ready(function () {
     $('[id$="DELETE"]').hide();
     $('.delete-header').hide();
     $('.del-item').click(delrow);
+    $("#toggle-well-prompt-short").click(toggleviewshortwell);
 });

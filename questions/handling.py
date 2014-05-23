@@ -3,6 +3,7 @@ import random
 from itertools import product as iterproduct
 from operator import itemgetter
 
+import questions.models
 import questions.mathness as mathness
 from collections import defaultdict
 import re
@@ -18,25 +19,6 @@ import sympy
 safelocals = {}
 safeglobals = {key : value for key, value 
                     in mathness.__dict__.items() if key[:2] != '__'}
-NEWLINE = '\n'
-
-
-
-# TODO:  Fix this!!!! This class is here to prevent circular imports
-class AnswerChoice(object):
-    CORRECT = 'CORR'
-    TOP3 = 'TOP3'
-    TOP4 = 'TOP4'
-    DISTRACT = 'DIST'
-    OTHER = 'OTHR'
-    VARIANT = 'VANS'
-    RANDOM = 'random'
-    LAST = 'last'
-    A = '0'
-    B = '1'
-    C = '2'
-    D = '3'
-    E = '4'
 
 
 
@@ -93,6 +75,7 @@ def condense_list_of_dicts(dicts,key):
 
 
 def handle_ordering(choice_list, correct_position=None):
+    AnswerChoice = questions.models.AnswerChoice
     # correct_answer = [c for c in choice_list 
     #                         if c['type']==AnswerChoice.CORRECT][0]
     open_positions = list(range(len(choice_list)))
@@ -129,6 +112,8 @@ def make_inline(latex):
     Takes a latex string, which may contain display math, and returns it
     with all math expressions as inline math.
     '''
+    if not latex:
+        return latex
     return latex.replace(r'\[',r'\(').replace(r'\]',r'\)')
 
 
@@ -139,6 +124,7 @@ def output_question(question, vardict):
     in that question to the values to be used.
     """
 
+    AnswerChoice = questions.models.AnswerChoice
     safelocals = vardict.copy()
 
     # Bring in the symbolic variables
@@ -150,11 +136,12 @@ def output_question(question, vardict):
 
     # Run code to establish all variable values
     exec(question.code, safeglobals, safelocals)
-
-    problem = question.body.format(**latex(safelocals))
-
-    questiontext = question.prompt + NEWLINE*2
-    questiontext += problem
+    
+    if question.short_version:
+        short_version = question.short_version.format(**latex(safelocals))
+    else:
+        short_version = None
+    questiontext = question.question_text.format(**latex(safelocals))
     
     choices = []
     for ans in question.answerchoice_set.all():
@@ -175,7 +162,7 @@ def output_question(question, vardict):
         'questiontext' : questiontext,
         'choices' : choices,
         'locals' : safelocals,
-        'Q' : make_inline(problem),
+        'Q' : make_inline(short_version),
         'A' : make_inline(answer),
     }
     return output
@@ -184,7 +171,7 @@ def output_question(question, vardict):
 
 def preview_question(question):
     try:
-        vardicts = question.validated.vardicts
+        vardicts = question.validation.vardicts
     except ObjectDoesNotExist:
         
         return defaultdict(lambda: 'ERROR! Question has not been validated.')
@@ -212,21 +199,22 @@ def validate_question(question, user):
         ✓ Code runs without errors
         ✓ Symbolic variables can all be symbol()ed
         ✓ Any random or symbolic variables are actually used in 
-          either the question_code or the question_body. 
+          either the question_code or the question_text. 
         ✓ There is exactly one answer choice with choice_type == AnswerChoice.CORRECT
         ✓ At most 3 answer choices have choice_type == TOP3
         ✓ At most 4 answer choices have choice_type == TOP3 or TOP4
         * Check for conflicting AnswerChoice pin values
+        * Strings that get .format() replacements use {{ }} properly
     
     """
-    
-    
-    
+
+
+
 
     def code_probably_safe(code=None, question=None,
                         user=None, field_name=None, **kwargs):
         if not code:
-            raise ValueError
+            return True
         spaceless_code = re.sub(r'\s','', code)
         if '(((((((' in spaceless_code:
             bad = BadCodeWarning(
@@ -264,7 +252,7 @@ def validate_question(question, user):
     def fail_response(validation_errors):
         return validation_errors
 
-
+    AnswerChoice = questions.models.AnswerChoice
     validation_errors = defaultdict(list)
     data = dict(question=question, user=user, 
                             validation_errors=validation_errors)
@@ -291,8 +279,6 @@ def validate_question(question, user):
     
     if not code_probably_safe(code=question.code, field_name='code',**data):
         validation_errors['code'].append('Potentially unsafe code in code field')
-    if not code_probably_safe(code=question.body, field_name='code',**data):
-        validation_errors['body'].append('Potentially unsafe code in body field')
     
     
     # Check that symbolic variable is a comma or space separated list
@@ -321,7 +307,7 @@ def validate_question(question, user):
     # Handle answer-choice checking.  
     
     num_correct = question.answerchoice_set.filter(
-                        choice_type=AnswerChoice.AnswerChoice.CORRECT).count()
+                        choice_type=AnswerChoice.CORRECT).count()
     num_top3 = question.answerchoice_set.filter(
                         choice_type=AnswerChoice.TOP3).count()
     num_top4 = question.answerchoice_set.filter(
@@ -341,12 +327,12 @@ def validate_question(question, user):
     
     
     # Check that all variables (random and symbolic) are used
-    words = re.split('\W+',question.code) + re.split('\W+',question.body)
+    words = re.split('\W+',question.code) + re.split('\W+',question.question_text)
     for var in sym_vars:
         if var not in words:
             err_mess = '''
             Symbolic variable {} is defined, but not used in either the 
-            question code or question body.'''.format(var)
+            question code or question text.'''.format(var)
             validation_errors['symbvar'].append(err_mess.strip())
     
     rand_vars = [r.varname for r in question.randvar_set.all()]
@@ -354,7 +340,7 @@ def validate_question(question, user):
         if var not in words:
             err_mess = '''
             Random variable {} is defined, but not used in either the 
-            question code or question body.'''.format(var)
+            question code or question text.'''.format(var)
             validation_errors['randvar'].append(err_mess.strip())
     
     
@@ -430,7 +416,7 @@ def validate_question(question, user):
     # and check for errors in the following:
     #           * exec(code)
     #           * eval(choice_expr) for each answer choice
-    safelocals = vardicts[5].copy()
+    safelocals = vardicts[0].copy()
     
     for v in sym_vars:
         exec('{v} = Symbol("{v}")'.format(v=v), safeglobals, safelocals)
@@ -462,9 +448,9 @@ def validate_question(question, user):
     else:
         
         try:
-            validation = question.validated
+            validation = question.validation
         except ObjectDoesNotExist:
-            validation = Validated(question = question)
+            validation = questions.models.Validation(question = question)
 
         validation.last_verified = datetime.datetime.now()
         validation.vardicts = vardicts

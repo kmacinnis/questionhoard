@@ -1,3 +1,5 @@
+{% load my_tags %}
+
 <div id="detail-group" class="question-details">
 
     <h1>Question Details</h1>
@@ -31,20 +33,33 @@
         Question Code:
     </p>
     <div class="data">   
-        {{ question.code|linebreaksbr }}
+        {{ question.code|code_style }}
     </div>
     <p class="data-label">   
-        Question Prompt:
+        Question Text:
     </p>
     <div class="data">   
-        {{ question.prompt }}
+        {{ question.question_text|code_style }}
     </div>
-    <p class="data-label">   
-        Main Question:
-    </p>
-    <div class="data">   
-        {{ question.body }}
-    </div>
+
+	
+	<div id="well-prompt-short" class=" row">
+		<div class="col-md-6">
+			<p class="data-label">Prompt:</p>
+		    <div class="data">   
+		        {{ question.prompt }}
+		    </div>
+		</div>
+		<div class="col-md-6">
+			<p class="data-label">Short Version:</p>
+		    <div class="data">   
+		        {{ question.short_version }}
+		    </div>
+		</div>
+	</div>
+	
+	
+	
 
     <p>
         {% include "dataset_table.html" with dataset=answerchoices_dataset %}

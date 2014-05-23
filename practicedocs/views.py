@@ -142,7 +142,7 @@ def generate_document(request, recipe_id):
                 )
                 block.save()
                 vardicts = random.sample(
-                    question.validated.vardicts, 
+                    question.validation.vardicts, 
                     block_recipe.num_exercises
                 )
                 for vardict in vardicts:

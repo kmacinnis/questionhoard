@@ -1,29 +1,41 @@
 from django.db import models
 import picklefield
 from django.contrib.auth.models import User
-from questions.handling import preview_question
+import questions.handling
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class Question(models.Model):
     name = models.CharField(unique=True, max_length=240)
     code = models.TextField(blank=True, null=True)
+    question_text = models.TextField()
     prompt = models.CharField(max_length=240, blank=True, null=True)
-    body = models.CharField(max_length=240)
+    short_version = models.CharField(max_length=240, blank=True, null=True)
     symbol_vars = models.CharField(max_length=240, blank=True, null=True)
     date_added = models.DateField(auto_now_add=True)
     created_by = models.ForeignKey(User)
     last_updated = models.DateTimeField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
+    packages = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
         return "/questions/%i/" % self.id
+    
     def preview(self):
         # TODO: questions with graphics will need a graphic preview
-        preview_dict = preview_question(self)
+        preview_dict = questions.handling.preview_question(self)
         return preview_dict['questiontext']
+    
+    @property
+    def validated(self):
+        try:
+            return (self.validation.last_verified >= self.last_updated)
+        except ObjectDoesNotExist:
+            return False
 
 
-class Validated(models.Model):
+class Validation(models.Model):
     question = models.OneToOneField(Question)
     last_verified = models.DateTimeField(null=True)
     vardicts = picklefield.PickledObjectField(null=True)

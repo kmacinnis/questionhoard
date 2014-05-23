@@ -4,13 +4,14 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-# from django.views.generic import CreateView, UpdateView, FormView
-from vanilla import CreateView, UpdateView, FormView
+from django.views.generic import CreateView, UpdateView, FormView
+# from vanilla import CreateView, UpdateView, FormView
 
 
 from questions.models import *
 from questions.forms import *
 from questions.handling import validate_question, preview_question
+from organization.models import Objective
 
 import logging
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -42,10 +43,7 @@ def detail(request, question_id):
     condition_formset.extra = 0
     answerchoices_formset = AnswerChoicesInline(instance=q)
     answerchoices_formset.extra = 0
-    try:
-        is_validated = (q.validated.last_verified >= q.last_updated)
-    except ObjectDoesNotExist:
-        is_validated = False
+    is_validated = q.validated
     variables = RequestContext(request,
         {
             'question' : q,
@@ -73,10 +71,18 @@ def preview(request, question_id):
 
 
 @login_required
-def create_question(request):
+def create_question(request,**kwargs):
+    objective_id = kwargs.get('obj_id','')
+    if objective_id:
+        objective = Objective.objects.get(id=objective_id)
+        logging.debug(objective)
+    else:
+        objective = ''
+
     if request.POST:
         question = Question(created_by=request.user)
         form = QuestionEntryForm(request.POST, instance=question)
+        logging.debug(form)
         if form.is_valid():
             question = form.save(commit=False)
             randvar_formset = RandVarsInline(request.POST, instance=question)
@@ -89,6 +95,8 @@ def create_question(request):
                 randvar_formset.save()
                 condition_formset.save()
                 answerchoices_formset.save()
+                if objective:
+                    question.objective_set.add(objective)
                 return HttpResponseRedirect(
                     "/questions/{}".format(question.id))
     else: #request.GET
@@ -102,6 +110,9 @@ def create_question(request):
         'randvar_formset' : randvar_formset,
         'condition_formset' : condition_formset,
         'answerchoices_formset' : answerchoices_formset,
+        'action' : 'Create',
+        'objective' : objective,
+
     })
     return render_to_response('questions/create_question.html',variables)
 
@@ -112,7 +123,13 @@ class CreateQuestion(CreateView):
     form_class = QuestionEntryForm
     
     def get_context_data(self, **kwargs):
-        context = super(CreateQuestion, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        objective_id = self.kwargs.get('obj_id')
+        if objective_id:
+            context['objective'] = Objective.objects.get(id=objective_id)
+            logging.debug(context['objective'])
+        
+        context['action'] = 'Create'
         if self.request.POST:
             context['randvar_formset'] = RandVarsInline(self.request.POST)
             context['condition_formset'] = ConditionsInline(self.request.POST)
@@ -124,23 +141,40 @@ class CreateQuestion(CreateView):
         return context
     
     def form_valid(self, form):
+        self.object = form.save(commit=False)
         context = self.get_context_data()
-        randvar_formset = context['randvar_formset']
-        if randvar_formset.is_valid():
-            self.object = form.save()
-            randvar_formset.instance = self.object
-            randvar_formset.save()
-            return HttpResponseRedirect(self.object.get_absolute_url())  
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
+        
+        randvar_formset = RandVarsInline(self.request.POST, instance=self.object)
+        condition_formset = ConditionsInline(self.request.POST, instance=self.object)
+        answerchoices_formset = AnswerChoicesInline(self.request.POST, instance=self.object)
 
-    def post(self, request):
+        all_formsets = [randvar_formset, condition_formset, answerchoices_formset]
+        if all([f.is_valid() for f in all_formsets]):
+            # lg.debug('good formsets')
+            self.object.save()
+            randvar_formset.save()
+            condition_formset.save()
+            answerchoices_formset.save()
+            # check to see if we're assigning an objective to this question:
+            if 'objective' in context:
+                self.object.objective_set.add(context['objective'])
+
+            return HttpResponseRedirect(self.object.get_absolute_url())  
+        else: # there's a problem with one of the formsets
+            context['form'] = form
+            context['randvar_formset'] = randvar_formset
+            context['condition_formset'] = condition_formset
+            context['answerchoices_formset'] = answerchoices_formset
+            return self.render_to_response(context)
+
+    def post(self, request,**kwargs):
         question = Question(created_by=request.user)
         form = QuestionEntryForm(request.POST, instance=question)
         if form.is_valid():
             return self.form_valid(form)
 
 
+        
 
 class EditQuestion(UpdateView):
     model = Question
@@ -149,6 +183,7 @@ class EditQuestion(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditQuestion, self).get_context_data(**kwargs)
+        context['action'] = 'Edit'
         context['randvar_formset'] = RandVarsInline(instance=self.object)
         context['condition_formset'] = ConditionsInline(instance=self.object)
         context['answerchoices_formset'] = AnswerChoicesInline(instance=self.object)
@@ -174,7 +209,7 @@ class EditQuestion(UpdateView):
                     reverse('validate', kwargs={'pk': self.object.id}))
 
             return HttpResponseRedirect(self.object.get_absolute_url())  
-        else:
+        else: # there's a problem with one of the formsets
             context['form'] = form
             context['randvar_formset'] = randvar_formset
             context['condition_formset'] = condition_formset
@@ -188,10 +223,7 @@ class ValidateQuestion(EditQuestion):
     def get_context_data(self, **kwargs):
         context = super(ValidateQuestion, self).get_context_data(**kwargs)
         q = self.object
-        try:
-            is_validated = (q.validated.last_verified > q.last_updated)
-        except ObjectDoesNotExist:
-            is_validated = False
+        is_validated = q.validated
         if not is_validated:
             context['validation_errors'] = validate_question(
                                             self.object, self.request.user)

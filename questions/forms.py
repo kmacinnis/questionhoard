@@ -17,10 +17,9 @@ class RandVarsInlineForm(forms.ModelForm):
         return
     
     def clean_varname(self):
-        '''
-        TODO: Figure out why this doesn't work.  
-        In the meantime, we will check for errors when validating the question.
-        '''
+        # TODO: Figure out why this doesn't work.  
+        # In the meantime, we will check for errors when validating the question.
+
         vname = self.cleaned_data['varname']
         if not valid_varname.match(vname):
             err_mess = '''
@@ -62,6 +61,7 @@ AnswerChoicesInline.description = "AnswerChoice"
 
 
 class QuestionEntryForm(forms.ModelForm):
+    
     class Meta:
         model = Question
         exclude = ('created_by',)

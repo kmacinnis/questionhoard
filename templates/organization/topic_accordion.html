@@ -63,6 +63,9 @@
 																	</div>
 																{% endfor %}   {# question loop #}
 															</div>
+															<a href="{% url 'create_question_for_objective' obj_id=objective.id  %}">
+																Create new question for this objective.
+															</a>
 														</div>
 													</div>
 												</div>
