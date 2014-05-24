@@ -36,6 +36,8 @@ class ExamPartRecipe(models.Model):
 class ExamRecipeItem(models.Model):
     '''
     This class is intended to be inherited by 
+    ExamRecipeQuestion and ExamRecipePool.
+    
     
     '''
     objects = InheritanceManager()
@@ -44,9 +46,10 @@ class ExamRecipeItem(models.Model):
     order = models.IntegerField()
     name = models.CharField(max_length=250)
     question_style = models.CharField(max_length=3,choices=BASIC_QUESTION_TYPES)
+    space_after = models.CharField(max_length=10, default="5mm")
 
 
-class ExamRecpeQuestion(ExamRecipeItem):
+class ExamRecipeQuestion(ExamRecipeItem):
     question = models.ForeignKey(Question)
 
 
@@ -75,13 +78,14 @@ class ExamQuestion(models.Model):
     vardict = picklefield.PickledObjectField()
     part = models.ForeignKey(ExamPart)
     order = models.IntegerField()
-    
+    space_after = models.CharField(max_length=10)
+
 
 class ExamAnswerChoice(models.Model):
     exam_question = models.ForeignKey(ExamQuestion)
     answer_choice = models.ForeignKey(AnswerChoice)
     choice_label = models.CharField(max_length=3)
-    
+
 
 
 
