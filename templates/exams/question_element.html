@@ -1,0 +1,33 @@
+<div class="questionform" id="id_{{ form.prefix }}">
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
+	{# <div class="col-md-1 order"> #}
+	{# 	{{ form.order.errors }} #}
+	{# 	{{ form.order }} #}
+	{# </div> #}
+	{# <div class="col-md-1 order"> #}
+	{# 	{{ form.question.errors }} #}
+	{# 	{{ form.question }} #}
+	{# </div> #}
+	<div class="col-md-7">
+		<h5>{{ form.instance.question.name }} </h5>
+	</div>
+	{# <div class="col-md-2"> #}
+	{# 	{{ form.name.errors }} #}
+	{# 	{{ form.name }} #}
+	{# </div> #}
+	<div class="col-md-2">
+		{{ form.question_style.errors }}
+		{{ form.question_style }}
+	</div>
+	<div class="col-md-2">
+		{{ form.space_after.errors }}
+		{{ form.space_after }}
+	</div>
+	<div class="col-md-1 delete-link small">
+		<a href="#" class="small delete-block">Delete</a>
+		<span class="hidden">{{ form.DELETE }}</span>
+	</div>
+</div>
+

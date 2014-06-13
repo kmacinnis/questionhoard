@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Add Part{% endblock title %}
+
+{% block content %}
+
+	<form method="post" action="." class="exam-info-form">
+		{% csrf_token %}
+
+			{{ form.as_p }}
+
+		<input type="submit" name="submit" value="Save and Add Questions" id="submit">
+	</form>
+
+
+{% endblock content %}

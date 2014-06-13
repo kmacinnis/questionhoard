@@ -1,2 +1,12 @@
 TM_PYTHON = "$HOME/.envs/dragon/bin/python"
+DJANGO_SETTINGS_MODULE = "settings"
 excludeDirectories = "{migrations,__pycache__}"
+
+[ *.py ]
+fileType         = source.python.django
+
+[ *.tex ]
+fileType         = text.tex.latex.django
+
+[*.html]
+fileType         = text.html.django

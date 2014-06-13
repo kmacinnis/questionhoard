@@ -24,7 +24,7 @@
 				{% csrf_token %}
 				{{ form.errors }}
 				{{ form.as_p }}
-				{% include "formset_sortable.html" with formset=blockrecipe_formset %}
+				{% include "practicedocs/formset_sortable.html" with formset=blockrecipe_formset %}
 				<input type="submit" value="Save" />
 			</form>
 		</div>

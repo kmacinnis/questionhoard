@@ -16,41 +16,42 @@
 \setlength{\spacing}{1in plus 1fil}
 
 \settasks{
-    counter-format	= tsk. ,
-    item-indent		= 2em ,
-    label-width		= 2 em,
-    resume			= true,
-    after-item-skip	= \spacing,
-    after-skip		= \spacing
+    counter-format  = tsk. ,
+    item-indent     = 2em ,
+    label-width     = 2 em,
+    resume          = true,
+    after-item-skip = \spacing,
+    after-skip      = \spacing
     }
 
 
 \newcommand{\resetspacing}[1]{
-	\setlength{\spacing}{#1 plus 1fil}
-	\settasks{after-item-skip = \spacing,after-skip=\spacing}
-	}
-
+    \setlength{\spacing}{ #1 plus 1fil }
+    \settasks{after-item-skip = \spacing,after-skip=\spacing}
+    }
 
 
 
 \begin{document}
 
-\section{  {{ doc.title }}  }
+\section{  {{ doc.title }} }
 
 
 
 {% for task_set in task_sets %}
 
 
-	\resetspacing{ {{task_set.space_after}} }
+    \resetspacing{ {{task_set.space_after}} }
 
-	{{ task_set.prompt }}
-	\begin{tasks}( {{ task_set.num_columns }} )
-		{% for exercise in task_set.tasks %}
-			\task {{ exercise.Q }}
-		{% endfor %}
+    {% ifchanged %}
+    {{ task_set.prompt }}
+    {% endifchanged %}
+    \begin{tasks}( {{ task_set.num_columns }} )
+        {% for exercise in task_set.tasks %}
+            \task {{ exercise.Q }}
+        {% endfor %}
 
-	\end{tasks}
+    \end{tasks}
 
 {% endfor %}
 

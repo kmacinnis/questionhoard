@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Exam List{% endblock title %}
+
+{% block content %}
+
+<ul>
+{% for recipe in object_list %}
+	<li>
+		<a href="{% url 'ExamRecipeDetail' recipe.id %}">{{ recipe.private_title }}</a>
+	</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'CreateExamRecipe' %}">Create New Exam Recipe</a>
+
+{% endblock content %}

@@ -3,6 +3,8 @@ from django.shortcuts import render
 from vanilla import CreateView, UpdateView, FormView, ListView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from nested_formset import nestedformset_factory
+
 
 from simplified.models import *
 from simplified.forms import FooForm, BarInline
@@ -62,3 +64,22 @@ class EditFoo(UpdateView):
 # return render_to_response('authors_books_edits.html', {'author': a, 'authorsbooks': authorsbooks, 'formset': formset, 'form_errors': form_errors}, context_instance=RequestContext(request))
             return self.render_to_response(context)
 
+
+class NestedFoo(UpdateView):
+    model = Foo
+
+    def get_template_names(self):
+
+        return ['nested_foo.html']
+
+    def get_form_class(self):
+
+        return nestedformset_factory(
+            Foo,
+            Bar,
+            Meep,
+        )
+
+    def get_success_url(self):
+        return reverse('listfoo')
+    

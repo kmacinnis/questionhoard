@@ -1,0 +1,77 @@
+{% autoescape off %}\documentclass[12pt]{exam}
+\usepackage{amsmath}
+\usepackage{mathpazo}
+\usepackage{color}
+{% for package in packages %}
+	\usepackage{package}
+{% endfor %}
+
+
+\CorrectChoiceEmphasis{\color{red}}
+\printanswers
+
+\firstpageheader{ {{ header_left }} } { {{ header_center }} } { {{ header_right }} }
+\footer{}{\thepage}{}
+\parindent=0in
+
+\newcommand{\examtitle}[1]{ {\centering\large\bfseries{ #1 }\par} }
+\newcommand{\parttitle}[1]{ \fullwidth{\centering{ #1 }\par} }
+\newcommand{\examinstructions}[1]{ \fullwidth{\footnotesize #1} }
+\renewcommand{\choicelabel}{\bf\thechoice.}
+ {#  TODO: try and remember why I do this: #}
+ {#  \newcommand{\closecorrect}{\ifprintanswers \endgroup \fi} #}
+\extraheadheight[.3in]{0in}
+
+{{ header_stuff }}
+
+\begin{document}
+\examtitle{ {{ exam.title }} }
+
+{% for part in exam.exampart_set.all %}
+{% if part.show_title %}
+\parttitle{ {{ part.title }} }
+{% endif %}
+{% if part.question_style == 'oa' %}
+
+{% for question in part.examquestion_set.all %}
+\begin{minipage}{\linewidth}
+	
+\question {{ question.question_text }}
+\vspace{ {{ question.space_after }} }
+\end{minipage}
+{% endfor %}
+
+{% elif part.question_style == 'mc' %}
+
+{% for question in part.examquestion_set.all %}
+\begin{minipage}{\linewidth}
+\question {{ question.question_text }}
+	\begin{choices}
+	{% for choice in question.examanswerchoice_set.all %}{% if choice.correct %}	\CorrectChoice {% else %}	\choice {% endif %}{{ choice.choice_text }} {% if choice.comment %}% {{ choice.comment }}{% endif %}
+	{% endfor %}\end{choices}
+\vspace{ {{ question.space_after }} }
+\end{minipage}
+{% endfor %}
+
+{% else %}
+
+{% for question in part.examquestion_set.all %}
+\begin{minipage}{\linewidth}
+\question {{ question.question_text }}
+{% if question.item.question_style == 'mc' %}
+	\begin{choices}
+	{% for choice in question.examanswerchoice_set.all %}{% if choice.correct %}	\CorrectChoice {% else %}	\choice {% endif %}{{ choice.choice_text }} {% if choice.comment %}% {{ choice.comment }}{% endif %}
+	{% endfor %}\end{choices}
+{% endif %}
+\vspace{ {{ question.space_after }} }
+\end{minipage}
+
+{% endfor %}
+{% endif %}
+\pagebreak
+{% endfor %}  {# parts forloop #}
+
+\end{questions}
+\end{document}
+
+{% endautoescape %}

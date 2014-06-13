@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import questions.handling
 from django.core.exceptions import ObjectDoesNotExist
 
+import random
 
 class Question(models.Model):
     name = models.CharField(unique=True, max_length=240)
@@ -33,6 +34,12 @@ class Question(models.Model):
             return (self.validation.last_verified >= self.last_updated)
         except ObjectDoesNotExist:
             return False
+    
+    def random_vardict(self):
+        try:
+            return random.choice(self.validation.vardicts)
+        except ObjectDoesNotExist:
+            raise ValueError("Question has not yet been validated.")
 
 
 class Validation(models.Model):
@@ -98,8 +105,11 @@ class AnswerChoice(models.Model):
     pin = models.CharField(max_length=6, choices=PIN_TYPES, default=RANDOM)
     comment = models.CharField(max_length=240, blank=True, null=True)
     def __str__(self):
-        return "Answer Choice «{0}» in Question {1}".format(
+        if self.choice_expr:
+            return "Answer Choice «{0}» in Question {1}".format(
                                     self.choice_expr, self.question)
+        return "Answer Choice «{0}» in Question {1}".format(
+                                    self.choice_text, self.question)
 
 
 

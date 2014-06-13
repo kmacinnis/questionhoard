@@ -72,7 +72,7 @@ def view_document(request, document_id, filetype):
         raise Http404
 
 
-class EditRecipe(UpdateView):
+class EditDocRecipe(UpdateView):
     model = DocumentRecipe
     template_name = 'practicedocs/edit_docrecipe.html'
     form_class = DocRecipeNameForm
@@ -91,7 +91,6 @@ class EditRecipe(UpdateView):
                 self.request.POST, instance=self.object)
         if blockrecipe_formset.is_valid():
             form.save()
-            print('hello')
             blockrecipe_formset.save()
             return HttpResponseRedirect(self.object.get_absolute_url())
         else:

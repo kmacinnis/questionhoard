@@ -75,23 +75,40 @@ def condense_list_of_dicts(dicts,key):
 
 
 def handle_ordering(choice_list, correct_position=None):
+    '''
+    Takes a list of choice dictionaries, randomly
+    sets a position key on each, respecting pinned choices,
+    and returns the choice_list sorted by that position.
+    
+    If passed a value for correct_position, it must be an
+    integer less than the length of the choice_list.
+    
+    '''
     AnswerChoice = questions.models.AnswerChoice
-    # correct_answer = [c for c in choice_list 
-    #                         if c['type']==AnswerChoice.CORRECT][0]
+    correct_answer = [c for c in choice_list if c['correct']][0]
     open_positions = list(range(len(choice_list)))
-    if correct_position != None:
-        correct_answer['position'] = int(correct_position)
-        open_positions.remove(int(correct_position))
     pinned_choices = [c for c in choice_list 
                             if c['pin'] != AnswerChoice.RANDOM]
+    if correct_position != None:
+        if correct_position not in open_positions:
+            raise ValueError("correct_position must be an integer less than the length of choice_list")
+        correct_answer['position'] = correct_position
+        open_positions.remove(correct_position)
+        try:
+            pinned_choices.remove(correct_answer)
+        except ValueError:
+            pass
     for choice in pinned_choices:
         if choice['pin'] == AnswerChoice.LAST:
             choice['position'] = len(choice_list) - 1
         else:
             choice['position'] = int(choice['pin'])
         open_positions.remove(choice['position'])
-    randomized_choices = [c for c in choice_list 
-                            if c['pin'] == AnswerChoice.RANDOM]
+    randomized_choices = [
+        choice for choice in choice_list 
+        if (choice['pin'] == AnswerChoice.RANDOM) 
+        and (choice.get('position','empty') == 'empty')
+    ]
     random.shuffle(open_positions)
     for pos, choice in zip(open_positions,randomized_choices):
         choice['position'] = pos
@@ -99,7 +116,7 @@ def handle_ordering(choice_list, correct_position=None):
 
 
 def latex(thing):
-    # I think we need to make this latexify anything.  For now, it's sympy objects and dictionaries.  Need to at least add lists and tuples.
+    # TODO I think we need to make this latexify anything.  For now, it's sympy objects and dictionaries.  Need to at least add lists and tuples.
     if isinstance(thing, sympy.Basic):
         return sympy.latex(thing)
     if isinstance(thing, dict):
@@ -117,11 +134,14 @@ def make_inline(latex):
     return latex.replace(r'\[',r'\(').replace(r'\]',r'\)')
 
 
-def output_question(question, vardict):
+def output_question(question, vardict, set_choice_position=True):
     """
+    Returns a dictionary 
     question should be a Question object, and 
     vardict should be a dictionary mapping the random variables
     in that question to the values to be used.
+    order_choices should be boolean.  If true, the dictionary will 
+    include a key 'position', and will be sorted on that key.
     """
 
     AnswerChoice = questions.models.AnswerChoice
@@ -145,7 +165,9 @@ def output_question(question, vardict):
     
     choices = []
     for ans in question.answerchoice_set.all():
-        exec('choice_expr = {}'.format(ans.choice_expr),safeglobals,safelocals)
+        if ans.choice_expr:
+            exec('choice_expr = {}'.format(ans.choice_expr),
+                    safeglobals,safelocals)
         choice = ans.choice_text.format(**latex(safelocals))
         choices.append({'text':choice,'type':ans.choice_type,'pin':ans.pin})
     choices = condense_list_of_dicts(choices,'text')
@@ -156,8 +178,9 @@ def output_question(question, vardict):
         if len(choice['pin']) == 1:
             choice['pin'] = list(choice['pin'])[0]
         else:
-            raise ValueError('Pin conflict!!!')
-    choices = handle_ordering(choices)
+            raise NotImplementedError('Pin conflict!!!')
+    if set_choice_position:
+        choices = handle_ordering(choices)
     output = {
         'questiontext' : questiontext,
         'choices' : choices,
@@ -204,7 +227,11 @@ def validate_question(question, user):
         ✓ At most 3 answer choices have choice_type == TOP3
         ✓ At most 4 answer choices have choice_type == TOP3 or TOP4
         * Check for conflicting AnswerChoice pin values
+          (including no LAST and E in TOP4 and no LAST and D in TOP3)
         * Strings that get .format() replacements use {{ }} properly
+        * Strings that get .format() replacements check for {0} and warn.
+        * Give warning to user when different AnswerChoices return the
+          same value for some particular vardict
     
     """
 
@@ -432,7 +459,9 @@ def validate_question(question, user):
         '''.format(error=exception)
         validation_errors['code'].append(err_mess.strip())
     
-    choice_exprs = [a.choice_expr for a in question.answerchoice_set.all()]
+    choice_exprs = [
+        a.choice_expr for a in question.answerchoice_set.all() if a.choice_expr
+    ]
     for choice_expr in choice_exprs:
         try:
             evaled = eval(choice_expr, safeglobals,safelocals)

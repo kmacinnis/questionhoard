@@ -13,6 +13,12 @@ def temp(request):
             )
 
 
+def not_implemented(request):
+    return render_to_response(
+            'not_implemented.html',
+            RequestContext(request)
+            )
+
 
 
 def main_page(request):

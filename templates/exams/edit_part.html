@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Edit Exam Part Recipe{% endblock title %}
+
+{% block external %}
+	{% include "scripts_jquery_ui_bootstrap.html" %}
+	{% include "scripts_mathjax.html" %}
+	{% load static %}
+	<script src="{% static 'questionformset_handler.js' %}"></script>
+	
+{% endblock external %}
+
+{% load bootstrap3 %}
+
+
+{% block content %}
+
+<div id="part-recipe-id" class="hidden">{{ object.id }}</div>
+
+<div class="row">
+	<div class="col-md-3">
+		{% include "organization/topic_accordion.html" with question_display="addable" %}
+	</div>
+	<div class="col-md-9">
+		<form action="" method="post" class="form-horizontal">
+			<div class="well well-sm row">
+				<div class="basic-part-info">
+					{{ form.non_field_errors }}
+					{% csrf_token %}
+					{{ form.errors }}
+				
+					<div class="form-group col-md-10">
+						<label for="id_title" class="control-label">Part Title</label>
+						{{ form.title.errors }}
+						{{ form.title }}
+					</div>
+					<div class="form-group col-md-2">
+						<div class="checkbox">
+							<label for="id_show_title">
+								{{ form.show_title.errors }}
+								{{ form.show_title }}
+							 Show part title in document
+						 </label>
+						</div>
+					</div>
+					<div class="form-group col-md-12">
+						<label for="id_instructions" class="control-label">Instructions</label>
+						{{ form.instructions.errors }}
+						{{ form.instructions }}
+					</div>
+					<div class="form-group col-md-12">
+						<label for="id_question_style" class="control-label">Question style</label>
+						{{ form.question_style.errors }}
+						{{ form.question_style }}
+					</div>
+				</div>
+
+				<div class="clearfix"></div>
+
+				<div class="blah">
+					{% include "exams/question_formset.html" with formset=question_formset %}
+				</div>
+				<input type="submit" value="Save" />
+			</div>
+		</form>
+		<a href="{% url 'AddPoolToPart' exampartrecipe.id %}">Add question pool to {{exampartrecipe.id}}</a>
+	</div>
+</div>
+
+{% endblock content %}

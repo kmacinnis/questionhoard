@@ -13,3 +13,10 @@ class Bar(models.Model):
     barname = models.CharField(max_length=10)
     def __str__(self):
         return "«{}» for Foo {}".format(self.barname, self.foo_id)
+
+
+class Meep(models.Model):
+    bar = models.ForeignKey(Bar)
+    meepname = models.CharField(max_length=10)
+    def __str__(self):
+        return self.meepname

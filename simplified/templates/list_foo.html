@@ -5,7 +5,11 @@
 
 <ul>
     {% for foo in foo_list %}
-        <li><a href="{% url 'editfoo' foo.id %}">{{ foo.name }}</a></li>
+        <li>
+					{{ foo.name }}
+					[<a href="{% url 'editfoo' foo.id %}">Edit</a>]
+					[<a href="{% url 'nestedfoo' foo.id %}">Edit Nested</a>]
+				</li>
     {% endfor %}
 </ul>
 

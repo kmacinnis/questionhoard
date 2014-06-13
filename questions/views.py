@@ -167,7 +167,7 @@ class CreateQuestion(CreateView):
             context['answerchoices_formset'] = answerchoices_formset
             return self.render_to_response(context)
 
-    def post(self, request,**kwargs):
+    def post(self, request, **kwargs):
         question = Question(created_by=request.user)
         form = QuestionEntryForm(request.POST, instance=question)
         if form.is_valid():

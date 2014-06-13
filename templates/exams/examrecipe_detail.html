@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block external %}
+	{% include "scripts_jquery_ui_bootstrap.html" %}
+{% endblock external %}
+
+
+{% block head %}
+<style>
+.exam-set1 {
+	background-color: #D1DFE0
+}
+.exam-set2 {
+	background-color: #B5F0F7;
+}
+	
+</style>
+{% endblock head %}
+
+
+{% block content %}
+
+<h5>Basic Exam Info</h5>
+<p>Private Title: {{ exam_recipe.private_title }}</p>
+<p>Display Title: {{ exam_recipe.display_title }}</p>
+<p>Form Number Style: {{ exam_recipe.form_number_style }}</p>
+<p>Number of Forms: {{ exam_recipe.number_of_forms }}</p>
+<p><a href="{% url 'EditExamRecipe' exam_recipe.id %}">Edit Basic Info</a></p>   
+
+
+<h5>Exam Parts</h5>
+
+
+<ul>
+	{% for part in exam_recipe.exampartrecipe_set.all %}
+		<li>
+			{{ part.title }}
+			({{ part.question_style_text }})
+			<a href="{% url 'PartRecipeDetail' exam_recipe_id=exam_recipe.id pk=part.id %}" class="edit-link">view</a>
+			{% if not exam_recipe.frozen %}
+				<a href="{% url 'EditPartRecipe' part.id %}" class="edit-link">edit</a>
+			{% endif %}
+			<br/>
+			{{ part.simple_questions_count }} Questions
+			<ul>
+				{% for question in part.simple_questions_list %}
+					<li>{{ question.name }}</li>
+				{% endfor %}
+			</ul>
+		</li>
+	{% endfor %}
+</ul>
+{% if not exam_recipe.frozen %}
+	<p>
+		<a href="{% url 'CreateExamPartRecipe' exam_id=exam_recipe.id %}">
+			Add New Part
+		</a>
+	</p>
+{% else %}
+	<p>
+		<a id="unfreeze-link" href="#">
+			Make changes to questions on this exam
+		</a>
+	</p>
+	<div class="unfreeze-panel hidden">
+		This question already has exams associated with it,
+		Do you want to:
+		<ol>
+			<li>
+				<a href="{% url 'UnfreezeRecipe' exam_recipe_id=exam_recipe.id action='keep' %}">
+					Keep the exams and disassociate them with this recipe
+			</li>
+			<li>
+				<a href="{% url 'UnfreezeRecipe' exam_recipe_id=exam_recipe.id action='delete' %}">
+					Delete the exams
+				</a>
+			</li>
+			
+			<li>
+				<a href="{% url 'DuplicateExamRecipe' recipe_id=exam_recipe.id %}">
+					Leave the exams alone, duplicate the recipe and edit the new recipe
+				</a>
+			</li>
+			<li>
+				<a href="{% url 'ExamRecipeDetail' exam_recipe.id %}">
+					Cancel and change nothing
+				</a>
+			</li>
+		</ol>
+	</div>
+
+{% endif %}
+
+
+<h5>Exams Generated From This Recipe:</h5>
+
+<div class="col-md-6">
+	{% for exam_set in exam_recipe.generatedset_set.all %}
+		<div class="{% cycle 'exam-set1' 'exam-set2' %} exam-set">
+			<h6>{{ exam_set.date_created }}</h6>
+			<ul>
+				{% for exam in exam_set.exam_set.all %}
+					<li>
+						{{ exam.title }}
+						(Form {{ exam.form }})
+						<a href="{% url 'ViewExam' exam.id 'tex' %}"> [tex] </a> 
+						<a href="{% url 'ViewExam' exam.id 'pdf' %}"> [pdf] </a> 
+					</li>
+				{% endfor %}
+			</ul>
+	
+		</div>
+	
+	{% endfor %}
+</div>
+
+
+<div class="clearfix"></div>
+
+<p><a href="{% url 'GenerateExam' recipe_id=exam_recipe.id %}">Generate a set of exams from this recipe</a></p>
+
+
+{% endblock content %}
+
+{% block bodyscripts %}
+<script>
+function unfreeze (event) {
+	event.preventDefault()
+	$(".unfreeze-panel").removeClass("hidden")	
+}
+
+$(document).ready(function () {
+	$("#unfreeze-link").click(unfreeze);
+})
+</script>
+
+{% endblock bodyscripts %}

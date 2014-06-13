@@ -2,6 +2,17 @@ from django import forms
 import re
 from django.contrib.auth.models import User
 
+FORM_INLINE = 'form-inline'
+FORM_CONTROL = 'form-control'
+INPUT_SIZE = 'input-sm'
+
+CLASS_INLINE = {'class':FORM_INLINE}
+CLASS_CONTROL = {'class':' '.join((FORM_CONTROL,INPUT_SIZE))}
+
+
+
+
+
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(label='Username', max_length=30)

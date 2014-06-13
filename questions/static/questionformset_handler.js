@@ -11,16 +11,18 @@ function addblock (event) {
     event.preventDefault();
     var link_id = this.attributes["id"].value;
     var question_id = link_id.split('-')[2];
-    var docrecipe_id = $("#doc-recipe-id").text();
-    var count = $('.blockform').length;
-    $("#id_blockrecipe_set-TOTAL_FORMS").attr('value',count+1);
+    var partrecipe_id = $("#part-recipe-id").text();
+    var count = $('.questionform').length;
+    var style = $("#id_question_style").val()
+    $("#id_examrecipequestion_set-TOTAL_FORMS").attr('value',count+1);
     request_data = {
         'question_id': question_id,
-        'docrecipe_id': docrecipe_id,
-        'form_num': count
+        'partrecipe_id': partrecipe_id,
+        'form_num': count,
+        'style': style,
     };
     $("#sortable").append('<div class="ajax-placeholder">placeholder</div>');
-    $.get( "/practicedocs/new_blockrecipe_form/", 
+    $.get( "/exams/new_erq_form/", 
         request_data,
         function (response) {
             $(".ajax-placeholder").html(response);
