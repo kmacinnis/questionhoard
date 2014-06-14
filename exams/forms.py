@@ -97,6 +97,7 @@ class PoolForm(forms.ModelForm):
         model = ExamRecipePool
         fields = (
             'part',
+            'order',
             'name',
             'question_style',
             'space_after',
@@ -104,7 +105,7 @@ class PoolForm(forms.ModelForm):
         )
         widgets = {
             'part' : forms.HiddenInput(),
-            'order' : forms.HiddenInput()
+            'order' : forms.HiddenInput(),
         }
 
 

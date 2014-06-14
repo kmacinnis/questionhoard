@@ -28,9 +28,10 @@
 
 				<div class="basic-part-info">
 					{{ form.non_field_errors }}
-					{% csrf_token %}
 					{{ form.errors }}
-
+					{% csrf_token %}
+					{{ form.part.as_hidden }}
+					{{ form.order.as_hidden }}
 					<div class="form-group col-md-10">
 						<label for="id_title" class="control-label">Question pool name</label>
 						{{ form.name.errors }}

@@ -46,15 +46,21 @@ class ExamPartRecipe(models.Model):
     QUESTION_TYPES = BASIC_QUESTION_TYPES + [('mix', 'mixture'),]
     question_style = models.CharField(max_length=3, choices=QUESTION_TYPES)
     
+    def __str__(self):
+        return "{0} ({1})".format(self.title,self.id)
+    
     def question_style_text(self):
         return self.QUESTION_TYPES[self.question_style]
     
     def simple_questions_count(self):
+        # TODO: This doesn't distinguish between questions and pools
         return self.examrecipeitem_set.select_subclasses(
                                         "examrecipequestion").count()
     def simple_questions_list(self):
+        # TODO: This doesn't distinguish between questions and pools
         return self.examrecipeitem_set.select_subclasses(
                                         "examrecipequestion")
+                                        
 
 
 class ExamRecipeItem(models.Model):
@@ -72,13 +78,16 @@ class ExamRecipeItem(models.Model):
     question_style = models.CharField(max_length=3,choices=BASIC_QUESTION_TYPES)
     space_after = models.CharField(max_length=10, default="5mm")
 
+    def __str__(self):
+        return self.name
+
 
 class ExamRecipeQuestion(ExamRecipeItem):
     question = models.ForeignKey(Question)
 
 
 class ExamRecipePool(ExamRecipeItem):
-    questions = models.ManyToManyField(Question)
+    questions = models.ManyToManyField(Question, blank=True)
     choose = models.IntegerField()
 
 

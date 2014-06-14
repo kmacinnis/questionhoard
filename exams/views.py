@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render_to_response
 from vanilla import ListView, DetailView, CreateView, UpdateView
+from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -7,6 +8,7 @@ from django.db.models import Max
 from django.db import transaction
 
 from copy import deepcopy
+from collections import Counter
 
 from exams.models import *
 from exams.forms import *
@@ -127,6 +129,26 @@ def ajax_add_examrecipequestion(request):
 @login_required
 @transaction.atomic
 def generate_exam(request, recipe_id):
+    
+    def append_question(question, item, part, question_counter):
+        vardict = question.random_vardict()
+        text = output_question(
+                question, vardict, set_choice_position=False)['questiontext']
+        
+        new_question = ExamQuestion(
+            question = question,
+            vardict = vardict,
+            part = part,
+            item = item,
+            question_text = text,
+            order = question_counter,
+            space_after = item.space_after,
+        )
+        new_question.save()
+        
+        
+        
+        
     exam_recipe = get_object_or_404(ExamRecipe,id=recipe_id)
     generated_set = GeneratedSet(
         recipe = exam_recipe,
@@ -140,8 +162,9 @@ def generate_exam(request, recipe_id):
             form = get_form_number(exam_recipe.form_number_style, i),
         )
         exam.save()
-        question_counter = 1
+        question_counter = 0
         for part_recipe in exam_recipe.exampartrecipe_set.all():
+            
             part = ExamPart(
                 exam = exam,
                 title = part_recipe.title,
@@ -153,25 +176,29 @@ def generate_exam(request, recipe_id):
             part.save()
             for item in part_recipe.examrecipeitem_set.select_subclasses():
                 if isinstance(item,ExamRecipeQuestion):
-                    vardict = item.question.random_vardict()
-                    text = output_question(
-                        item.question,vardict, set_choice_position=False
-                    )['questiontext']
-                    q = ExamQuestion(
-                        question = item.question,
-                        vardict = vardict,
-                        part = part,
-                        item = item,
-                        question_text = text,
-                        order = question_counter,
-                        space_after = item.space_after,
-                    )
-                    q.save()
                     question_counter += 1
+                    append_question(item.question, item, part, question_counter)
+                    # vardict = item.question.random_vardict()
+                    # text = output_question(
+                    #     item.question,vardict, set_choice_position=False
+                    # )['questiontext']
+                    # q = ExamQuestion(
+                    #     question = item.question,
+                    #     vardict = vardict,
+                    #     part = part,
+                    #     item = item,
+                    #     question_text = text,
+                    #     order = question_counter,
+                    #     space_after = item.space_after,
+                    # )
+                    # q.save()
                 elif isinstance(item,ExamRecipePool):
-                    raise NotImplementedError(
-                        "Question pools are not yet implemented"
+                    question_list = random.sample(
+                            item.questions.all(), item.choose
                     )
+                    for q in question_list:
+                        question_counter += 1
+                        append_question(q, item, part, question_counter)
                 else:
                     raise ValueError("That's weird")
             if part_recipe.question_style == 'mc':
@@ -267,18 +294,19 @@ def duplicate_exam_recipe(request, recipe_id):
     return HttpResponseRedirect(recipe_copy.get_absolute_url())
 
 
-class AddPool(CreateView):
+class AddPool(generic.edit.CreateView):
     model = ExamRecipePool
     template_name = 'exams/create_pool.html'
-
-    def get_form(self,**kwargs):
+    form_class = PoolForm
+    
+    def get_initial(self):
         part_recipe_id = self.kwargs.get('part_recipe_id')
         part = get_object_or_404(ExamPartRecipe, id=part_recipe_id)
         order = part.examrecipeitem_set.count() + 1
-        
-        form = PoolForm()
-        form.initial = {'part': part, 'order': order, 'choose': 1}
-        return form
+        return {'part': part, 'order': order, 'choose': 1}
+
+    def get_success_url(self):
+        return reverse('EditPool', kwargs={'pk': self.object.id})
 
 
 class EditPool(UpdateView):
@@ -289,6 +317,10 @@ class EditPool(UpdateView):
         context = super().get_context_data(**kwargs)
         context['topics'] = Topic.objects.all()
         return context
+
+    def get_success_url(self):
+        return reverse('EditPartRecipe', kwargs={'pk': self.object.part.id})
+
 
 def ajax_add_question_to_pool(request):
     question_id = request.GET['question_id']

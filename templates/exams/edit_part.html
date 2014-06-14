@@ -62,7 +62,15 @@
 				<input type="submit" value="Save" />
 			</div>
 		</form>
-		<a href="{% url 'AddPoolToPart' exampartrecipe.id %}">Add question pool to {{exampartrecipe.id}}</a>
+		<div "pool-list">
+			<h5>Question Pools:</h5>
+			{% for pool in object.pools %}
+				<p>
+					<a href="{% url 'EditPool' pool.id %}">{{ pool.name }}</a>
+				</p>
+			{% endfor %}
+			<a href="{% url 'AddPoolToPart' exampartrecipe.id %}">Add question pool</a>
+		</div>
 	</div>
 </div>
 
