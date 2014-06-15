@@ -9,6 +9,7 @@ from django.db import transaction
 
 from copy import deepcopy
 from collections import Counter
+import random
 
 from exams.models import *
 from exams.forms import *
@@ -145,10 +146,7 @@ def generate_exam(request, recipe_id):
             space_after = item.space_after,
         )
         new_question.save()
-        
-        
-        
-        
+
     exam_recipe = get_object_or_404(ExamRecipe,id=recipe_id)
     generated_set = GeneratedSet(
         recipe = exam_recipe,
@@ -194,7 +192,7 @@ def generate_exam(request, recipe_id):
                     # q.save()
                 elif isinstance(item,ExamRecipePool):
                     question_list = random.sample(
-                            item.questions.all(), item.choose
+                            list(item.questions.all()), item.choose
                     )
                     for q in question_list:
                         question_counter += 1

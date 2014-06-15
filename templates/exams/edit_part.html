@@ -64,7 +64,7 @@
 		</form>
 		<div "pool-list">
 			<h5>Question Pools:</h5>
-			{% for pool in object.pools %}
+			{% for pool in object.pool_list %}
 				<p>
 					<a href="{% url 'EditPool' pool.id %}">{{ pool.name }}</a>
 				</p>

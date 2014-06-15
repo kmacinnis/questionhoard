@@ -53,13 +53,15 @@ class ExamPartRecipe(models.Model):
         return self.QUESTION_TYPES[self.question_style]
     
     def simple_questions_count(self):
-        # TODO: This doesn't distinguish between questions and pools
-        return self.examrecipeitem_set.select_subclasses(
-                                        "examrecipequestion").count()
+        return len(self.simple_questions_list())
+
     def simple_questions_list(self):
-        # TODO: This doesn't distinguish between questions and pools
-        return self.examrecipeitem_set.select_subclasses(
-                                        "examrecipequestion")
+        all_items = self.examrecipeitem_set.select_subclasses()
+        return [item for item in all_items if type(item)==ExamRecipeQuestion]
+
+    def pool_list(self):
+        all_items = self.examrecipeitem_set.select_subclasses()
+        return [item for item in all_items if type(item)==ExamRecipePool]
                                         
 
 
@@ -67,8 +69,6 @@ class ExamRecipeItem(models.Model):
     '''
     This class is intended to be inherited by 
     ExamRecipeQuestion and ExamRecipePool.
-    
-    
     '''
     objects = InheritanceManager()
     
@@ -139,6 +139,17 @@ class ExamAnswerChoice(models.Model):
     comment = models.TextField(blank=True, null=True)
 
 
+class FormattingPreferences(models.Model):
+    user = models.ForeignKey(User)
+    # TODO: Add choices to font
+    font = models.CharField(max_length=30)
+    header_left = models.CharField(max_length=150)
+    hader_center = models.CharField(max_length=150)
+    header_right = models.CharField(max_length=150)
+    footer_left = models.CharField(max_length=150)
+    footer_center = models.CharField(max_length=150)
+    footer_right = models.CharField(max_length=150)
+    
 
 
 

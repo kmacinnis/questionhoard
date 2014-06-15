@@ -41,3 +41,11 @@ class Subtopic(models.Model):
         return self.name
 
 
+class Course(models.Model):
+    name = models.CharField(max_length=150)
+    instructor = models.ForeignKey(User)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+
+
