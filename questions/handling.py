@@ -89,7 +89,7 @@ def handle_ordering(choice_list, correct_position=None):
     open_positions = list(range(len(choice_list)))
     pinned_choices = [c for c in choice_list 
                             if c['pin'] != AnswerChoice.RANDOM]
-    if correct_position != None:
+    if correct_position is not None:
         if correct_position not in open_positions:
             raise ValueError("correct_position must be an integer less than the length of choice_list")
         correct_answer['position'] = correct_position

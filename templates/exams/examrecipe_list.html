@@ -2,6 +2,10 @@
 
 {% block title %}Exam List{% endblock title %}
 
+{% block external %}
+{% include "scripts_bootstrap.html" %}
+{% endblock external %}
+
 {% block content %}
 
 <ul>
@@ -12,6 +16,8 @@
 {% endfor %}
 </ul>
 
-<a href="{% url 'CreateExamRecipe' %}">Create New Exam Recipe</a>
+<p><a href="{% url 'CreateExamRecipe' %}">Create New Exam Recipe</a></p>
+
+{% include "exams/preferences_modal.html" %}
 
 {% endblock content %}

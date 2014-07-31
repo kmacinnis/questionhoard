@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+
 from zother.forms import RegistrationForm
 
 
@@ -20,13 +22,12 @@ def not_implemented(request):
             )
 
 
-
+@login_required
 def main_page(request):
-    return render_to_response(
-            'main_page.html',
-            RequestContext(request)
-            )
-
+    variables = RequestContext(request,
+        {'active_courses' : request.user.course_set.filter(is_active=True)}
+    )
+    return render_to_response('main_page.html', variables)
 
 
 def logout_page(request):

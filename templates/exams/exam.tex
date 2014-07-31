@@ -1,13 +1,18 @@
-{% autoescape off %}\documentclass[12pt]{exam}
+{% autoescape off %}\documentclass{exam}
+{% if prefs.font_size != 10 %}\usepackage[fontsize={{ prefs.fontsize}} ]{scrextend}{% endif %}
 \usepackage{amsmath}
 \usepackage{mathpazo}
 \usepackage{color}
 {% for package in packages %}
-	\usepackage{package}
+\usepackage{package}
 {% endfor %}
 
+{% if prefs.font != prefs.COMP_MODERN %}
+\usepackage{ {{ prefs.font }} }
+{% endif %}
+\usepackage[T1]{fontenc}
 
-\CorrectChoiceEmphasis{\color{red}}
+\CorrectChoiceEmphasis{\color{red} }
 \printanswers
 
 \firstpageheader{ {{ header_left }} } { {{ header_center }} } { {{ header_right }} }

@@ -117,7 +117,16 @@ urlpatterns = patterns('',
     url(
         r'^ajax_remove_question_from_pool/$',
         ajax_remove_question_from_pool
-    )
+    ),
+    
+    #ex: /exams/preferences/
+    url(
+        r'^preferences/$',
+        set_preferences,
+        name='set_preferences'
+    ),
+    
+    
     
     
 )

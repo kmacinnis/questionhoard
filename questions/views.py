@@ -227,7 +227,7 @@ class ValidateQuestion(EditQuestion):
         if not is_validated:
             context['validation_errors'] = validate_question(
                                             self.object, self.request.user)
-            if context['validation_errors'] == None:
+            if context['validation_errors'] is None:
                 is_validated = True
         context['is_validated'] = is_validated
         

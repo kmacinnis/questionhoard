@@ -109,3 +109,10 @@ class PoolForm(forms.ModelForm):
         }
 
 
+class PreferencesForm(forms.ModelForm):
+    class Meta:
+        model = FormattingPreferences
+        widgets = {
+            'user' : forms.HiddenInput(),
+        }
+

@@ -24,6 +24,6 @@ urlpatterns = patterns('',
     url(r'simp/', include('simplified.urls')),
     url(r'practicedocs/', include('practicedocs.urls')),
     url(r'organization/', include('organization.urls')),
-    url(r'org/', include('organization.urls')),
+    # url(r'org/', include('organization.urls')),
     url(r'exams/', include('exams.urls')),
 )

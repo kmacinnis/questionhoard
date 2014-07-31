@@ -132,24 +132,46 @@ class ExamQuestion(models.Model):
 
 class ExamAnswerChoice(models.Model):
     exam_question = models.ForeignKey(ExamQuestion)
-    
     position = models.IntegerField()
     choice_text = models.TextField()
     correct = models.BooleanField()
     comment = models.TextField(blank=True, null=True)
 
 
+
+FONTS = Choices(
+    ('concmath', 'Computer Concrete'),
+    ('cmbright','Computer Modern Bright'),
+    ('kpfonts','Kepler'),
+    ('kmath,kerkis', 'Kerkis'),
+    ('mathpazo','Palatino (mathpazo)'),
+    ('sitx', 'Times (sitx)'),
+)
+
+
 class FormattingPreferences(models.Model):
-    user = models.ForeignKey(User)
-    # TODO: Add choices to font
-    font = models.CharField(max_length=30)
-    header_left = models.CharField(max_length=150)
-    hader_center = models.CharField(max_length=150)
-    header_right = models.CharField(max_length=150)
-    footer_left = models.CharField(max_length=150)
-    footer_center = models.CharField(max_length=150)
-    footer_right = models.CharField(max_length=150)
-    
+    user = models.OneToOneField(User)
+    font = models.CharField(max_length=30, choices=FONTS, default='mathpazo')
+    font_size = models.CharField(max_length=4, default=12)
+
+    first_page_header_different = models.BooleanField(default=False)
+    header_left = models.CharField(max_length=150, blank=True, null=True)
+    header_center = models.CharField(max_length=150, blank=True, null=True)
+    header_right = models.CharField(max_length=150, blank=True, null=True)
+    first_page_header_left = models.CharField(max_length=150, blank=True, null=True)
+    first_page_header_center = models.CharField(max_length=150, blank=True, null=True)
+    first_page_header_right = models.CharField(max_length=150, blank=True, null=True)
+
+    first_page_footer_different = models.BooleanField(default=False)
+    footer_left = models.CharField(max_length=150, blank=True, null=True)
+    footer_center = models.CharField(max_length=150, blank=True, null=True)
+    footer_right = models.CharField(max_length=150, blank=True, null=True)
+    first_page_footer_left = models.CharField(max_length=150, blank=True, null=True)
+    first_page_footer_center = models.CharField(max_length=150, blank=True, null=True)
+    first_page_footer_right = models.CharField(max_length=150, blank=True, null=True)
+
+    def __str__(self):
+        return 'Preferences for {}'.format(self.user)
 
 
 

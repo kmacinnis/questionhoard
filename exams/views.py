@@ -6,6 +6,8 @@ from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import Max
 from django.db import transaction
+from django.core.urlresolvers import reverse
+
 
 from copy import deepcopy
 from collections import Counter
@@ -340,8 +342,20 @@ def ajax_remove_question_from_pool(request):
     return HttpResponse('success')
 
 
-
-
-
+@login_required
+def set_preferences(request):
+    if request.POST:
+        prefs = FormattingPreferences.objects.get(user=request.user)
+        form = PreferencesForm(request.POST,instance=prefs)
+        if form.is_valid():
+            prefs = form.save()
+            return HttpResponse('success')
+    else: # request.GET
+        prefs,_ = FormattingPreferences.objects.get_or_create(user=request.user)
+        form = PreferencesForm(instance=prefs)
+    variables = RequestContext(request, {
+        'form' : form,
+    })
+    return render_to_response('exams/preferences_form.html', variables)
 
 

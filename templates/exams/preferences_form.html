@@ -1,0 +1,116 @@
+<form method="post" action="/exams/preferences/" class="modal-form" id="prefs-form">
+	{% csrf_token %}
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Formatting Preferences</h4>
+	</div>
+	<div id="this-one" class="modal-body">
+		{# {{ form.as_p }} #}
+		{{ form.user.as_hidden }}
+		
+		<div class="form-group col-md-6">
+			<label for="id_font" class="control-label">Font</label>
+			{{ form.font.errors }}
+			{{ form.font }}
+		</div>
+		<div class="form-group col-md-6">
+			<label for="id_font" class="control-label">Font Size</label>
+			{{ form.font_size.errors }}
+			{{ form.font_size }}
+		</div>
+
+		<div class="form-group col-md-12">
+			<div class="checkbox">
+				<label for="id_first_page_header_different">
+					{{ form.first_page_header_different.errors }}
+					{{ form.first_page_header_different }}
+				 Use different header for first page
+			 </label>
+			</div>
+		</div>
+		<div id="first-page-header-group" class="first-page-header-shown">
+			<div class="form-group col-md-4">
+				<label for="id_first_page_header_left" class="control-label">First Page Header Left</label>
+				{{ form.first_page_header_left.errors }}
+				{{ form.first_page_header_left }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_first_page_header_center" class="control-label">First Page Header Center</label>
+				{{ form.first_page_header_center.errors }}
+				{{ form.first_page_header_center }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_first_page_header_right" class="control-label">First Page Header Right</label>
+				{{ form.first_page_header_right.errors }}
+				{{ form.first_page_header_right }}
+			</div>
+		</div>
+		<div id="header-group">
+			<div class="form-group col-md-4">
+				<label for="id_header_left" class="control-label"><span class="first-page-header-shown">Subsequent Pages </span>Header Left</label>
+				{{ form.header_left.errors }}
+				{{ form.header_left }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_header_center" class="control-label"><span class="first-page-header-shown">Subsequent Pages </span>Header Center</label>
+				{{ form.header_center.errors }}
+				{{ form.header_center }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_header_right" class="control-label"><span class="first-page-header-shown">Subsequent Pages </span>Header Right</label>
+				{{ form.header_right.errors }}
+				{{ form.header_right }}
+			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<div class="checkbox">
+				<label for="id_first_page_footer_different">
+					{{ form.first_page_footer_different.errors }}
+					{{ form.first_page_footer_different }}
+				 Use different footer for first page
+			 </label>
+			</div>
+		</div>
+		<div id="first-page-footer-group" class="first-page-footer-shown">
+			<div class="form-group col-md-4">
+				<label for="id_first_page_footer_left" class="control-label">First Page Footer Left</label>
+				{{ form.first_page_footer_left.errors }}
+				{{ form.first_page_footer_left }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_first_page_footer_center" class="control-label">First Page Footer Center</label>
+				{{ form.first_page_footer_center.errors }}
+				{{ form.first_page_footer_center }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_first_page_footer_right" class="control-label">First Page Footer Right</label>
+				{{ form.first_page_footer_right.errors }}
+				{{ form.first_page_footer_right }}
+			</div>
+		</div>
+		<div id="footer-group">
+			<div class="form-group col-md-4">
+				<label for="id_footer_left" class="control-label"><span class="first-page-footer-shown">Subsequent Pages </span>Footer Left</label>
+				{{ form.footer_left.errors }}
+				{{ form.footer_left }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_footer_center" class="control-label"><span class="first-page-footer-shown">Subsequent Pages </span>Footer Center</label>
+				{{ form.footer_center.errors }}
+				{{ form.footer_center }}
+			</div>
+			<div class="form-group col-md-4">
+				<label for="id_footer_right" class="control-label"><span class="first-page-footer-shown">Subsequent Pages </span>Footer Right</label>
+				{{ form.footer_right.errors }}
+				{{ form.footer_right }}
+			</div>
+		</div>
+
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-primary" onclick="submitChanges()" id="submit-prefs">Save Changes</button>
+	</div>
+</form>
+

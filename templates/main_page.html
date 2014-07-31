@@ -4,10 +4,24 @@
 {% block content %}
 
 {% if user.username %}
+<div class="row">
+<h3>Courses:</h3>
+<ul>
+	{% for course in active_courses %}
+		<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
+	{% empty %}
+		<li>There are no active courses for this user</li>
+	{% endfor %}
+	</ul>
+	<a href="{% url 'CreateCourse' %}">Create New Course</a>
     <ul>
         <li> <a href='/questions/'>Question List</a> </li>
         <li> <a href='/questions/create/'>Create New Question</a> </li>
     </ul>
+
+
+
+</div>
 {% else %}
     <p>You must <a href="/login/">login</a> 
         before you can do anything useful.</p>
