@@ -1,5 +1,8 @@
 Django==1.6.5
+Pillow==2.4.0
 South==0.8.4
+colorize==1.0.0
+coverage==3.7.1
 django-bootstrap3==4.4.0
 django-debug-toolbar==1.2.1
 django-discover-runner==1.0
