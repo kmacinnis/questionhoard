@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'bootstrap3',
     'south',
     'questions',
@@ -63,16 +63,20 @@ WSGI_APPLICATION = 'questionbank.wsgi.application'
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dragon_db',
+        'USER': 'dragon_user',
+        'PASSWORD': 'boop77',
+        'HOST': 'localhost',
+        'PORT': '',                      # Set to empty string for default.
     }
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -96,3 +100,7 @@ STATIC_URL = '/static/'
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
 }
+
+# Necessary for Django-Debug-Toolbar to work with gunicorn:
+DEBUG_TOOLBAR_PATCH_SETTINGS = False 
+
