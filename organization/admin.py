@@ -20,3 +20,8 @@ class TopicAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Topic, TopicAdmin)
+admin.site.register(Schema)
+admin.site.register(CourseType)
+admin.site.register(Objective)
+admin.site.register(Subtopic)
+admin.site.register(Course)
