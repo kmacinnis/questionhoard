@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'bootstrap3',
     'south',
     'questions',
@@ -48,7 +48,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,11 +98,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TEMPLATE_CONTEXT': True,
-}
-
-# Necessary for Django-Debug-Toolbar:
-DEBUG_TOOLBAR_PATCH_SETTINGS = False 
-INTERNAL_IPS = ['127.0.0.1', '::1', '72.179.33.203']
-
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TEMPLATE_CONTEXT': True,
+# }
+#
+# # Necessary for Django-Debug-Toolbar:
+# DEBUG_TOOLBAR_PATCH_SETTINGS = False
+# INTERNAL_IPS = ['127.0.0.1', '::1', '72.179.33.203']
+#
