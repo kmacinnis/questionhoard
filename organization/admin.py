@@ -14,6 +14,7 @@ class TopicAdmin(admin.ModelAdmin):
         'name',
         'description',
         'comment',
+        'schema',
         'order',
     ]
     inlines = [SubtopicInline]
