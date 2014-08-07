@@ -2,7 +2,7 @@
 Settings for the development version
 '''
 
-from settings_base import *
+from questionbank.settings_base import *
 
 # Insecure security settings!
 DEBUG = True

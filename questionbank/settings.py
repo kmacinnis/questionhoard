@@ -1,1 +1,1 @@
-from settings_local import *
+from questionbank.settings_local import *
