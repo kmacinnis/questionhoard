@@ -58,3 +58,6 @@ migrations/
 
 # pycharm
 .idea/
+
+# local settings
+settings_local.py
