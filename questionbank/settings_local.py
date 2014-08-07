@@ -22,3 +22,4 @@ DATABASES = {
     }
 }
 
+STATIC_ROOT = '/webapps/dragon/static/'
