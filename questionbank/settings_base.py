@@ -55,21 +55,6 @@ WSGI_APPLICATION = 'questionbank.wsgi.application'
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dragon_db',
-        'USER': 'dragon_user',
-        'PASSWORD': 'boop77',
-        'HOST': 'localhost',
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
