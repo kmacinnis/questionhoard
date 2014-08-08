@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-5 .col-md-offset-1">
+		{% include "organization/topic_accordion.html" with question_display="simple_preview" topics=schema.topic_set.all schema_detail=True%}
+	</div>
+</div>
+
+{% include "scripts_bootstrap.html" %}
+{% include "scripts_mathjax.html" %}
+{% endblock content %}

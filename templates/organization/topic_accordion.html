@@ -1,9 +1,12 @@
 {# When including this, you must pass in a variable: question_display #}
 {# possible values: "simple_preview", "addable"     #}
+{# If this is included from the schema detail page, there will be  #}
+{# a variable schema_detail=True #}
+
 
 <div class="panel-group" id="accordion1">
-	{% for topic in topics %}
-		
+	{% if schema_detail %}Topics:{% endif %}
+	{% for topic in topics %}		
 		<div class="panel panel-default">
 			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion1" data-target="#panel-topic-{{ topic.id }}">    
 				<h4 class="panel-title panel-toggle">
@@ -40,50 +43,62 @@
 															{{ objective.short }}
 														</h4>
 													</div>
-													<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
-														<div class="panel-inner">
+													{% if not schema_detail %}
+														<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
+															<div class="panel-inner">
 							
-															{% if objective.questions.all %}Questions:{% endif %}
-															<!-- question accordion -->
+																{% if objective.questions.all %}Questions:{% endif %}
+																<!-- question accordion -->
 							
-															<div class="panel-group" id="accordion-objective-{{ subtopic.id }}-{{ objective.id }}">
-																{% for question in objective.questions.all %}
+																<div class="panel-group" id="accordion-objective-{{ subtopic.id }}-{{ objective.id }}">
+																	{% for question in objective.questions.all %}
 
-																	<div class="panel panel-default">
-																		<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
-																			<h4 class="panel-title panel-toggle">
-																				{{ question.name }}
-																			</h4>
-																		</div>
-																		<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
-																			<div class="panel-inner">
-
-
-																				{% include "organization/question_"|add:question_display %}
+																		<div class="panel panel-default">
+																			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
+																				<h4 class="panel-title panel-toggle">
+																					{{ question.name }}
+																				</h4>
+																			</div>
+																			<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
+																				<div class="panel-inner">
 
 
+																					{% include "organization/question_"|add:question_display %}
+
+
+																				</div>
 																			</div>
 																		</div>
-																	</div>
-																{% endfor %}   {# question loop #}
+																	{% endfor %}   {# question loop #}
+																</div>
+																{% if add_question_links %}
+																	<a href="{% url 'create_question_for_objective' obj_id=objective.id  %}">
+																		Create new question for this objective.
+																	</a>
+																{% endif %}
 															</div>
-															{% if add_question_links %}
-																<a href="{% url 'create_question_for_objective' obj_id=objective.id  %}">
-																	Create new question for this objective.
-																</a>
-															{% endif %}
 														</div>
-													</div>
+													{% endif %}
 												</div>
 											{% endfor %}  {# objective loop #}
 										</div>
 									</div>
+									{% if schema_detail %}
+										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}" href='#'>Add objective to subtopic "{{ subtopic.name }}"</a>
+									{% endif %}
 								</div>
 							</div>
 						{% endfor %} {# subtopic loop #}
 					</div>
 				</div>
+				{% if schema_detail %}
+					<a id="id-add-subtopic-to-topic-{{ topic.id }}" href='#'>Add subtopic to topic "{{ topic.name }}"</a>
+				{% endif %}
+				
 			</div>
 		</div>
 	{% endfor %} {# topic loop #}
 </div>
+{% if schema_detail %}
+	<a id="id-add-topic-to-schema-{{ schema.id }}" href='#'>Add topic to schema "{{ schema.name }}"</a>
+{% endif %}

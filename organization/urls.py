@@ -15,10 +15,17 @@ urlpatterns = patterns('',
         name='CreateCourse'
     ),
 
-    # ex: /organization/courses/
+    # ex: /organization/courses/details/5/
     url(
-        r'organization/courses/details/(?P<pk>\d+)/',
+        r'courses/details/(?P<pk>\d+)/',
         login_required(CourseDetails.as_view()),
+        name='CourseDetails'
+    ),
+
+    # ex: /organization/schema/details/5/
+    url(
+        r'schema/details/(?P<pk>\d+)/',
+        login_required(SchemaDetails.as_view()),
         name='CourseDetails'
     ),
 )
