@@ -1,0 +1,21 @@
+{# Needs variables `modal_title`, `form` and `action_url`. #}
+
+<form class="modal-form" method="post" action="{{ action_url }}">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h4>{{ modal_title }}</h4>
+	</div>
+	<div class="modal-body">
+		{% csrf_token %}
+		{{ form.as_p }}
+	</div>
+	<div class="modal-footer">
+			 <input class="btn btn-primary" type="submit" value="Save" />
+			 <input name="cancel" class="btn" type="submit" value="Cancel"/>
+	</div>
+</form>
+
+
+
+
+

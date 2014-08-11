@@ -12,6 +12,11 @@
 				<h4 class="panel-title panel-toggle">
 					{{ topic.name }}
 				</h4>
+				<div class="small">
+					<a class="topic-edit" id="edit-topic-{{ topic.id }}">
+						[edit]
+					</a>
+				</div>
 			</div>
 			<div id="panel-topic-{{ topic.id }}" class="panel-body collapse">
 				<div class="panel-inner">
@@ -84,7 +89,9 @@
 										</div>
 									</div>
 									{% if schema_detail %}
-										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}" href='#'>Add objective to subtopic "{{ subtopic.name }}"</a>
+										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}">
+											Add objective to subtopic "{{ subtopic.name }}"
+										</a>
 									{% endif %}
 								</div>
 							</div>
@@ -92,7 +99,9 @@
 					</div>
 				</div>
 				{% if schema_detail %}
-					<a id="id-add-subtopic-to-topic-{{ topic.id }}" href='#'>Add subtopic to topic "{{ topic.name }}"</a>
+					<a id="id-add-subtopic-to-topic-{{ topic.id }}" data-toggle="modal" data-target="#myModal" href="{% url 'add_subtopic' topic_id=topic.id %}">
+						Add subtopic to topic "{{ topic.name }}"
+					</a>
 				{% endif %}
 				
 			</div>
@@ -100,5 +109,7 @@
 	{% endfor %} {# topic loop #}
 </div>
 {% if schema_detail %}
-	<a id="id-add-topic-to-schema-{{ schema.id }}" href='#'>Add topic to schema "{{ schema.name }}"</a>
+	<a data-toggle="modal" data-target="#myModal" id="myLink" href="{% url 'add_topic' schema_id=schema.id %}">
+		Add topic to schema "{{ schema.name }}"
+	</a>
 {% endif %}

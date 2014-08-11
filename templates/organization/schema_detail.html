@@ -1,6 +1,33 @@
 {% extends "base.html" %}
 
+{% block external %}
+
+{% load static %}
+
+
+{% include "scripts_bootstrap.html" %}
+<script src="{% static 'schema_handler.js' %}"></script>
+<script>
+$('body').on('hidden.bs.modal', '.modal', function () {
+	$(this).removeData('bs.modal');
+});
+</script>
+
+{% endblock external %}
+
+
 {% block content %}
+
+
+<div id="boop">
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
 
 <div class="row">
 	<div class="col-md-5 .col-md-offset-1">
@@ -8,6 +35,13 @@
 	</div>
 </div>
 
-{% include "scripts_bootstrap.html" %}
-{% include "scripts_mathjax.html" %}
+
+
+
+
+
+
+
+
 {% endblock content %}
+

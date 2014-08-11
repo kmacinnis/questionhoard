@@ -26,6 +26,22 @@ urlpatterns = patterns('',
     url(
         r'schema/details/(?P<pk>\d+)/',
         login_required(SchemaDetails.as_view()),
-        name='CourseDetails'
+        name='SchemaDetails'
     ),
+
+    # ex: /organization/schema/1/add_topic/
+    url(
+        r'schema/(?P<schema_id>\d+)/add_topic/',
+        add_topic,
+        name='add_topic'
+    ),
+    
+    # ex: /organization/topic/1/add_subtopic/
+    url(
+        r'topic/(?P<topic_id>\d+)/add_subtopic/',
+        add_subtopic,
+        name='add_subtopic'
+    )
+    
+
 )
