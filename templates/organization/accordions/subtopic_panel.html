@@ -1,0 +1,37 @@
+
+<div class="panel panel-default">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-topic-{{ topic.id }}" data-target="#panel-subtopic-{{ subtopic.id }}">     
+		<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle">    
+			{{ subtopic.name }}
+		</h4>
+		<span class="small">
+			<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
+				[edit]
+			</a>
+		</span>
+		
+	</div>
+	<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
+		{% if subtopic.objectives.all %}
+			<div class="panel-inner">
+				Objectives:
+
+				<!-- objective accordion -->
+				<div class="panel-group" id="accordion-subtopic-{{ subtopic.id }}">
+					{% for objective in subtopic.objectives.all %}
+						{% include "organization/accordions/objective_panel.html" %}
+					{% endfor %}  {# objective loop #}
+				</div>
+			</div>
+		{% endif %}
+		
+		{% if schema_detail %}
+			<a id="id-add-objective-to-subtopic-{{ subtopic.id }}"
+				data-formURL="{% url 'add_objective' subtopic_id=subtopic.id %}"
+				href="#"
+				class="add-item">
+				Add objective to subtopic "{{ subtopic.name }}"
+			</a>
+		{% endif %}
+	</div>
+</div>

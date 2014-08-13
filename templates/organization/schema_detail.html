@@ -1,22 +1,39 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+div .tabletop-empty {
+	height:100vh;
+	background-color:#A5A7B8;
+}
+	
+</style>
+{% endblock head %}
+
+
+
 {% block external %}
 
 {% load static %}
 
 
-{% include "scripts_bootstrap.html" %}
-<script src="{% static 'schema_handler.js' %}"></script>
-<script>
-$('body').on('hidden.bs.modal', '.modal', function () {
-	$(this).removeData('bs.modal');
-});
-</script>
+	{% include "scripts_bootstrap.html" %}
+	<script src="{% static 'schema_handler.js' %}"></script>
+
+	<script>
+	$('body').on('hidden.bs.modal', '.modal', function () {
+		$(this).removeData('bs.modal');
+	});
+	</script>
+
+
 
 {% endblock external %}
 
 
 {% block content %}
+
+<a>blah</a>
 
 
 <div id="boop">
@@ -29,9 +46,15 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 </div>
 
 
+
+
+
 <div class="row">
-	<div class="col-md-5 .col-md-offset-1">
-		{% include "organization/topic_accordion.html" with question_display="simple_preview" topics=schema.topic_set.all schema_detail=True%}
+	<div class="col-md-5" id="schema-accordions" >
+		{% include "organization/accordions/schema_base.html" with question_display="none" schema_detail=True%}
+	</div>                
+	<div class="col-md-7 tabletop-empty tabletop" id="tabletop">
+		
 	</div>
 </div>
 
