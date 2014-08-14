@@ -91,7 +91,7 @@ def add_topic(request, schema_id):
     return form_html(TopicForm())
     
 @login_required
-def edit_topic(request, topic_id):
+def edit_topic_old(request, topic_id):
     topic = get_object_or_404(Topic, id=topic_id)
     
     if request.POST:
