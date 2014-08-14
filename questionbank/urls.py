@@ -25,11 +25,11 @@ urlpatterns = patterns('',
     url(r'^temp/', zviews.temp),
     url(r'^not_implemented_yet/$', zviews.not_implemented, name="NotImplemented"),
     
-    url(r'simp/', include('simplified.urls')),
-    url(r'practicedocs/', include('practicedocs.urls')),
-    url(r'organization/', include('organization.urls')),
-    # url(r'org/', include('organization.urls')),
-    url(r'exams/', include('exams.urls')),
+    url(r'^simp/', include('simplified.urls')),
+    url(r'^practicedocs/', include('practicedocs.urls')),
+    url(r'^organization/', include('organization.urls')),
+    # url(r'^org/', include('organization.urls')),
+    url(r'^exams/', include('exams.urls')),
 )
 
 # if settings.DEBUG:

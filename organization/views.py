@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from vanilla import ListView, CreateView, DetailView
 from organization.models import *
 from organization.forms import *
+import json
 
 
 class TopicList(ListView):
@@ -41,65 +42,179 @@ class SchemaDetails(DetailView):
     model = Schema
     context_object_name = 'schema'
 
-
 @login_required
 def add_topic(request, schema_id):
-    schema = get_object_or_404(Schema, id=schema_id)
-    modal_title = "Add topic to schema “{}”".format(schema.name)
-
-    if request.POST:        
-        topic = Topic(schema=schema, order=schema.topic_set.count())
-        form = TopicForm(request.POST,instance=topic)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(
-                reverse('SchemaDetails', kwargs={'pk':schema.id})
-            )
-
-    else: # request.GET
-        form = TopicForm()
+    """
+    On GET, returns the form to be used to add a subtopic.
+    On POST, returns a json object:
+        {   success     : whether the form was valid,
+            panel_url   : if form.is_valid, the new panel for the accordion,
+            place       : if form.is_valid, the place to stick the new panel,
+            form_html   : if form not valid, the html to represent the form
+        }
+    """
+    
+    def form_html(form):
         variables = RequestContext(request,
         {
             'schema' : schema,
             'form' : form,
-            'modal_title' : modal_title,
+            'form_title' : form_title,
             'action_url' : reverse('add_topic', kwargs={'schema_id':schema.id})
         })
         return render_to_response('organization/schema_form.html',variables)
+    
+    schema = get_object_or_404(Schema, id=schema_id)
+    form_title = "Add topic to schema “{}”".format(schema.name)
 
-@login_required
-def add_subtopic(request, topic_id):
-    topic = get_object_or_404(Topic, id=topic_id)
-    modal_title = "Add subtopic to topic “{}”".format(topic.name)
-
-    if request.POST:        
-        subtopic = Subtopic(topic=topic, order=topic.subtopic_set.count())
-        form = SubtopicForm(request.POST,instance=subtopic)
+    if request.POST:
+        topic = Topic(schema=schema, order=schema.topic_set.count())
+        form = TopicForm(request.POST,instance=topic)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(
-                reverse('SchemaDetails', kwargs={'pk':topic.schema.id})
+            response_data = {
+                'success' : True,
+                'panel_url' : reverse('get_accordion_panel', 
+                    kwargs={'item_type':'topic','item_id':topic.id}),
+                'place' : '#accordion-main',
+                
+            }
+        else: # form not valid
+            response_data = {
+                'success' : False,
+                'form_html' : form_html(form)
+            }
+        return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
             )
-
+    # request.GET:
+    return form_html(TopicForm())
+    
+@login_required
+def edit_topic(request, topic_id):
+    topic = get_object_or_404(Topic, id=topic_id)
+    
+    if request.POST:
+        form = TopicForm(request.POST, instance=topic)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
     else: # request.GET
-        form = TopicForm()
-        variables = RequestContext(request,
+        form = TopicForm(instance=topic)
+    variables = RequestContext(request, 
         {
-            'schema' : topic.schema,
-            'topic' : topic,
             'form' : form,
-            'modal_title' : modal_title,
-            'action_url' : reverse('add_subtopic', kwargs={'topic_id':topic.id})
+            'form_title' : 'Edit Topic',
+            'item_type' : 'topic',
+            'item_id' : topic_id,
+            'action_url' : reverse('edit_topic', kwargs={'topic_id':topic.id}),
         })
-        return render_to_response('organization/schema_form.html',variables)
+    return render_to_response('organization/schema_form.html',variables)
 
 
+
+
+
+@login_required
 def delete_topic(request, topic_id):
     topic = get_object_or_404(Topic, id=topic_id)
     topic.delete()
     return HttpResponseRedirect(
             reverse('SchemaDetails', kwargs={'pk':topic.schema.id})
     )
+
+@login_required
+def add_subtopic(request, topic_id):
+    """
+    On GET, returns the form to be used to add a subtopic.
+    On POST, returns a json object:
+        {   success     : whether the form was valid,
+            panel_url   : if form.is_valid, the new panel for the accordion,
+            place       : if form.is_valid, the place to stick the new panel,
+            form_html   : if form not valid, the html to represent the form
+        }
+    """
+    
+    def form_html(form):
+        variables = RequestContext(request,
+        {
+            'schema' : topic.schema,
+            'topic' : topic,
+            'form' : form,
+            'form_title' : form_title,
+            'action_url' : reverse('add_subtopic', kwargs={'topic_id':topic.id})
+        })
+        return render_to_response('organization/schema_form.html',variables)
+    
+    topic = get_object_or_404(Topic, id=topic_id)
+    form_title = "Add subtopic to topic “{}”".format(topic.name)
+
+    if request.POST:
+        subtopic = Subtopic(topic=topic, order=topic.subtopic_set.count())
+        form = SubtopicForm(request.POST,instance=subtopic)
+        if form.is_valid():
+            form.save()
+            response_data = {
+                'success' : True,
+                'panel_url' : reverse('get_accordion_panel', 
+                    kwargs={'item_type':'subtopic','item_id':subtopic.id}),
+                'place' : '#accordion-topic-{}'.format(topic.id),
+                'panel_html' : get_accordion_panel(
+                        request, 'subtopic', subtopic.id
+                ).content.decode()
+                
+            }
+        else: # form not valid
+            response_data = {
+                'success' : False,
+                'form_html' : form_html(form)
+            }
+        return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
+            )
+    # request.GET:
+    return form_html(TopicForm())
+    
+
+@login_required
+def edit_subtopic(request, subtopic_id):
+    subtopic = get_object_or_404(Subtopic, id=subtopic_id)
+    
+    if request.POST:
+        form = SubtopicForm(request.POST, instance=subtopic)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
+    else: # request.GET
+        form = SubtopicForm(instance=subtopic)
+    variables = RequestContext(request, 
+        {
+            'form' : form,
+            'form_title' : 'Edit Subtopic',
+            'item_type' : 'subtopic',
+            'item_id' : subtopic_id,
+            'action_url' : reverse(
+                    'edit_subtopic', 
+                    kwargs={'subtopic_id':subtopic.id}
+            ),
+        })
+    return render_to_response('organization/schema_form.html',variables)
+
+# @login_required
+def get_accordion_panel(request, item_type, item_id):
+    template = "organization/accordions/{}_panel.html".format(item_type)
+    Item = {
+        'topic' : Topic,
+        'subtopic' : Subtopic,
+        'objective' : Objective,
+        'question' : Question,
+    }[item_type]
+    item = get_object_or_404(Item, id=item_id)
+    variables = RequestContext(request, {
+        item_type : item,
+        'schema_detail': True,
+    })
+    return render_to_response(template, variables)
 
 
         

@@ -11,7 +11,7 @@
 {# 	{% include "other file" %} #}
 {# {% endfor %} #}
 
-<div class="panel-group" id="accordion1">
+<div class="panel-group" id="accordion-main">
 	{% if schema_detail %}Topics:{% endif %}
 	{% for topic in schema.topic_set.all %}
 		{% include "organization/accordions/topic_panel.html" %}

@@ -1,22 +1,25 @@
+{# Shouldn't need this anymore.  Refactored into: #}
+{# organization/accordions/*_panel.html #}
+
 {# When including this, you must pass in a variable: question_display #}
 {# possible values: "simple_preview", "addable"     #}
 {# If this is included from the schema detail page, there will be  #}
 {# a variable schema_detail=True #}
 
 
-<div class="panel-group" id="accordion1">
+<div class="panel-group" id="accordion-main">
 	{% if schema_detail %}Topics:{% endif %}
 	{% for topic in topics %}		
 		<div class="panel panel-default">
-			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion1" data-target="#panel-topic-{{ topic.id }}">    
-				<h4 class="panel-title panel-toggle">
+			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-main" data-target="#panel-topic-{{ topic.id }}">    
+				<h4 id="label-topic-{{ topic.id }}" class="panel-title panel-toggle">
 					{{ topic.name }}
 				</h4>
-				<div class="small">
-					<a class="topic-edit" id="edit-topic-{{ topic.id }}">
+				<span class="small">
+					<a class="item-edit" id="edit-topic-{{ topic.id }}" href="#" data-formURL="{% url 'edit_topic' topic_id=topic.id %}">
 						[edit]
 					</a>
-				</div>
+				</span>
 			</div>
 			<div id="panel-topic-{{ topic.id }}" class="panel-body collapse">
 				<div class="panel-inner">
@@ -29,9 +32,15 @@
 
 							<div class="panel panel-default">
 								<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-topic-{{ topic.id }}" data-target="#panel-subtopic-{{ subtopic.id }}">     
-									<h4 class="panel-title panel-toggle">    
+									<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle">    
 										{{ subtopic.name }}
 									</h4>
+									<span class="small">
+										<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
+											[edit]
+										</a>
+									</span>
+									
 								</div>
 								<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
 									<div class="panel-inner">
@@ -44,9 +53,17 @@
 
 												<div class="panel panel-default">
 													<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ subtopic.id }}-{{ objective.id }}">
-														<h4 class="panel-title panel-toggle">
+														<h4 id="label-objective-{{ objective.id }}" class="panel-title panel-toggle">
 															{{ objective.short }}
 														</h4>
+														<span class="small">
+															{# TODO: Change so that edit link only shows up #}
+															{# if this is the only subtopic that it is linked to. #}
+															<a class="item-edit" id="edit-objective-{{ objective.id }}" href="#">
+																[edit]
+															</a>
+														</span>
+														
 													</div>
 													{% if not schema_detail %}
 														<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
@@ -89,7 +106,10 @@
 										</div>
 									</div>
 									{% if schema_detail %}
-										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}">
+										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}"
+											data-formURL="{% url 'add_objective' subtopic_id=subtopic.id %}"
+											href="#"
+											class="add-item">
 											Add objective to subtopic "{{ subtopic.name }}"
 										</a>
 									{% endif %}
@@ -99,7 +119,7 @@
 					</div>
 				</div>
 				{% if schema_detail %}
-					<a id="id-add-subtopic-to-topic-{{ topic.id }}" data-toggle="modal" data-target="#myModal" href="{% url 'add_subtopic' topic_id=topic.id %}">
+					<a id="id-add-subtopic-to-topic-{{ topic.id }}" data-formURL="{% url 'add_subtopic' topic_id=topic.id %}" href="#" class="add-item">
 						Add subtopic to topic "{{ topic.name }}"
 					</a>
 				{% endif %}
@@ -109,7 +129,7 @@
 	{% endfor %} {# topic loop #}
 </div>
 {% if schema_detail %}
-	<a data-toggle="modal" data-target="#myModal" id="myLink" href="{% url 'add_topic' schema_id=schema.id %}">
+	<a id="id-add-topic-to-schema-{{ schema.id }}" data-formURL="{% url 'add_topic' schema_id=schema.id %}" href="#" class="add-item">
 		Add topic to schema "{{ schema.name }}"
 	</a>
 {% endif %}

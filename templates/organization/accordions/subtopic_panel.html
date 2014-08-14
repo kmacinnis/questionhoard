@@ -9,21 +9,21 @@
 				[edit]
 			</a>
 		</span>
-		
 	</div>
-	<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
-		{% if subtopic.objectives.all %}
-			<div class="panel-inner">
-				Objectives:
 
-				<!-- objective accordion -->
-				<div class="panel-group" id="accordion-subtopic-{{ subtopic.id }}">
-					{% for objective in subtopic.objectives.all %}
-						{% include "organization/accordions/objective_panel.html" %}
-					{% endfor %}  {# objective loop #}
-				</div>
+	<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
+		<div class="panel-inner">
+			{% if subtopic.objectives.all %}
+				Objectives:
+			{% endif %}
+
+			<!-- objective accordion -->
+			<div class="panel-group" id="accordion-subtopic-{{ subtopic.id }}">
+				{% for objective in subtopic.objectives.all %}
+					{% include "organization/accordions/objective_panel.html" %}
+				{% endfor %}  {# objective loop #}
 			</div>
-		{% endif %}
+		</div>
 		
 		{% if schema_detail %}
 			<a id="id-add-objective-to-subtopic-{{ subtopic.id }}"

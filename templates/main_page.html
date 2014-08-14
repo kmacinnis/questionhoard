@@ -5,20 +5,22 @@
 
 {% if user.username %}
 <div class="row">
-<h3>Courses:</h3>
-<ul>
-	{% for course in active_courses %}
-		<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
-	{% empty %}
-		<li>There are no active courses for this user</li>
-	{% endfor %}
-	</ul>
-	<a href="{% url 'CreateCourse' %}">Create New Course</a>
-    <ul>
-        <li> <a href='/questions/'>Question List</a> </li>
-        <li> <a href='/questions/create/'>Create New Question</a> </li>
-    </ul>
-
+	<h3>Courses:</h3>
+	<ul>
+		{% for course in active_courses %}
+			<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
+		{% empty %}
+			<li>There are no active courses for this user</li>
+		{% endfor %}
+		</ul>
+		<a href="{% url 'CreateCourse' %}">Create New Course</a>
+	    <ul>
+	        <li> <a href='/questions/'>Question List</a> </li>
+	        <li> <a href='/questions/create/'>Create New Question</a> </li>
+	    </ul>
+	<h3>What I'm currently working on:</h3>
+	<p>
+		<a href="http://127.0.0.1:8000/organization/schema/details/1/">Edit schema</a>
 
 
 </div>
