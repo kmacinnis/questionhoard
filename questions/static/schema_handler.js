@@ -52,7 +52,7 @@ function submitEdit (event) {
 
 function submitForm (event) {
     event.preventDefault();
-    var action = $('#tabletop').data('currentAction');
+     action = $('#tabletop').data('currentAction');
     var url = this.action;
     var data = $( this ).serialize();
     $.ajax({
@@ -63,12 +63,10 @@ function submitForm (event) {
         success: function (response, status){
             if (response.success) {
                 if (action == 'edit') {
-                    $('#'+$('#tabletop').data('currentLabel')).html(this.name.value);
+                    $(response.label).html(response.name);
                 } else if (action == 'add') {
-                    $(response.place).append('<div class="ajax-placeholder">placeholder</div>');
-                    $(".ajax-placeholder").replaceWith(response.panel_html);
-                    // $(".ajax-placeholder").load(response.panel_url);
-                    // $(".ajax-placeholder").children().unwrap();
+                    $(response.place).append('<div id="ajax-placeholder">placeholder</div>');
+                    $("#ajax-placeholder").replaceWith(response.panel_html);
                 }
                 clearTabletop();
             }
