@@ -23,4 +23,4 @@ class SubtopicForm(forms.ModelForm):
 class ObjectiveForm(forms.ModelForm):
     class Meta:
         model = Objective
-        exclude = ()
+        exclude = ('questions',)

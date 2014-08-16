@@ -300,4 +300,57 @@ def get_accordion_panel(request, item_type, item_id):
 
 @login_required
 def add_objective(request, subtopic_id):
-    pass
+    """
+    On GET, returns the form to be used to add an objective.
+    On POST, returns a json object:
+        {   success     : whether the form was valid,
+            panel_url   : if form.is_valid, the new panel for the accordion,
+            place       : if form.is_valid, the place to stick the new panel,
+            form_html   : if form not valid, the html to represent the form
+        }
+    
+    """
+    # TODO: refactor this so that it checks for similar objectives, 
+    # and offers the user a choice to use an existing one or create a new one
+    
+    def form_html(form):
+        form_title = "Add objective to subtopic “{}”".format(subtopic.name)
+        variables = RequestContext(request,
+        {
+            'subtopic' : subtopic,
+            'form' : form,
+            'form_title' : form_title,
+            'action_url' : reverse('add_objective', 
+                                    kwargs={'subtopic_id':subtopic.id})
+        })
+        return render_to_response('organization/schema_form.html',variables)
+    
+    subtopic = get_object_or_404(Subtopic, id=subtopic_id)
+
+    if request.POST:
+        form = ObjectiveForm(request.POST)
+        if form.is_valid():
+            form.save()
+            objective = form.instance
+            objective.subtopic_set.add(subtopic)
+            response_data = {
+                'success' : True,
+                'panel_url' : reverse('get_accordion_panel', 
+                    kwargs={'item_type':'objective','item_id':objective.id}),
+                'place' : '#accordion-subtopic-{}'.format(subtopic.id),
+                'action' : 'add',
+                'panel_html' : get_accordion_panel(
+                        request, 'objective', objective.id
+                ).content.decode()
+                
+            }
+        else: # form not valid
+            response_data = {
+                'success' : False,
+                'form_html' : form_html(form)
+            }
+        return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
+            )
+    # request.GET:
+    return form_html(ObjectiveForm())

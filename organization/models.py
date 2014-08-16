@@ -12,13 +12,12 @@ class Schema(models.Model):
 
 
 class Objective(models.Model):
-    short = models.CharField(max_length=120)
-    long = models.TextField()
+    name = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     questions = models.ManyToManyField(Question)
     def __str__(self):
-        return self.short
+        return self.name
 
 
 class Topic(models.Model):

@@ -1,7 +1,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ subtopic.id }}-{{ objective.id }}">
 		<h4 id="label-objective-{{ objective.id }}" class="panel-title panel-toggle">
-			{{ objective.short }}
+			{{ objective.name }}
 		</h4>
 		{% if objective.subtopic_set.count == 1 %}
 		<span class="small">
@@ -11,7 +11,7 @@
 			<a class="item-delete" 
 				id="delete-objective-{{ objective.id }}" 
 				href="#" data-item-type="objective" 
-				data-item-name="{{ objective.short }}" 
+				data-item-name="{{ objective.name }}" 
 				data-confirmed-url="{% url 'delete_item' item_type='objective' item_id=objective.id %}">
 					[delete]
 			</a>

@@ -61,7 +61,7 @@ urlpatterns = patterns('',
     # ex: /organization/subtopic/1/add_objective/
     url(
         r'^subtopic/(?P<subtopic_id>\d+)/add_objective/$',
-        zviews.not_implemented,
+        add_objective,
         name='add_objective'
     ),
     
