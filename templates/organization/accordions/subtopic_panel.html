@@ -8,6 +8,13 @@
 			<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
 				[edit]
 			</a>
+			<a class="item-delete" 
+				id="delete-subtopic-{{ subtopic.id }}" 
+				href="#" data-item-type="subtopic" 
+				data-item-name="{{ subtopic.name }}" 
+				data-confirmed-url="{% url 'delete_item' item_type='subtopic' item_id=subtopic.id %}">
+					[delete]
+			</a>
 		</span>
 	</div>
 

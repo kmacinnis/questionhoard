@@ -8,9 +8,14 @@
 			<a class="item-edit" id="edit-objective-{{ objective.id }}" href="#">
 				[edit]
 			</a>
-			<a class="item-delete" id="delete-objective-{{ objective.id }}" href="#">
-				[delete]
+			<a class="item-delete" 
+				id="delete-objective-{{ objective.id }}" 
+				href="#" data-item-type="objective" 
+				data-item-name="{{ objective.short }}" 
+				data-confirmed-url="{% url 'delete_item' item_type='objective' item_id=objective.id %}">
+					[delete]
 			</a>
+			
 		</span>
 		{% endif %}
 		

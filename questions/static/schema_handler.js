@@ -17,6 +17,7 @@ function openAddForm (event) {
 
 function openEditForm (event) {
     event.stopPropagation();
+    event.preventDefault();
     var link_id = this.attributes["id"].value;
     var stuff = link_id.split('-');
     var item_id = stuff.pop();
@@ -52,7 +53,6 @@ function submitEdit (event) {
 
 function submitForm (event) {
     event.preventDefault();
-     action = $('#tabletop').data('currentAction');
     var url = this.action;
     var data = $( this ).serialize();
     $.ajax({
@@ -62,9 +62,9 @@ function submitForm (event) {
         dataType: 'json',
         success: function (response, status){
             if (response.success) {
-                if (action == 'edit') {
+                if (response.action == 'edit') {
                     $(response.label).html(response.name);
-                } else if (action == 'add') {
+                } else if (response.action == 'add') {
                     $(response.place).append('<div id="ajax-placeholder">placeholder</div>');
                     $("#ajax-placeholder").replaceWith(response.panel_html);
                 }
@@ -77,12 +77,42 @@ function submitForm (event) {
     });
 }
 
+function confirmDelete (event) {
+    event.stopPropagation();
+    event.preventDefault();
+    var data = $(this).data();
+    $('#delete-item-type').html(data.itemType);
+    $('#delete-item-name').html(data.itemName);
+    $("#confirm-delete").modal();
+    $("#confirm-btn").data('url', data.confirmedUrl);
+    $("#confirm-btn").data('panel', $(this).closest('.panel'));
+}
+
+function actualDelete (event) {
+    var data = $(this).data();
+    $("#confirm-delete").modal("hide");
+    $.ajax({
+        type: "GET",
+        url: data.url,
+        data: {confirmed:true},
+        success: function (response, status){
+            if (response == 'deleted') {
+                data.panel.remove();
+            } else {
+                alert("An unknown error occurred.");
+            }
+        }
+    })
+}
 
 
 
 $(document).ready(function () {
     $('#schema-accordions').on("click", ".item-edit", openEditForm);
     $('#schema-accordions').on("click", ".add-item", openAddForm);
+    $('#schema-accordions').on("click", ".item-delete", confirmDelete);
+    
+    $('#confirm-btn').on("click", actualDelete);
 
     $('#tabletop').on("click", ".form-cancel", clearTabletop);
     $('#tabletop').on( "submit", "form", submitForm);

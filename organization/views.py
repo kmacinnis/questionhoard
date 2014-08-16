@@ -163,17 +163,20 @@ def edit_topic_old(request, topic_id):
         })
     return render_to_response('organization/schema_form.html',variables)
 
-
-
-
-
 @login_required
-def delete_topic(request, topic_id):
-    topic = get_object_or_404(Topic, id=topic_id)
-    topic.delete()
-    return HttpResponseRedirect(
-            reverse('SchemaDetails', kwargs={'pk':topic.schema.id})
-    )
+def delete_item(request, item_type, item_id):
+    
+    if not 'confirmed' in request.GET:
+        raise Http404
+    Item = {
+        'topic' : Topic,
+        'subtopic' : Subtopic,
+        'objective' : Objective,
+        'question' : Question,
+    }[item_type]
+    item = get_object_or_404(Item, id=item_id)
+    item.delete()
+    return HttpResponse('deleted')
 
 @login_required
 def add_subtopic(request, topic_id):
@@ -295,5 +298,6 @@ def get_accordion_panel(request, item_type, item_id):
     })
     return render_to_response(template, variables)
 
-
-        
+@login_required
+def add_objective(request, subtopic_id):
+    pass

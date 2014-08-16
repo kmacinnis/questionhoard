@@ -70,5 +70,12 @@ urlpatterns = patterns('',
         r'^get_accordion_panel/(?P<item_type>\w+)/(?P<item_id>\d+)/$',
         get_accordion_panel,
         name='get_accordion_panel'
-    )
+    ),
+    
+    # ex: /organization/delete_item/topic/1/
+    url(
+        r'^delete_item/(?P<item_type>\w+)/(?P<item_id>\d+)/$',
+        delete_item,
+        name='delete_item'
+    ),
 )
