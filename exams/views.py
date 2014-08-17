@@ -161,6 +161,7 @@ def generate_exam(request, recipe_id):
     exam_recipe = get_object_or_404(ExamRecipe,id=recipe_id)
     generated_set = GeneratedSet(
         recipe = exam_recipe,
+        course = exam_recipe.course,
         created_by = request.user,
     )
     generated_set.save()
