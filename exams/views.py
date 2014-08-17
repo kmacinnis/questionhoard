@@ -94,8 +94,8 @@ class EditPartRecipe(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['question_formset'] = QuestionInlineFormSet(instance=self.object)
-        context['topics'] = Topic.objects.all()
-        # context['topics'] = []
+        context['schema'] = self.object.exam.course.course_type.schema
+        context['edit_schema'] = False
         return context
         
     def form_valid(self, form):
