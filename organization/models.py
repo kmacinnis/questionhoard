@@ -28,6 +28,8 @@ class Topic(models.Model):
     order = models.IntegerField()
     def __str__(self):
         return self.name
+    class Meta:
+        ordering = ['order']
 
 
 class Subtopic(models.Model):
@@ -39,6 +41,8 @@ class Subtopic(models.Model):
     order = models.IntegerField()
     def __str__(self):
         return self.name
+    class Meta:
+        ordering = ['order']
 
 
 def get_image_path(instance, filename):

@@ -137,7 +137,7 @@ class ExamAnswerChoice(models.Model):
     exam_question = models.ForeignKey(ExamQuestion)
     position = models.IntegerField()
     choice_text = models.TextField()
-    correct = models.BooleanField()
+    correct = models.BooleanField(default=False)
     comment = models.TextField(blank=True, null=True)
 
 

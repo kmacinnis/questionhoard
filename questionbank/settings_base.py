@@ -29,7 +29,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap3',
     'south',
     'questions',
     'organization',
@@ -73,12 +72,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# DEBUG_TOOLBAR_CONFIG = {
-#     'SHOW_TEMPLATE_CONTEXT': True,
-# }
-#
-# # Necessary for Django-Debug-Toolbar:
-# DEBUG_TOOLBAR_PATCH_SETTINGS = False
-# INTERNAL_IPS = ['127.0.0.1', '::1', '72.179.33.203']
-#
