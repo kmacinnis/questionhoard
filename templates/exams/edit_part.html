@@ -9,13 +9,13 @@
 	
 {% endblock external %}
 
-
 {% block content %}
 
 <div id="part-recipe-id" class="hidden">{{ object.id }}</div>
 
 <div class="row">
 	<div class="col-md-3">
+		{{ schema }}
 		{% include "organization/accordions/schema_base.html" with question_display="addable" %}
 	</div>
 	<div class="col-md-9">
