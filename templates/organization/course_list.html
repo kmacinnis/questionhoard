@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Course List{% endblock title %}
+
+{% block content %}
+
+<h3>Active Courses:</h3>
+<ul>
+	{% for course in active_courses %}
+		<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
+	{% empty %}
+		<li>You have no active courses</li>
+	{% endfor %}
+</ul>
+
+<h3>Inactive Courses:</h3>
+<ul>
+	{% for course in inactive_courses %}
+		<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
+	{% empty %}
+		<li>You have no inactive courses</li>
+	{% endfor %}
+</ul>
+
+<p><a href="{% url 'CreateCourse' %}">Create New Course</a></p>
+
+
+
+{% endblock content %}

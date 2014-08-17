@@ -22,6 +22,7 @@ div #schema-accordions {
 
 
 	{% include "scripts_bootstrap.html" %}
+	{% include "scripts_mathjax.html" %}
 	<script src="{% static 'schema_handler.js' %}"></script>
 
 	<script>
@@ -67,7 +68,7 @@ div #schema-accordions {
 
 <div class="row">
 	<div class="col-md-5" id="schema-accordions" >
-		{% include "organization/accordions/schema_base.html" with question_display="none" schema_detail=True%}
+		{% include "organization/accordions/schema_base.html" %}
 	</div>								
 	<div class="col-md-7 tabletop-empty tabletop" id="tabletop">
 		

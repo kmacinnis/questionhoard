@@ -25,6 +25,15 @@ class ExamRecipeList(ListView):
     model = ExamRecipe
 
 
+@login_required
+def examrecipe_list(request):
+    variables = RequestContext(request, {
+        'examrecipe_set' : request.user.examrecipe_set.all(),
+    })
+    return render_to_response('exams/examrecipe_list.html', variables)
+    
+
+
 class ExamRecipeDetail(DetailView):
     model = ExamRecipe
     context_object_name = 'exam_recipe'

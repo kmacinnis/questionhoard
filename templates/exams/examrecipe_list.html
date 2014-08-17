@@ -4,20 +4,71 @@
 
 {% block external %}
 {% include "scripts_bootstrap.html" %}
+{% load static %}
+<script>
+
+function confirmDelete (event) {
+    event.stopPropagation();
+    event.preventDefault();
+    var data = $(this).data();
+    moo = this;
+    $('#delete-item-type').html(data.itemType);
+    $('#delete-item-name').html(data.itemName);
+    $("#confirm-delete").modal();
+    $("#confirm-btn").data('url', data.confirmedUrl);
+    $("#confirm-btn").data('panel', $(this).closest('li'));
+}
+
+function actualDelete (event) {
+    var data = $(this).data();
+    $("#confirm-delete").modal("hide");
+    $.ajax({
+        type: "GET",
+        url: data.url,
+        data: {confirmed:true},
+        success: function (response, status){
+            if (response == 'deleted') {
+                data.panel.remove();
+            } else {
+                alert("An unknown error occurred.");
+            }
+        }
+    })
+}
+
+$(document).ready(function () {
+	$("#recipe-list").on("click", ".item-delete", confirmDelete);
+  $('#confirm-btn').on("click", actualDelete);
+	
+})
+</script>
 {% endblock external %}
 
 {% block content %}
 
-<ul>
-{% for recipe in object_list %}
+
+<h3>Exam Recipes</h3>
+<ul id="recipe-list">
+{% for recipe in examrecipe_set %}
 	<li>
-		<a href="{% url 'ExamRecipeDetail' recipe.id %}">{{ recipe.private_title }}</a>
+		{{ recipe.private_title }}
+		<a href="{% url 'ExamRecipeDetail' recipe.id %}">(view/edit)</a>
+		<a href="#" 
+			id="delete-item-{{ recipe.id }}"
+			data-item-type="exam recipe" 
+			data-item-name="{{ recipe.private_title }}" 
+			data-confirmed-url="{% url 'delete_item' item_type='examrecipe' item_id=recipe.id %}"
+			class="item-delete">(delete)</a>
 	</li>
+{% empty %}
+	You have no exam recipes.
 {% endfor %}
 </ul>
 
 <p><a href="{% url 'CreateExamRecipe' %}">Create New Exam Recipe</a></p>
 
 {% include "exams/preferences_modal.html" %}
+{% include "confirm_delete_modal.html" %}
+
 
 {% endblock content %}

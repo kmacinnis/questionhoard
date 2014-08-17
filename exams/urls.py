@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     # ex: /exams/
     url(
         r'^$',
-        login_required(ExamRecipeList.as_view()),
+        examrecipe_list,
         name='ExamRecipeList'
     ),
     

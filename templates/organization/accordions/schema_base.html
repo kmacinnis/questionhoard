@@ -1,23 +1,16 @@
 {# When including this, you must pass in a variable: question_display #}
 {# possible values: "simple_preview", "addable"     #}
-{# If this is included from the schema detail page, there will be  #}
-{# a variable schema_detail=True #}
+{# If this is included from the edit schema page, there will be  #}
+{# a variable edit_schema=True #}
 
-
-{# TODO: Split this into separate files,  #}
-{# so that I can inject a new panel with ajax. #}
-{# Loops need to be: #}
-{# {% for thing in set %} #}
-{# 	{% include "other file" %} #}
-{# {% endfor %} #}
 
 <div class="panel-group" id="accordion-main">
-	{% if schema_detail %}Topics:{% endif %}
+	{% if edit_schema %}Topics:{% endif %}
 	{% for topic in schema.topic_set.all %}
 		{% include "organization/accordions/topic_panel.html" %}
 	{% endfor %} {# topic loop #}
 </div>
-{% if schema_detail %}
+{% if edit_schema %}
 	<a id="id-add-topic-to-schema-{{ schema.id }}" 
 		data-formURL="{% url 'add_topic' schema_id=schema.id %}" 
 		href="#" class="add-item">

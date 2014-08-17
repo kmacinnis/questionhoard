@@ -16,7 +16,7 @@ function openAddForm (event) {
 
 
 function openEditForm (event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     event.preventDefault();
     var link_id = this.attributes["id"].value;
     var stuff = link_id.split('-');
@@ -81,11 +81,12 @@ function confirmDelete (event) {
     event.stopPropagation();
     event.preventDefault();
     var data = $(this).data();
+    moo = this;
     $('#delete-item-type').html(data.itemType);
     $('#delete-item-name').html(data.itemName);
     $("#confirm-delete").modal();
     $("#confirm-btn").data('url', data.confirmedUrl);
-    $("#confirm-btn").data('panel', $(this).closest('.panel'));
+    $("#confirm-btn").data('panel', $(this).closest('li'));
 }
 
 function actualDelete (event) {

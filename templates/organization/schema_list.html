@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Schema List{% endblock title %}
+
+{% block content %}
+
+<h3>Available Schemas</h3>
+<ul>
+{% for schema in object_list %}
+	<li>
+		{{ schema.name }}
+		<a href="{% url 'SchemaDetails' pk=schema.id %}">(view)</a>
+		<a href="{% url 'EditSchema' pk=schema.id %}">(edit topics, subtopics, and objectives)</a>
+		<a href="{% url 'SchemaWithQuestions' pk=schema.id %}">(add questions)</a>
+	</li>
+{% endfor %}
+</ul>
+<p>
+	<a href="{% url 'CreateSchema' %}">Create new schema</a>
+</p>
+
+{% endblock content %}

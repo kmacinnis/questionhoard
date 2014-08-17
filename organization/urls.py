@@ -9,6 +9,13 @@ urlpatterns = patterns('',
     # ex: /organization/topics/
     url(r'^topics/$', TopicList.as_view(), name='TopicList'),
     
+    # ex: /organization/courses/
+    url(
+        r'^courses/$',
+        course_list,
+        name='course_list'
+    ),
+    
     # ex: /organization/courses/create/
     url(
         r'^courses/create/$',
@@ -23,11 +30,39 @@ urlpatterns = patterns('',
         name='CourseDetails'
     ),
 
-    # ex: /organization/schema/details/5/
+    # ex: /organization/schema/
     url(
-        r'^schema/details/(?P<pk>\d+)/$',
+        r'^schema/$',
+        login_required(SchemaList.as_view()),
+        name='SchemaList'
+    ),
+
+    # ex: /organization/schema/create/
+    url(
+        r'^schema/create/$',
+        login_required(CreateSchema.as_view()),
+        name='CreateSchema'
+    ),
+
+    # ex: /organization/schema/5/details/
+    url(
+        r'^schema/(?P<pk>\d+)/details/$',
         login_required(SchemaDetails.as_view()),
         name='SchemaDetails'
+    ),
+
+    # ex: /organization/schema/5/edit/
+    url(
+        r'^schema/(?P<pk>\d+)/edit/$',
+        login_required(EditSchema.as_view()),
+        name='EditSchema'
+    ),
+    
+    # ex: /organization/schema/5/add_questions/
+    url(
+        r'^schema/(?P<pk>\d+)/add_questions/$',
+        login_required(SchemaWithQuestions.as_view()),
+        name='SchemaWithQuestions'
     ),
 
     # ex: /organization/schema/1/add_topic/

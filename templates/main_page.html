@@ -5,28 +5,45 @@
 
 {% if user.username %}
 <div class="row">
-	<h3>Courses:</h3>
+	{# <h3>Courses:</h3> #}
+	{# <ul> #}
+	{# 	{% for course in active_courses %} #}
+	{# 		<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li> #}
+	{# 	{% empty %} #}
+	{# 		<li>There are no active courses for this user</li> #}
+	{# 	{% endfor %} #}
+	{# 	</ul> #}
+	{#  #}
+	{# 	<p><a href="{% url 'CreateCourse' %}">Create New Course</a></p> #}
+
+
+	<h3>Things that you can do:</h3>
 	<ul>
-		{% for course in active_courses %}
-			<li><a href="{% url 'CourseDetails' course.id %}">{{ course.name }}</a></li>
-		{% empty %}
-			<li>There are no active courses for this user</li>
-		{% endfor %}
-		</ul>
-		<a href="{% url 'CreateCourse' %}">Create New Course</a>
-	    <ul>
-	        <li> <a href='/questions/'>Question List</a> </li>
-	        <li> <a href='/questions/create/'>Create New Question</a> </li>
-	    </ul>
-	<h3>What I'm currently working on:</h3>
+		<li><a href="{% url 'CreateSchema' %}">Create schema</a></li>
+		<li><a href="{% url 'SchemaList' %}">View all schema</a></li>
+		<li><a href="{% url 'CreateCourse' %}">Create course</a></li>
+		<li><a href="{% url 'course_list' %}">View your courses</a></li>
+		<li>
+			<a href="{% url 'CreateQuestion' %}">Create question</a>
+			(although it's a better idea to view a schema, and create questions linked to objectives)
+		</li> 
+		<li><a href="{% url 'QuestionList' %}">List all questions</a></li>
+		<li><a href="{% url 'ExamRecipeList' %}">List your exam recipes</a> (At the moment, exams aren't associated with courses)</li>
+		<li><a href="{% url 'CreateExamRecipe' %}">Create a new exam recipe</a></li>
+		
+	</ul>
+
+
 	<p>
-		<a href="http://127.0.0.1:8000/organization/schema/details/1/">Edit schema</a>
-
-
+		You can file bugs and feature requests at the 
+			<a href="https://bitbucket.org/kmacinnis/questionhoard/issues">
+				issue tracker
+			</a> (requires a bitbucket account).
+	</p>
 </div>
 {% else %}
     <p>You must <a href="/login/">login</a> 
-        before you can do anything useful.</p>
+        before you can do anything interesting.</p>
         
 {% endif %}
 

@@ -6,6 +6,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from vanilla import ListView, CreateView, DetailView
 from organization.models import *
 from organization.forms import *
+from exams.models import ExamRecipe
 import json
 
 
@@ -38,9 +39,50 @@ class CreateCourse(CreateView):
         return reverse('CourseDetails', kwargs={'pk': self.object.id})
 
 
+@login_required
+def course_list(request):
+    variables = RequestContext(request, {
+        'active_courses' : request.user.course_set.filter(is_active=True),
+        'inactive_courses' : request.user.course_set.filter(is_active=False),
+    })
+    return render_to_response('organization/course_list.html', variables)
+
+
+class CreateSchema(CreateView):
+    model= Schema
+    template_name = 'organization/create_schema.html'
+    
+    def get_success_url(self):
+        return reverse('EditSchema', kwargs={'pk': self.object.id})
+
+
 class SchemaDetails(DetailView):
     model = Schema
     context_object_name = 'schema'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['question_display'] = 'simple_preview'
+        return context
+
+
+class EditSchema(SchemaDetails):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['edit_schema'] = True
+        return context
+
+
+class SchemaWithQuestions(SchemaDetails):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['add_question_links'] = True
+        return context
+
+
+class SchemaList(ListView):
+    model = Schema
+
 
 @login_required
 def add_topic(request, schema_id):
@@ -173,6 +215,7 @@ def delete_item(request, item_type, item_id):
         'subtopic' : Subtopic,
         'objective' : Objective,
         'question' : Question,
+        'examrecipe' : ExamRecipe,
     }[item_type]
     item = get_object_or_404(Item, id=item_id)
     item.delete()
@@ -294,7 +337,7 @@ def get_accordion_panel(request, item_type, item_id):
     item = get_object_or_404(Item, id=item_id)
     variables = RequestContext(request, {
         item_type : item,
-        'schema_detail': True,
+        'edit_schema': True,
     })
     return render_to_response(template, variables)
 

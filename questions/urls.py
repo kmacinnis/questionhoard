@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/validate/$', ValidateQuestion.as_view(), name='validate'),
 
     # ex: /questions/create/
-    url(r'^create/$', CreateQuestion.as_view(), name='create'),
+    url(r'^create/$', CreateQuestion.as_view(), name='CreateQuestion'),
     # ex: /questions/create/obj12345/
     url(r'^create/obj(?P<obj_id>\d+)/$', 
             CreateQuestion.as_view(), name='create_question_for_objective'),

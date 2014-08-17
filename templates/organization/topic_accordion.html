@@ -4,11 +4,11 @@
 {# When including this, you must pass in a variable: question_display #}
 {# possible values: "simple_preview", "addable"     #}
 {# If this is included from the schema detail page, there will be  #}
-{# a variable schema_detail=True #}
+{# a variable edit_schema=True #}
 
 
 <div class="panel-group" id="accordion-main">
-	{% if schema_detail %}Topics:{% endif %}
+	{% if edit_schema %}Topics:{% endif %}
 	{% for topic in topics %}		
 		<div class="panel panel-default">
 			<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-main" data-target="#panel-topic-{{ topic.id }}">    
@@ -65,7 +65,7 @@
 														</span>
 														
 													</div>
-													{% if not schema_detail %}
+													{% if not edit_schema %}
 														<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
 															<div class="panel-inner">
 							
@@ -105,7 +105,7 @@
 											{% endfor %}  {# objective loop #}
 										</div>
 									</div>
-									{% if schema_detail %}
+									{% if edit_schema %}
 										<a id="id-add-objective-to-subtopic-{{ subtopic.id }}"
 											data-formURL="{% url 'add_objective' subtopic_id=subtopic.id %}"
 											href="#"
@@ -118,7 +118,7 @@
 						{% endfor %} {# subtopic loop #}
 					</div>
 				</div>
-				{% if schema_detail %}
+				{% if edit_schema %}
 					<a id="id-add-subtopic-to-topic-{{ topic.id }}" data-formURL="{% url 'add_subtopic' topic_id=topic.id %}" href="#" class="add-item">
 						Add subtopic to topic "{{ topic.name }}"
 					</a>
@@ -128,7 +128,7 @@
 		</div>
 	{% endfor %} {# topic loop #}
 </div>
-{% if schema_detail %}
+{% if edit_schema %}
 	<a id="id-add-topic-to-schema-{{ schema.id }}" data-formURL="{% url 'add_topic' schema_id=schema.id %}" href="#" class="add-item">
 		Add topic to schema "{{ schema.name }}"
 	</a>

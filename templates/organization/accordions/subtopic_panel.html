@@ -4,18 +4,20 @@
 		<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle">    
 			{{ subtopic.name }}
 		</h4>
-		<span class="small">
-			<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
-				[edit]
-			</a>
-			<a class="item-delete" 
-				id="delete-subtopic-{{ subtopic.id }}" 
-				href="#" data-item-type="subtopic" 
-				data-item-name="{{ subtopic.name }}" 
-				data-confirmed-url="{% url 'delete_item' item_type='subtopic' item_id=subtopic.id %}">
-					[delete]
-			</a>
-		</span>
+		{% if edit_schema %}
+			<span class="small">
+				<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
+					[edit]
+				</a>
+				<a class="item-delete" 
+					id="delete-subtopic-{{ subtopic.id }}" 
+					href="#" data-item-type="subtopic" 
+					data-item-name="{{ subtopic.name }}" 
+					data-confirmed-url="{% url 'delete_item' item_type='subtopic' item_id=subtopic.id %}">
+						[delete]
+				</a>
+			</span>
+		{% endif %}
 	</div>
 
 	<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">
@@ -32,7 +34,7 @@
 			</div>
 		</div>
 		
-		{% if schema_detail %}
+		{% if edit_schema %}
 			<a id="id-add-objective-to-subtopic-{{ subtopic.id }}"
 				data-formURL="{% url 'add_objective' subtopic_id=subtopic.id %}"
 				href="#"

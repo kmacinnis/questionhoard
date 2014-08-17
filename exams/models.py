@@ -6,6 +6,7 @@ from model_utils import Choices
 import picklefield
 
 from questions.models import Question, AnswerChoice
+from organization.models import Course
 
 
 
@@ -29,6 +30,7 @@ class ExamRecipe(models.Model):
     number_of_forms = models.IntegerField(default=1)
     max_number_choices = models.IntegerField(default=5)
     frozen = models.BooleanField(default=False)
+    course = models.ForeignKey(Course)
     
     def __str__(self):
         return self.private_title
@@ -94,6 +96,7 @@ class ExamRecipePool(ExamRecipeItem):
 class GeneratedSet(models.Model):
     recipe = models.ForeignKey(ExamRecipe, blank=True, null=True)
     created_by = models.ForeignKey(User)
+    course = models.ForeignKey(Course)
     date_created = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=300, blank=True, null=True)
     

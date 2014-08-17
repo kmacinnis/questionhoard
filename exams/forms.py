@@ -12,6 +12,7 @@ class ExamRecipeForm(forms.ModelForm):
     class Meta:
         model = ExamRecipe
         fields = (
+            'course',
             'private_title',
             'display_title',
             'form_number_style',
