@@ -112,6 +112,8 @@ class Exam(models.Model):
     
     def __str__(self):
         return "{title} (Form {form})".format(title=self.title,form=self.form)
+    class Meta:
+        ordering = ['generated_set','form']
 
 
 class ExamPart(models.Model):
