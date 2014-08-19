@@ -52,7 +52,13 @@
 {% endfor %}
 </ul>
 <p>
-	<a href="#">Create an exam for this course</a>
+	<a href="{% url 'CreateExamRecipe' %}">Create an exam for this course</a>
+	{# TODO: Create another view that actually creates exams linked to courses #}
 </p>
+<p><a href="#">TODO: Show exams for your other courses linked to this schema</a>
+</p>
+
+<h4>Practice Documents</h4>
+
 
 {% endblock content %}

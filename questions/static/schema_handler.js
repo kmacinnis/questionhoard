@@ -86,7 +86,7 @@ function confirmDelete (event) {
     $('#delete-item-name').html(data.itemName);
     $("#confirm-delete").modal();
     $("#confirm-btn").data('url', data.confirmedUrl);
-    $("#confirm-btn").data('panel', $(this).closest('li'));
+    $("#confirm-btn").data('panel', $(this).closest('.panel'));
 }
 
 function actualDelete (event) {
@@ -102,6 +102,9 @@ function actualDelete (event) {
             } else {
                 alert("An unknown error occurred.");
             }
+        },
+        error: function  (jqXHR, textStatus, errorThrown) {
+            alert(textStatus);
         }
     })
 }

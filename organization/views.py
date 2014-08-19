@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from vanilla import ListView, CreateView, DetailView, UpdateView
 from organization.models import *
@@ -125,7 +126,7 @@ def add_topic(request, schema_id):
                 'action' : 'add',
                 'panel_html' : get_accordion_panel(
                         request, 'topic', topic.id
-                ).content.decode()
+                )
             }
         else: # form not valid
             response_data = {
@@ -263,8 +264,7 @@ def add_subtopic(request, topic_id):
                 'action' : 'add',
                 'panel_html' : get_accordion_panel(
                         request, 'subtopic', subtopic.id
-                ).content.decode()
-                
+                )
             }
         else: # form not valid
             response_data = {
@@ -342,7 +342,7 @@ def get_accordion_panel(request, item_type, item_id):
         item_type : item,
         'edit_schema': True,
     })
-    return render_to_response(template, variables)
+    return render_to_string(template, variables)
 
 @login_required
 def add_objective(request, subtopic_id):
@@ -387,7 +387,7 @@ def add_objective(request, subtopic_id):
                 'action' : 'add',
                 'panel_html' : get_accordion_panel(
                         request, 'objective', objective.id
-                ).content.decode()
+                )
                 
             }
         else: # form not valid
