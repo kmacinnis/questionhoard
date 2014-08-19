@@ -25,9 +25,16 @@ urlpatterns = patterns('',
 
     # ex: /organization/courses/details/5/
     url(
-        r'^courses/details/(?P<pk>\d+)/$',
+        r'^course/(?P<pk>\d+)/details/$',
         login_required(CourseDetails.as_view()),
         name='CourseDetails'
+    ),
+
+    # ex: /organization/course/5/edit/
+    url(
+        r'^course/(?P<pk>\d+)/edit/$',
+        login_required(EditCourseDetails.as_view()),
+        name='EditCourseDetails'
     ),
 
     # ex: /organization/schema/

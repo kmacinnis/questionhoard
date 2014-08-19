@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from questions.models import Question
+from django.core.urlresolvers import reverse
 import os
+from questions.models import Question
 
 
 class Schema(models.Model):
@@ -82,6 +83,9 @@ class Course(models.Model):
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return "{0} ({1})".format(self.name, self.instructor)
+    def get_absolute_url(self):
+        return reverse('CourseDetails', args=(str(self.id),))
+    
 
 
 

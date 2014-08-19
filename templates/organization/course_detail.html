@@ -1,10 +1,58 @@
 {% extends "base.html" %}
 
+{% block bodyscripts %}
+<style>
+.moo {
+	font-weight: bold;
+	color: #317EAC;
+}
+</style>
+
+{% endblock bodyscripts %}
+
 {% block content %}
 
 <h3>{{ course.name }}</h3>
 
-<p>{{ course.description }}</p>
-<p>{{ course.}}
+<p>
+	<span class="moo">Course Description:</span> &nbsp; {{ course.description }}
+	<br/>
+	<span class="moo">Instructor:</span> &nbsp; {{ course.instructor}}
+	<br/>
+	<span class="moo">Start Date:</span> &nbsp; {{ course.start_date }}
+	<br/>
+	<span class="moo">End Date:</span> &nbsp; {{ course.end_date }}
+	<br/>
+	<span class="moo">Semester:</span> &nbsp; {{ course.semester }}
+	<br/>
+	<span class="moo">Course Type:</span> &nbsp; {{ course.course_type }}
+	<br/>
+	<span class="moo">Currently Active:</span> &nbsp; {{ course.is_active }}
+	<br/>
+	<span class="moo">Teaching Assistants:</span> 
+	{% if course.assistants.count %}
+	<ul>
+		{% for assistant in course.assistants.all %}
+		<li>{{ assistant }}</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+			None
+	{% endif %}
+</p>
+<p>
+	<a href="{% url 'EditCourseDetails' pk=course.id %}">Edit course details</a></p>
+
+<h4>Exams</h4>
+<ul>
+{% for er in course.examrecipe_set.all %}
+	<li><a href="{% url 'ExamRecipeDetail' pk=er.id %}">{{ er }}</a></li>
+{% empty %}
+	<li>This course has no exams</li>
+{% endfor %}
+</ul>
+<p>
+	<a href="#">Create an exam for this course</a>
+</p>
 
 {% endblock content %}

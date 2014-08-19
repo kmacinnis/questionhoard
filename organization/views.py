@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from vanilla import ListView, CreateView, DetailView
+from vanilla import ListView, CreateView, DetailView, UpdateView
 from organization.models import *
 from organization.forms import *
 from exams.models import ExamRecipe
@@ -24,6 +24,9 @@ class CourseDetails(DetailView):
     model = Course
     context_object_name = 'course'
 
+class EditCourseDetails(UpdateView):
+    model = Course
+    context_object_name = 'course'
 
 class CreateCourse(CreateView):
     model = Course
