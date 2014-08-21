@@ -1,5 +1,5 @@
 {% autoescape off %}\documentclass{exam}
-{% if prefs.font_size != 10 %}\usepackage[fontsize={{ prefs.fontsize}} ]{scrextend}{% endif %}
+{% if False and prefs.font_size != 10 %}\usepackage[fontsize={{ prefs.fontsize}} ]{scrextend}{% endif %}
 \usepackage{amsmath}
 \usepackage{mathpazo}
 \usepackage{color}
@@ -7,7 +7,7 @@
 \usepackage{package}
 {% endfor %}
 
-{% if prefs.font != prefs.COMP_MODERN %}
+{% if False and prefs.font != prefs.COMP_MODERN %}
 \usepackage{ {{ prefs.font }} }
 {% endif %}
 \usepackage[T1]{fontenc}
@@ -31,6 +31,8 @@
 
 \begin{document}
 \examtitle{ {{ exam.title }} }
+
+\begin{questions}
 
 {% for part in exam.exampart_set.all %}
 {% if part.show_title %}
