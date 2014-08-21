@@ -106,6 +106,13 @@ urlpatterns = patterns('',
         add_objective,
         name='add_objective'
     ),
+
+    # ex: /organization/objective/1/edit/
+    url(
+        r'^objective/(?P<objective_id>\d+)/edit/$',
+        edit_objective,
+        name='edit_objective'
+    ),
     
     # ex: /organization/get_accordion_panel/topic/1/
     url(

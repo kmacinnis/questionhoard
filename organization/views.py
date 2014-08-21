@@ -402,6 +402,55 @@ def add_objective(request, subtopic_id):
     return form_html(ObjectiveForm())
 
 @login_required
+def edit_objective(request, objective_id):
+    """
+    On GET, returns the form to be used to edit the subtopic.
+    On POST, returns a json object:
+        {   success     : whether the form was valid,
+            form_html   : if form not valid, the html to represent the form
+            action      : "edit"
+            label       : the id of the panel label
+            name        : the new name of the subtopic
+        }
+    """
+    
+    def form_html(form):
+        variables = RequestContext(request,
+        {
+            'form' : form,
+            'form_title' : 'Edit Objective',
+            'item_type' : 'objective',
+            'item_id' : objective_id,
+            'action_url' : reverse(
+                    'edit_objective', 
+                    kwargs={'objective_id':objective.id})
+        })
+        return render_to_response('organization/schema_form.html',variables)
+    
+    objective = get_object_or_404(Objective, id=objective_id)
+
+    if request.POST:
+        form = ObjectiveForm(request.POST, instance=objective)
+        if form.is_valid():
+            form.save()
+            response_data = {
+                'success' : True,
+                'action' : 'edit',
+                'label' : '#label-objective-{}'.format(objective.id),
+                'name' : objective.name,
+            }
+        else: # form not valid
+            response_data = {
+                'success' : False,
+                'form_html' : form_html(form)
+            }
+        return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
+        )
+    # request.GET:
+    return form_html(ObjectiveForm(instance=objective))
+
+@login_required
 def related_courses(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     schema = course.course_type.schema
