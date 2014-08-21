@@ -1,0 +1,21 @@
+<h4>Related Courses</h4>
+<ul class="related-course-list">
+{% for course in related_courses %}
+	<li> <h4>{{ course.display }}</h4>
+		<ul class="exam-list">
+			{% for exam in course.examrecipe_set %}
+				<li>
+					<a href="{% url 'ExamRecipeDetails' pk=exam.id %}">
+						{{ exam.private_name }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</li>
+{% empty %}
+You have no related courses.
+{% endfor %}
+</ul>
+<p>
+	<a id="hide-me-link" href="#">Hide</a>
+</p>

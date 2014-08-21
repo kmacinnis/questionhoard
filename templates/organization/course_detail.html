@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block external %}
+{% include "scripts_jquery_ui.html" %}
+{% endblock external %}
+
+
 {% block bodyscripts %}
 <style>
 .moo {
@@ -7,6 +12,27 @@
 	color: #317EAC;
 }
 </style>
+
+<script>
+function showRelated (event) {
+	event.preventDefault();
+	$("#related-courses").load("{% url 'related_courses' course_id=course.id %}");
+	$("#related-courses").removeClass('hidden');
+	$(this).closest('div').addClass('hidden');
+}
+function hideRelated (event) {
+	event.preventDefault();
+	$("#related-courses").addClass('hidden');
+	$("#show-related").removeClass('hidden');
+	
+}
+
+$(document).ready(function () {
+	$("#show-related-link").click(showRelated);
+	$("#related-courses").on("click", "#hide-me-link", hideRelated);
+})
+
+</script>
 
 {% endblock bodyscripts %}
 
@@ -52,13 +78,20 @@
 {% endfor %}
 </ul>
 <p>
-	<a href="{% url 'CreateExamRecipe' %}">Create an exam for this course</a>
-	{# TODO: Create another view that actually creates exams linked to courses #}
+	<a href="{% url 'CreateExamRecipeForCourse' course_id=course.id %}">
+		Create an exam for this course
+	</a>
 </p>
-<p><a href="#">TODO: Show exams for your other courses linked to this schema</a>
-</p>
+<div class="hidden" id='related-courses'>
+</div>
+<div id="show-related">
+	<a href="{% url 'related_courses' course_id=course.id %}" id='show-related-link'>
+		Show exams for your other courses linked to this schema
+	</a>
+</div>
 
 <h4>Practice Documents</h4>
-
+{# TODO: Practice Docs aren't yet linked to courses. #}
+<p>At the moment, Practice Documents aren't linked to courses.  That will change.
 
 {% endblock content %}

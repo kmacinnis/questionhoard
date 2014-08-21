@@ -47,12 +47,23 @@ class CreateExamRecipe(CreateView):
     model = ExamRecipe
     form_class = ExamRecipeForm
     template_name = 'exams/create_recipe.html'
+    
+    def get_form(self):
+        form = ExamRecipeForm()
+        course_id = self.kwargs.get('course_id')
+        if course_id:
+            form.fields['course'].widget = forms.HiddenInput()
+            form.fields['course'].initial = course_id
+        return form
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         recipe = ExamRecipe(created_by=request.user)
         form = ExamRecipeForm(request.POST, instance=recipe)
         if form.is_valid():
             return self.form_valid(form)
+        return HttpResponse('oops')
+        # TODO: I think this needs to return something when the form is not valid?
+        # MAYBE????
 
 
 class CreateExamPartRecipe(CreateView):

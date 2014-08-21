@@ -83,6 +83,10 @@ class Course(models.Model):
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return "{0} ({1})".format(self.name, self.instructor)
+    def display(self):
+        if self.semester:
+            return '{0} ({1})'.format(self.name, self.semester)
+        return self.name
     def get_absolute_url(self):
         return reverse('CourseDetails', args=(str(self.id),))
     

@@ -20,6 +20,13 @@ urlpatterns = patterns('',
         name='CreateExamRecipe'
     ),
 
+    # ex: /exams/create/course/56/
+    url(
+        r'^create/course/(?P<course_id>\d+)/$',
+        login_required(CreateExamRecipe.as_view()),
+        name='CreateExamRecipeForCourse'
+    ),
+
     # ex: /exams/5/
     url(
         r'^(?P<pk>\d+)/$',

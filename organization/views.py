@@ -400,3 +400,16 @@ def add_objective(request, subtopic_id):
             )
     # request.GET:
     return form_html(ObjectiveForm())
+
+@login_required
+def related_courses(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    schema = course.course_type.schema
+    related_courses = (request.user.course_set
+        .filter(course_type__schema=schema)
+        .exclude(id=course.id)
+        .order_by('-start_date')
+    )
+    variables = RequestContext(request, {'related_courses' : related_courses})
+    return render_to_response('organization/related_courses.html', variables)
+

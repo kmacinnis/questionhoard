@@ -120,4 +120,11 @@ urlpatterns = patterns('',
         delete_item,
         name='delete_item'
     ),
+    
+    # ex: /organization/course/1/related_courses/
+    url(
+        r'^course/(?P<course_id>\d+)/related_courses/$',
+        related_courses,
+        name='related_courses'
+    )
 )

@@ -127,7 +127,6 @@ class CreateQuestion(CreateView):
         objective_id = self.kwargs.get('obj_id')
         if objective_id:
             context['objective'] = Objective.objects.get(id=objective_id)
-            logging.debug(context['objective'])
         
         context['action'] = 'Create'
         if self.request.POST:
