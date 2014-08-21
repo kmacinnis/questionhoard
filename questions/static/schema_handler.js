@@ -9,9 +9,10 @@ function notify (event) {
 
 function openAddForm (event) {
     event.preventDefault();
-    $('#tabletop').load($(this).data("formurl"));
+    $('#tabletop').load($(this).data("formurl"), function () {
+        $('#id_name').focus();
+    });
     $('#tabletop').data('currentAction','add');
-    
 }
 
 
