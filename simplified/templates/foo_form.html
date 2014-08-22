@@ -1,7 +1,7 @@
 {% if form.errors %}
     {{ form.errors }}
 {% endif %}
-<form method="post" action="." class="question-form">
+<form method="post" action="." class="question-form big-width">
     {% csrf_token %}
     <h1>{{ action }} Foo</h1>
     <p><label for="id_name">Foo Name:</label>

@@ -8,7 +8,6 @@
 
 /*######## Smart Green ########*/
 .question-form {
-    width: 800px;
     margin-right: auto;
     margin-left: auto;
     background: #FFF;
@@ -259,4 +258,12 @@ ul.question-list-links, ul.question-list-links li {
 
 div.end-space {
     height: 100ex;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.big-width {
+    width: 800px;
 }
