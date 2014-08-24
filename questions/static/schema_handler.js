@@ -29,30 +29,22 @@ function openEditForm (event) {
     
 }
 
+function openQuestionForm (event) {
+    event.preventDefault();
+    $('#tabletop').load(this.href + ' form', function () {
+        $('#id_name').focus();
+    });
+    $('#tabletop').data('currentAction','add');
+}
+
 function clearTabletop (event) {
     $('#tabletop').html("");
     $('#tabletop').removeData('currentLabel');
     $('#tabletop').removeData('currentAction');
 }
 
-function submitEdit (event) {
-    var newName = this.name.value;
-    var url = this.action;
-    var data = $( this ).serialize();
-    $.post(url, data, 
-        function(data,status){
-            if (data == 'success') {
-                $('#'+$('#tabletop').data('currentLabel')).html(newName);
-                clearTabletop();
-            }
-            else {
-                $('#tabletop').html(data);
-            }
-        }
-    );
-}
-
 function submitForm (event) {
+    moo = this;
     event.preventDefault();
     var url = this.action;
     var data = $( this ).serialize();
@@ -115,6 +107,7 @@ function actualDelete (event) {
 $(document).ready(function () {
     $('#schema-accordions').on("click", ".item-edit", openEditForm);
     $('#schema-accordions').on("click", ".add-item", openAddForm);
+    $('#schema-accordions').on("click", ".add-question", openQuestionForm);
     $('#schema-accordions').on("click", ".item-delete", confirmDelete);
     
     $('#confirm-btn').on("click", actualDelete);

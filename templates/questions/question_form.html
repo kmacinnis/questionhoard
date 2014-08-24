@@ -1,16 +1,17 @@
-{% if form.errors %}
-    {{ form.errors }}
-{% endif %}
-<div class="col-md-9">
-		<form method="post" action="." class="question-form big-width">
+    {{ form.non_field_errors }}
+
+{{ form.errors }}
+
+		<form method="post" action="{{ action_url }}" class="question-form full-width">
 			<h1>
-				{{ action }} Question
+				{{ action }} Question {{ for_obj }}
 			</h1>
 			{% for hidden in form.hidden_fields %}
 				{{ hidden }}
 			{% endfor %}
 			{% csrf_token %}
 			<p><label for="id_name">Question Name:</label>
+				{{ form.name.errors }}
 				{{ form.name }}
 			</p>
 
@@ -29,23 +30,28 @@
 			<div class="clear"></div>
 
 			<p><label for="id_symbol_vars">Symbolic Variables:</label>
+				{{ form.symbol_vars.errors }}
 				{{ form.symbol_vars }}
 			</p>
 			<p><label for="id_code">Question Code:</label>
+				{{ form.code.errors }}
 				{{ form.code }}
 			</p>
 			<p>
 				<label for="id_question_text">Question text:</label> 
+				{{ form.question_text.errors }}
 				{{ form.question_text }}
 				<a href="" id="toggle-well-prompt-short">Add short version</a>
 			</p>
 			<div id="well-prompt-short" class="well row hidden">
 				<div class="col-md-6">
 				<label for="id_prompt">Prompt:</label>
+					{{ form.prompt.errors }}
 					{{ form.prompt }}
 				</div>
 				<div class="col-md-6">
 					<label for="id_body">Short Version:</label>
+					{{ form.short_version.errors }}
 					{{ form.short_version }}
 				</div>
 			</div>
@@ -54,8 +60,9 @@
 				{% include "formset_table.html" with formset=answerchoices_formset %}
 			</p>
 
+			 <input class="btn btn-primary" type="submit" value="Save" />
+			 <input class="btn form-cancel" type="submit" value="Cancel"/>
 
-			<input type="submit" name="submit" value="Save" id="submit">
+			{# <input type="submit" name="submit" value="Save" id="submit"> #}
 		</form>
-</div>
 

@@ -1,18 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-<style>
-div .tabletop-empty {
-	height:90vh;
-	background-color:#A5A7B8;
-}
-div #schema-accordions {
-	height:90vh;
-	overflow-y:auto;
-}
-	
-</style>
-{% endblock head %}
 
 {% block title %}Schema Details{% endblock title %}
 
@@ -31,6 +18,16 @@ div #schema-accordions {
 	});
 	</script>
 
+<style>
+div .tabletop-empty {
+	height:90vh;
+	background-color:#A5A7B8;
+}
+div #schema-accordions {
+	height:90vh;
+	overflow-y:auto;
+}
+</style>
 
 
 {% endblock external %}
@@ -67,10 +64,10 @@ div #schema-accordions {
 {# </div> #}
 
 <div class="row">
-	<div class="col-md-5" id="schema-accordions" >
+	<div class="col-md-4" id="schema-accordions" >
 		{% include "organization/accordions/schema_base.html" %}
 	</div>								
-	<div class="col-md-7 tabletop-empty tabletop" id="tabletop">
+	<div class="col-md-8 tabletop-empty tabletop" id="tabletop">
 		
 	</div>
 </div>

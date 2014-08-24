@@ -1,11 +1,11 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-topic-{{ topic.id }}" data-target="#panel-subtopic-{{ subtopic.id }}">     
-		<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle">    
+		<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle inline-block">    
 			{{ subtopic.name }}
 		</h4>
 		{% if edit_schema %}
-			<span class="small">
+			<span class="small inline-block">
 				<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
 					[edit]
 				</a>

@@ -230,6 +230,11 @@ table.formset  {
 .delete {
     display: none;
 }
+
+.inline-block {
+    display: inline-block;
+}
+
 div#question-preview {
     width: 250px;
     margin-right: auto;

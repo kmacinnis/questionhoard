@@ -18,9 +18,9 @@ urlpatterns = patterns('',
 
     # ex: /questions/create/
     url(r'^create/$', CreateQuestion.as_view(), name='CreateQuestion'),
-    # ex: /questions/create/obj12345/
-    url(r'^create/obj(?P<obj_id>\d+)/$', 
-            CreateQuestion.as_view(), name='create_question_for_objective'),
+    # ex: /questions/create_for_objective/345/
+    url(r'^create_for_objective/(?P<obj_id>\d+)/$', 
+            create_question, name='create_question_for_objective'),
 
 
 

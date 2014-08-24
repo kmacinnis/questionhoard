@@ -1,11 +1,11 @@
 <div class="panel panel-default">
-	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ subtopic.id }}-{{ objective.id }}">
-		<h4 id="label-objective-{{ objective.id }}" class="panel-title panel-toggle">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ objective.id }}">
+		<h4 id="label-objective-{{ objective.id }}" class="panel-title panel-toggle inline-block">
 			{{ objective.name }}
 		</h4>
 		{% if edit_schema %}
 			{% if objective.subtopic_set.count == 1 %}
-				<span class="small">
+				<span class="small inline-block">
 					<a class="item-edit" id="edit-objective-{{ objective.id }}" href="#">
 						[edit]
 					</a>
@@ -23,35 +23,19 @@
 		
 	</div>
 	{% if not edit_schema %}
-		<div id="panel-objective-{{ subtopic.id }}-{{ objective.id }}" class="panel-body collapse">
+		<div id="panel-objective-{{ objective.id }}" class="panel-body collapse">
 			<div class="panel-inner">
 
 				{% if objective.questions.all %}Questions:{% endif %}
 				<!-- question accordion -->
 
-				<div class="panel-group" id="accordion-objective-{{ subtopic.id }}-{{ objective.id }}">
+				<div class="panel-group" id="accordion-objective-{{ objective.id }}">
 					{% for question in objective.questions.all %}
-
-						<div class="panel panel-default">
-							<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
-								<h4 class="panel-title panel-toggle">
-									{{ question.name }}
-								</h4>
-							</div>
-							<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
-								<div class="panel-inner">
-
-									{% if question_display %}
-										{% include "organization/question_"|add:question_display %}
-									{% endif %}
-
-								</div>
-							</div>
-						</div>
+						{% include "organization/accordions/question_panel.html" %}
 					{% endfor %}   {# question loop #}
 				</div>
 				{% if add_question_links %}
-					<a href="{% url 'create_question_for_objective' obj_id=objective.id  %}">
+					<a class="add-question" href="{% url 'create_question_for_objective' obj_id=objective.id  %}">
 						Create new question for this objective.
 					</a>
 				{% endif %}

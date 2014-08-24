@@ -6,12 +6,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, UpdateView, FormView
 # from vanilla import CreateView, UpdateView, FormView
+import json
 
 
 from questions.models import *
 from questions.forms import *
 from questions.handling import validate_question, preview_question
 from organization.models import Objective
+from organization.views import get_accordion_panel
 
 import logging
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -72,17 +74,33 @@ def preview(request, question_id):
 
 @login_required
 def create_question(request,**kwargs):
+    
+    def form_html(form ):
+        myvars = RequestContext(request,
+        {
+            'form' : form,
+            'randvar_formset' : randvar_formset,
+            'condition_formset' : condition_formset,
+            'answerchoices_formset' : answerchoices_formset,
+            'action' : 'Create',
+            'objective' : objective,
+            'for_obj' : for_obj,
+            'action_url' : reverse(
+                'create_question_for_objective', kwargs={'obj_id':objective_id})
+        })
+        return render_to_response('questions/question_form.html',myvars)
+
     objective_id = kwargs.get('obj_id','')
     if objective_id:
-        objective = Objective.objects.get(id=objective_id)
-        logging.debug(objective)
+        objective = get_object_or_404(Objective, id=objective_id)
+        for_obj = 'for Objective "{}"'.format(objective.name)
     else:
-        objective = ''
+        objective, for_obj = '',''
 
     if request.POST:
+        response_data = {}
         question = Question(created_by=request.user)
         form = QuestionEntryForm(request.POST, instance=question)
-        logging.debug(form)
         if form.is_valid():
             question = form.save(commit=False)
             randvar_formset = RandVarsInline(request.POST, instance=question)
@@ -97,24 +115,28 @@ def create_question(request,**kwargs):
                 answerchoices_formset.save()
                 if objective:
                     question.objective_set.add(objective)
-                return HttpResponseRedirect(
-                    "/questions/{}".format(question.id))
+                response_data = {
+                    'success' : True,
+                    'panel_html' : get_accordion_panel(
+                            request, 'question', question.id
+                    ),
+                    'place' : '#accordion-objective-{}'.format(objective.id),
+                    'action' : 'add', 
+                }
+        if not response_data:
+            response_data = {
+                'success' : False,
+                'form_html' : form_html(form),
+            }
+        return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
+            )
     else: #request.GET
         form = QuestionEntryForm()
         randvar_formset = RandVarsInline(instance=Question())
         condition_formset = ConditionsInline(instance=Question())
         answerchoices_formset = AnswerChoicesInline(instance=Question())
-    variables = RequestContext(request,
-    {
-        'form' : form,
-        'randvar_formset' : randvar_formset,
-        'condition_formset' : condition_formset,
-        'answerchoices_formset' : answerchoices_formset,
-        'action' : 'Create',
-        'objective' : objective,
-
-    })
-    return render_to_response('questions/create_question.html',variables)
+        return form_html(form)
 
 
 class CreateQuestion(CreateView):
@@ -167,13 +189,13 @@ class CreateQuestion(CreateView):
             return self.render_to_response(context)
 
     def post(self, request, **kwargs):
+        self.object = None
         question = Question(created_by=request.user)
         form = QuestionEntryForm(request.POST, instance=question)
         if form.is_valid():
             return self.form_valid(form)
+        return self.form_invalid(form) 
 
-
-        
 
 class EditQuestion(UpdateView):
     model = Question

@@ -341,6 +341,7 @@ def get_accordion_panel(request, item_type, item_id):
     variables = RequestContext(request, {
         item_type : item,
         'edit_schema': True,
+        'question_display': 'simple_preview',
     })
     return render_to_string(template, variables)
 
