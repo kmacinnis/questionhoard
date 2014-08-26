@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.db.models.base import ModelBase
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from vanilla import ListView, CreateView, DetailView, UpdateView
 from organization.models import *
@@ -328,16 +329,28 @@ def edit_subtopic(request, subtopic_id):
 
 
 
-# @login_required
-def get_accordion_panel(request, item_type, item_id):
+@login_required
+def get_accordion_panel(request, item_type='', item_id='', item=None):
+    '''
+    Returns the panel for a panel for the object of type `item_type`
+    with id `item_id`.
+    
+    This function can accept either an actual object as `item`,
+    or strings for the model name (`item_type`) and id.
+    (If `item` is provided, then these will be ignored.)
+    '''
+    if item:
+        item_type = type(item).__name__.lower()
+    else:
+        Item = {
+            'topic' : Topic,
+            'subtopic' : Subtopic,
+            'objective' : Objective,
+            'question' : Question,
+        }[item_type]
+        item = get_object_or_404(Item, id=item_id)
+        
     template = "organization/accordions/{}_panel.html".format(item_type)
-    Item = {
-        'topic' : Topic,
-        'subtopic' : Subtopic,
-        'objective' : Objective,
-        'question' : Question,
-    }[item_type]
-    item = get_object_or_404(Item, id=item_id)
     variables = RequestContext(request, {
         item_type : item,
         'edit_schema': True,

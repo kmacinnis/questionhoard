@@ -13,8 +13,10 @@ urlpatterns = patterns('',
     url(r'^(?P<question_id>\d+)/preview/$', preview, name='preview'),
     # ex: /questions/5/edit/
     url(r'^(?P<pk>\d+)/edit/$', EditQuestion.as_view(), name='edit'),
+    # ex: /questions/5/edit/
+    url(r'^(?P<pk>\d+)/edit/$', EditQuestion.as_view(), name='EditQuestion'),
     # ex: /questions/5/validate/
-    url(r'^(?P<pk>\d+)/validate/$', ValidateQuestion.as_view(), name='validate'),
+    url(r'^(?P<question_id>\d+)/validate/$', validate, name='validate'),
 
     # ex: /questions/create/
     url(r'^create/$', CreateQuestion.as_view(), name='CreateQuestion'),

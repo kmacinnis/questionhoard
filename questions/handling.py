@@ -212,6 +212,10 @@ def preview_question(question):
 def validate_question(question, user):
 # TODO: Items with *
     """
+    This function validates the question by checking for several conditions.
+    If it fails, we return a dictionary of error messages.
+    If it succeeds, we return None.
+    
     Checks for the following things:
         * Question name should be unique to user
         ✓ all fields that contain code (varposs, condition, code, choice_expr)

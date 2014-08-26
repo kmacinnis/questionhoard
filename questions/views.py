@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -45,7 +46,7 @@ def detail(request, question_id):
     condition_formset.extra = 0
     answerchoices_formset = AnswerChoicesInline(instance=q)
     answerchoices_formset.extra = 0
-    is_validated = q.validated
+    is_validated = q.is_validated
     variables = RequestContext(request,
         {
             'question' : q,
@@ -197,13 +198,13 @@ class CreateQuestion(CreateView):
         return self.form_invalid(form) 
 
 
-class EditQuestion(UpdateView):
+class EditQuestionBase(UpdateView):
     model = Question
     template_name = 'questions/edit_question.html'
     form_class = QuestionEntryForm
 
     def get_context_data(self, **kwargs):
-        context = super(EditQuestion, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['action'] = 'Edit'
         context['randvar_formset'] = RandVarsInline(instance=self.object)
         context['condition_formset'] = ConditionsInline(instance=self.object)
@@ -219,7 +220,6 @@ class EditQuestion(UpdateView):
 
         all_formsets = [randvar_formset, condition_formset, answerchoices_formset]
         if all([f.is_valid() for f in all_formsets]):
-            # lg.debug('good formsets')
             form.save()
             randvar_formset.save()
             condition_formset.save()
@@ -237,14 +237,52 @@ class EditQuestion(UpdateView):
             context['answerchoices_formset'] = answerchoices_formset
             return self.render_to_response(context)
 
+class AjaxableResponseMixin(object):
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'success' : True,
+                'id' : self.object.pk,
+                'name' : self.object.name,
+                'panel_html' : get_accordion_panel(
+                        request, self.object, self.object.pk
+                ),
+            }
+            return self.render_to_json_response(data)
+        else:
+            return response
+
+
+class EditQuestion(AjaxableResponseMixin, EditQuestionBase):
+    pass
+
 
 class ValidateQuestion(EditQuestion):
     template_name = 'questions/validation.html'
 
     def get_context_data(self, **kwargs):
         context = super(ValidateQuestion, self).get_context_data(**kwargs)
-        q = self.object
-        is_validated = q.validated
+        is_validated = self.object.is_validated
         if not is_validated:
             context['validation_errors'] = validate_question(
                                             self.object, self.request.user)
@@ -254,6 +292,26 @@ class ValidateQuestion(EditQuestion):
         
         return context
 
-
+@login_required
+def validate(request, question_id):
+    ajax = 'ajax' in request.GET
+    if not ajax:
+        return ValidateQuestion.as_view()(request, pk=question_id)
+    question = get_object_or_404(Question, id=question_id)
+    if question.is_validated:
+        return HttpResponse('validated')
+    validation_errors = validate_question(question, request.user)
+    if validation_errors is None:
+        return HttpResponse('validated')
+    error_html = render_to_string('questions/validation_errors.html', 
+            {'validation_errors' : validation_errors}
+    )
+    response_data = {
+        'error_html' : error_html,
+        'form_url' : reverse('EditQuestion', kwargs={'pk':question_id}),
+    }
+    return HttpResponse(
+                json.dumps(response_data), content_type="application/json"
+    )
 
 

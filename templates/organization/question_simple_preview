@@ -1,1 +1,10 @@
+{% if question.is_validated %}
 {{ question.preview }}
+{% else %}
+This question has not been validated yet.
+<br/>
+<a class='validate-link' href="{% url 'validate' question.id %}">
+	Attempt to validate this question now.
+</a>
+{% endif %} 
+

@@ -1,68 +1,68 @@
-    {{ form.non_field_errors }}
 
-{{ form.errors }}
+<form method="post" action="{{ action_url }}" class="question-form full-width">
+	<h1>
+		{{ action }} Question {{ for_obj }}
+	</h1>
+	{{ form.non_field_errors }}
 
-		<form method="post" action="{{ action_url }}" class="question-form full-width">
-			<h1>
-				{{ action }} Question {{ for_obj }}
-			</h1>
-			{% for hidden in form.hidden_fields %}
-				{{ hidden }}
-			{% endfor %}
-			{% csrf_token %}
-			<p><label for="id_name">Question Name:</label>
-				{{ form.name.errors }}
-				{{ form.name }}
-			</p>
+	{{ form.errors }}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
+	{% csrf_token %}
+	<p><label for="id_name">Question Name:</label>
+		{{ form.name.errors }}
+		{{ form.name }}
+	</p>
 
-			<p>
-				<div id="randvar-div" class="formset">
-				<label for="randvar_set-table">Random Variables:</label>
-					{% include "formset_table.html" with formset=randvar_formset %}
-				</div>
-				<div id="condition-div" class="formset">
-				<label for="condition_set-table">Conditions on Random Variables:</label>
-					{% include "formset_table.html" with formset=condition_formset %}
-				</div>
-			</p>
+	<p>
+		<div id="randvar-div" class="formset">
+		<label for="randvar_set-table">Random Variables:</label>
+			{% include "formset_table.html" with formset=randvar_formset %}
+		</div>
+		<div id="condition-div" class="formset">
+		<label for="condition_set-table">Conditions on Random Variables:</label>
+			{% include "formset_table.html" with formset=condition_formset %}
+		</div>
+	</p>
 
-			<!-- Clearing Floating Elements-->
-			<div class="clear"></div>
+	<!-- Clearing Floating Elements-->
+	<div class="clear"></div>
 
-			<p><label for="id_symbol_vars">Symbolic Variables:</label>
-				{{ form.symbol_vars.errors }}
-				{{ form.symbol_vars }}
-			</p>
-			<p><label for="id_code">Question Code:</label>
-				{{ form.code.errors }}
-				{{ form.code }}
-			</p>
-			<p>
-				<label for="id_question_text">Question text:</label> 
-				{{ form.question_text.errors }}
-				{{ form.question_text }}
-				<a href="" id="toggle-well-prompt-short">Add short version</a>
-			</p>
-			<div id="well-prompt-short" class="well row hidden">
-				<div class="col-md-6">
-				<label for="id_prompt">Prompt:</label>
-					{{ form.prompt.errors }}
-					{{ form.prompt }}
-				</div>
-				<div class="col-md-6">
-					<label for="id_body">Short Version:</label>
-					{{ form.short_version.errors }}
-					{{ form.short_version }}
-				</div>
-			</div>
+	<p><label for="id_symbol_vars">Symbolic Variables:</label>
+		{{ form.symbol_vars.errors }}
+		{{ form.symbol_vars }}
+	</p>
+	<p><label for="id_code">Question Code:</label>
+		{{ form.code.errors }}
+		{{ form.code }}
+	</p>
+	<p>
+		<label for="id_question_text">Question text:</label> 
+		{{ form.question_text.errors }}
+		{{ form.question_text }}
+		<a href="" id="toggle-well-prompt-short">Add short version</a>
+	</p>
+	<div id="well-prompt-short" class="well row hidden">
+		<div class="col-md-6">
+		<label for="id_prompt">Prompt:</label>
+			{{ form.prompt.errors }}
+			{{ form.prompt }}
+		</div>
+		<div class="col-md-6">
+			<label for="id_body">Short Version:</label>
+			{{ form.short_version.errors }}
+			{{ form.short_version }}
+		</div>
+	</div>
 
-			<p>
-				{% include "formset_table.html" with formset=answerchoices_formset %}
-			</p>
+	<p>
+		{% include "formset_table.html" with formset=answerchoices_formset %}
+	</p>
 
-			 <input class="btn btn-primary" type="submit" value="Save" />
-			 <input class="btn form-cancel" type="submit" value="Cancel"/>
+	 <input class="btn btn-primary" type="submit" value="Save" />
+	 <input class="btn form-cancel" type="submit" value="Cancel"/>
 
-			{# <input type="submit" name="submit" value="Save" id="submit"> #}
-		</form>
+	{# <input type="submit" name="submit" value="Save" id="submit"> #}
+</form>
 

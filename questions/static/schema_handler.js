@@ -15,7 +15,6 @@ function openAddForm (event) {
     $('#tabletop').data('currentAction','add');
 }
 
-
 function openEditForm (event) {
     // event.stopPropagation();
     event.preventDefault();
@@ -37,14 +36,44 @@ function openQuestionForm (event) {
     $('#tabletop').data('currentAction','add');
 }
 
+function validateQuestion(event) {
+    event.preventDefault();
+    $('#tabletop').data('currentAction','validate question');
+    url = this.href;
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: 'ajax',
+        success: function (response,status){
+            if (response == 'validated'){
+                alert('yes!');
+                // reload question panel
+            } else {
+                $('#schema-accordions').addClass('hidden');
+                $('#error-spot').removeClass('hidden');
+                $('#error-spot').html(response.error_html);
+                $('#tabletop').load(response.form_url + ' form', function () {
+                    $('#id_name').focus();
+                    $('form.question-form').attr('action',url);
+                });
+                $('#tabletop').data('currentAction','validate question');
+            }
+        }
+    })
+}
+
 function clearTabletop (event) {
+    if ('validate question' == $('#tabletop').data('currentAction')) {
+        $('#schema-accordions').addClass('hidden');
+        $('#error-spot').removeClass('hidden');
+        $('#error-spot').html('');
+    };
     $('#tabletop').html("");
     $('#tabletop').removeData('currentLabel');
     $('#tabletop').removeData('currentAction');
 }
 
 function submitForm (event) {
-    moo = this;
     event.preventDefault();
     var url = this.action;
     var data = $( this ).serialize();
@@ -109,6 +138,7 @@ $(document).ready(function () {
     $('#schema-accordions').on("click", ".add-item", openAddForm);
     $('#schema-accordions').on("click", ".add-question", openQuestionForm);
     $('#schema-accordions').on("click", ".item-delete", confirmDelete);
+    $('#schema-accordions').on("click", ".validate-link", validateQuestion);
     
     $('#confirm-btn').on("click", actualDelete);
 

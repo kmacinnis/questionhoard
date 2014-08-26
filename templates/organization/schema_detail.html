@@ -11,6 +11,11 @@
 	{% include "scripts_bootstrap.html" %}
 	{% include "scripts_mathjax.html" %}
 	<script src="{% static 'schema_handler.js' %}"></script>
+	{% if add_question_links %}
+		<script src="{% static 'formset_handler.js' %}"></script> 
+	{% endif %}
+
+
 
 	<script>
 	$('body').on('hidden.bs.modal', '.modal', function () {
@@ -18,19 +23,21 @@
 	});
 	</script>
 
-<style>
-div .tabletop-empty {
-	height:90vh;
-	background-color:#A5A7B8;
-}
-div #schema-accordions {
-	height:90vh;
-	overflow-y:auto;
-}
-</style>
+	<style>
+	div .tabletop-empty {
+		height:90vh;
+		background-color:#A5A7B8;
+	}
+	div #schema-accordions {
+		height:90vh;
+		overflow-y:auto;
+	}
+	</style>
+
 
 
 {% endblock external %}
+
 
 
 {% block content %}
@@ -64,6 +71,8 @@ div #schema-accordions {
 {# </div> #}
 
 <div class="row">
+	<div class="col-md-4 hidden" id="error-spot">
+	</div>
 	<div class="col-md-4" id="schema-accordions" >
 		{% include "organization/accordions/schema_base.html" %}
 	</div>								

@@ -16,7 +16,7 @@
                 <li>[<a href="{% url 'detail' question.id %}">Details</a>]</li>
                 <li>[<a href="{% url 'edit' question.id %}">Edit</a>]</li>
                 
-                {% if question.validated %}
+                {% if question.is_validated %}
                 
                     <li>[<a href="{% url 'preview' question.id %}">Preview</a>]</li>
                 {% endif %}

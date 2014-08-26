@@ -29,7 +29,7 @@ class Question(models.Model):
         return preview_dict['questiontext']
     
     @property
-    def validated(self):
+    def is_validated(self):
         try:
             return (self.validation.last_verified >= self.last_updated)
         except ObjectDoesNotExist:
