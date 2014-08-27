@@ -31,6 +31,8 @@ function openQuestionForm (event) {
     $('#tabletop').load(this.href + ' form', function () {
         $('#id_name').focus();
     });
+    $('#tabletop').data('currentPanel',$(this).closest('.panel'));
+    
 }
 
 
@@ -62,13 +64,14 @@ function validateQuestion(event) {
 
 function clearTabletop (event) {
     if ('validate question' == $('#tabletop').data('currentAction')) {
-        $('#schema-accordions').addClass('hidden');
-        $('#error-spot').removeClass('hidden');
+        $('#schema-accordions').removeClass('hidden');
+        $('#error-spot').addClass('hidden');
         $('#error-spot').html('');
     };
     $('#tabletop').html("");
     $('#tabletop').removeData('currentLabel');
     $('#tabletop').removeData('currentAction');
+    $('#tabletop').removeData('currentPanel');
 }
 
 function submitForm (event) {
@@ -87,6 +90,8 @@ function submitForm (event) {
                 } else if (response.action == 'add') {
                     $(response.place).append('<div id="ajax-placeholder">placeholder</div>');
                     $("#ajax-placeholder").replaceWith(response.panel_html);
+                } else if (response.action == 'edit question') {
+                    $('#tabletop').data('currentPanel').replaceWith(response.panel_html);
                 }
                 clearTabletop();
             }

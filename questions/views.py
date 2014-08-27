@@ -211,38 +211,32 @@ class EditQuestionBase(UpdateView):
         context['answerchoices_formset'] = AnswerChoicesInline(instance=self.object)
         return context
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.get_form(instance=self.object)
-        context = self.get_context_data(form=form)
-        return render_to_string(self.template_name, context)
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-
+        form = self.get_form(data=request.POST, instance=self.object)
         randvar_formset = RandVarsInline(self.request.POST, instance=self.object)
         condition_formset = ConditionsInline(self.request.POST, instance=self.object)
         answerchoices_formset = AnswerChoicesInline(self.request.POST, instance=self.object)
+        formsets = {
+            'randvar_formset' : randvar_formset,
+            'condition_formset' : condition_formset,
+            'answerchoices_formset' : answerchoices_formset
+        }
+        if form.is_valid() and all([f.is_valid() for f in formsets.values()]):
+            return self.form_valid(form, formsets)
+        return self.form_invalid(form, formsets)
 
-        all_formsets = [randvar_formset, condition_formset, answerchoices_formset]
-        if all([f.is_valid() for f in all_formsets]):
-            form.save()
-            randvar_formset.save()
-            condition_formset.save()
-            answerchoices_formset.save()
-            # check to see if we're attempting to validate this question:
-            # if 'is_validated' in context:
-            #     return HttpResponseRedirect(
-            #         reverse('validate', kwargs={'pk': self.object.id}))
+    def form_valid(self, form, formsets):
+        context = self.get_context_data()
+        form.save()
+        for formset in formsets.values():
+            formset.save()
+        return (True, context)
 
-            # return HttpResponseRedirect(self.object.get_absolute_url())
-            return self.render_to_string(context)
-        else: # there's a problem with one of the formsets
-            context['form'] = form
-            context['randvar_formset'] = randvar_formset
-            context['condition_formset'] = condition_formset
-            context['answerchoices_formset'] = answerchoices_formset
-            return self.render_to_string(context)
+    def form_invalid(self, form, formsets):
+        context['form'] = form
+        context.update(formsets)
+        return (False, context)
 
 class AjaxableResponseMixin(object):
     """
@@ -254,50 +248,34 @@ class AjaxableResponseMixin(object):
         response_kwargs['content_type'] = 'application/json'
         return HttpResponse(data, **response_kwargs)
 
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if self.request.is_ajax():
-            data = {
-                'html' :  response,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return HttpResponse(response)
-
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        response = super().form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'success' : True,
-                'id' : self.object.pk,
-                'name' : self.object.name,
-                'panel_html' : get_accordion_panel(request, item=self.object),
-                'whole_page' : response,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return HttpResponse('response')
-
+    def post(self, request, *args, **kwargs):
+        success, context = super().post(request)
+        if not self.request.is_ajax():
+            if success:
+                return HttpResponseRedirect(self.object.get_absolute_url())
+            return self.render_to_response(context)
+        # Ajax request
+        response_data = {
+            'success' : success,
+            'action' : self.action,
+            'panel_html' : get_accordion_panel(request, item=self.object),
+        }
+        if not success:
+            response_data['form_html'] = render_to_string(
+                    'questions/question_form.html', context
+            )
+        return self.render_to_json_response(response_data)
 
 class EditQuestion(AjaxableResponseMixin, EditQuestionBase):
-    pass
+    action = 'edit question'
 
 
 class ValidateQuestion(EditQuestion):
     template_name = 'questions/validation.html'
+    action = 'validate question'
 
     def get_context_data(self, **kwargs):
-        context = super(ValidateQuestion, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         is_validated = self.object.is_validated
         if not is_validated:
             context['validation_errors'] = validate_question(
@@ -305,7 +283,6 @@ class ValidateQuestion(EditQuestion):
             if context['validation_errors'] is None:
                 is_validated = True
         context['is_validated'] = is_validated
-        
         return context
 
 @login_required
