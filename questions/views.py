@@ -5,8 +5,8 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, UpdateView, FormView
-# from vanilla import CreateView, UpdateView, FormView
+# from django.views.generic import CreateView, UpdateView, FormView
+from vanilla import CreateView, UpdateView, FormView
 import json
 
 
@@ -68,7 +68,8 @@ def preview(request, question_id):
     return render_to_response('questions/question_preview.html', variables)
     
 
-
+def question_form_html(nothing):
+    pass
 
 
 
@@ -76,7 +77,7 @@ def preview(request, question_id):
 @login_required
 def create_question(request,**kwargs):
     
-    def form_html(form ):
+    def form_html(form):
         myvars = RequestContext(request,
         {
             'form' : form,
@@ -118,9 +119,7 @@ def create_question(request,**kwargs):
                     question.objective_set.add(objective)
                 response_data = {
                     'success' : True,
-                    'panel_html' : get_accordion_panel(
-                            request, 'question', question.id
-                    ),
+                    'panel_html' : get_accordion_panel(request, item=question),
                     'place' : '#accordion-objective-{}'.format(objective.id),
                     'action' : 'add', 
                 }
@@ -206,10 +205,17 @@ class EditQuestionBase(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'Edit'
+        context['action_url'] = reverse('edit', kwargs={'pk': self.object.id})
         context['randvar_formset'] = RandVarsInline(instance=self.object)
         context['condition_formset'] = ConditionsInline(instance=self.object)
         context['answerchoices_formset'] = AnswerChoicesInline(instance=self.object)
         return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form(instance=self.object)
+        context = self.get_context_data(form=form)
+        return render_to_string(self.template_name, context)
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -225,17 +231,18 @@ class EditQuestionBase(UpdateView):
             condition_formset.save()
             answerchoices_formset.save()
             # check to see if we're attempting to validate this question:
-            if 'is_validated' in context:
-                return HttpResponseRedirect(
-                    reverse('validate', kwargs={'pk': self.object.id}))
+            # if 'is_validated' in context:
+            #     return HttpResponseRedirect(
+            #         reverse('validate', kwargs={'pk': self.object.id}))
 
-            return HttpResponseRedirect(self.object.get_absolute_url())  
+            # return HttpResponseRedirect(self.object.get_absolute_url())
+            return self.render_to_string(context)
         else: # there's a problem with one of the formsets
             context['form'] = form
             context['randvar_formset'] = randvar_formset
             context['condition_formset'] = condition_formset
             context['answerchoices_formset'] = answerchoices_formset
-            return self.render_to_response(context)
+            return self.render_to_string(context)
 
 class AjaxableResponseMixin(object):
     """
@@ -246,6 +253,16 @@ class AjaxableResponseMixin(object):
         data = json.dumps(context)
         response_kwargs['content_type'] = 'application/json'
         return HttpResponse(data, **response_kwargs)
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if self.request.is_ajax():
+            data = {
+                'html' :  response,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return HttpResponse(response)
 
     def form_invalid(self, form):
         response = super().form_invalid(form)
@@ -264,13 +281,12 @@ class AjaxableResponseMixin(object):
                 'success' : True,
                 'id' : self.object.pk,
                 'name' : self.object.name,
-                'panel_html' : get_accordion_panel(
-                        request, self.object, self.object.pk
-                ),
+                'panel_html' : get_accordion_panel(request, item=self.object),
+                'whole_page' : response,
             }
             return self.render_to_json_response(data)
         else:
-            return response
+            return HttpResponse('response')
 
 
 class EditQuestion(AjaxableResponseMixin, EditQuestionBase):

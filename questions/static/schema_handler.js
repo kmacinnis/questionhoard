@@ -24,8 +24,6 @@ function openEditForm (event) {
     var item_type = stuff.pop();
     $('#tabletop').load("/organization/"+ item_type + "/" + item_id + "/edit/");
     $('#tabletop').data('currentLabel','label-' + item_type + '-' + item_id);
-    $('#tabletop').data('currentAction','edit');
-    
 }
 
 function openQuestionForm (event) {
@@ -33,8 +31,8 @@ function openQuestionForm (event) {
     $('#tabletop').load(this.href + ' form', function () {
         $('#id_name').focus();
     });
-    $('#tabletop').data('currentAction','add');
 }
+
 
 function validateQuestion(event) {
     event.preventDefault();
@@ -137,6 +135,7 @@ $(document).ready(function () {
     $('#schema-accordions').on("click", ".item-edit", openEditForm);
     $('#schema-accordions').on("click", ".add-item", openAddForm);
     $('#schema-accordions').on("click", ".add-question", openQuestionForm);
+    $('#schema-accordions').on("click", ".edit-question", openQuestionForm);
     $('#schema-accordions').on("click", ".item-delete", confirmDelete);
     $('#schema-accordions').on("click", ".validate-link", validateQuestion);
     

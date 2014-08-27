@@ -7,4 +7,7 @@ This question has not been validated yet.
 	Attempt to validate this question now.
 </a>
 {% endif %} 
-
+<br/>
+<a href="{% url 'edit' question.id %}" class='edit-question'>
+	edit question
+</a>

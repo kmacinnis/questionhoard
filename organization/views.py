@@ -121,13 +121,9 @@ def add_topic(request, schema_id):
             form.save()
             response_data = {
                 'success' : True,
-                'panel_url' : reverse('get_accordion_panel', 
-                    kwargs={'item_type':'topic','item_id':topic.id}),
                 'place' : '#accordion-main',
                 'action' : 'add',
-                'panel_html' : get_accordion_panel(
-                        request, 'topic', topic.id
-                )
+                'panel_html' : get_accordion_panel(request, item=topic),
             }
         else: # form not valid
             response_data = {
@@ -259,13 +255,9 @@ def add_subtopic(request, topic_id):
             form.save()
             response_data = {
                 'success' : True,
-                'panel_url' : reverse('get_accordion_panel', 
-                    kwargs={'item_type':'subtopic','item_id':subtopic.id}),
                 'place' : '#accordion-topic-{}'.format(topic.id),
                 'action' : 'add',
-                'panel_html' : get_accordion_panel(
-                        request, 'subtopic', subtopic.id
-                )
+                'panel_html' : get_accordion_panel(request, item=subtopic),
             }
         else: # form not valid
             response_data = {
@@ -395,13 +387,9 @@ def add_objective(request, subtopic_id):
             objective.subtopic_set.add(subtopic)
             response_data = {
                 'success' : True,
-                'panel_url' : reverse('get_accordion_panel', 
-                    kwargs={'item_type':'objective','item_id':objective.id}),
                 'place' : '#accordion-subtopic-{}'.format(subtopic.id),
                 'action' : 'add',
-                'panel_html' : get_accordion_panel(
-                        request, 'objective', objective.id
-                )
+                'panel_html' : get_accordion_panel(request, item=objective)
                 
             }
         else: # form not valid
