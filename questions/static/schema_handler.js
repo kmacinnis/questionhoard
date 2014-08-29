@@ -53,7 +53,10 @@ function validateQuestion(event) {
         data: 'ajax',
         success: function (response,status){
             if (response.validated){
-                panel.html(response.panel_html);
+                panel.replaceWith(response.panel_html);
+                // TODO: Probably want to change this to just
+                // typeset the reloaded content:
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             } else {
                 $(panel).addClass('current-panel');
                 $('#schema-accordions').addClass('hidden');
@@ -100,6 +103,9 @@ function submitForm (event) {
                 } else if (response.action == 'validate question') {
                     $('.current-panel').replaceWith(response.panel_html);
                 }
+                // TODO: Probably want to change this to just
+                // typeset the newly loaded content:
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
                 clearTabletop();
             }
             else {
