@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 import random
 from itertools import product as iterproduct
 from operator import itemgetter
@@ -8,7 +9,6 @@ import questions.mathness as mathness
 from collections import defaultdict
 import re
 import keyword
-import datetime
 import sympy
 
 
@@ -251,7 +251,7 @@ def validate_question(question, user):
             bad = BadCodeWarning(
                 question = question,
                 user = user,
-                warn_datetime = datetime.datetime.now(),
+                warn_datetime = timezone.now(),
                 error_type = BadCodeWarning.OVER_NESTING,
                 field_name = field_name,
                 code = code
@@ -261,7 +261,7 @@ def validate_question(question, user):
             bad = BadCodeWarning(
                 question = question,
                 user = user,
-                warn_datetime = datetime.datetime.now(),
+                warn_datetime = timezone.now(),
                 error_type = BadCodeWarning.BYTE_STRINGS,
                 field_name = field_name,
                 code = code
@@ -271,7 +271,7 @@ def validate_question(question, user):
             bad = BadCodeWarning(
                 question = question,
                 user = user,
-                warn_datetime = datetime.datetime.now(),
+                warn_datetime = timezone.now(),
                 error_type = BadCodeWarning.DOUBLE_UNDERSCORE,
                 field_name = field_name,
                 code = code
@@ -485,7 +485,7 @@ def validate_question(question, user):
         except ObjectDoesNotExist:
             validation = questions.models.Validation(question = question)
 
-        validation.last_verified = datetime.datetime.now()
+        validation.last_verified = timezone.now()
         validation.vardicts = vardicts
         validation.num_poss = num_poss
         validation.validated_by = user

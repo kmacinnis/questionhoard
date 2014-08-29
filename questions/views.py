@@ -200,6 +200,7 @@ class CreateQuestion(CreateView):
 class EditQuestionBase(UpdateView):
     model = Question
     template_name = 'questions/edit_question.html'
+    just_form = 'questions/question_form.html'
     form_class = QuestionEntryForm
 
     def get_context_data(self, **kwargs):
@@ -211,7 +212,7 @@ class EditQuestionBase(UpdateView):
         context['answerchoices_formset'] = AnswerChoicesInline(instance=self.object)
         return context
 
-    def post(self, request, *args, **kwargs):
+    def get_posted(self, request):
         self.object = self.get_object()
         form = self.get_form(data=request.POST, instance=self.object)
         randvar_formset = RandVarsInline(self.request.POST, instance=self.object)
@@ -238,7 +239,18 @@ class EditQuestionBase(UpdateView):
         context.update(formsets)
         return (False, context)
 
-class AjaxableResponseMixin(object):
+    def get_response_data(self, context):
+        response_data = {
+            'validated' : self.object.is_validated,
+            'action' : self.action,
+            'panel_html' : get_accordion_panel(self.request, item=self.object),
+            'form_html' : render_to_string(self.just_form, 
+                    RequestContext(self.request,context)
+            ),
+        }
+        return response_data
+
+class AjaxyMixin(object):
     """
     Mixin to add AJAX support to a form.
     Must be used with an object-based FormView (e.g. CreateView)
@@ -248,29 +260,34 @@ class AjaxableResponseMixin(object):
         response_kwargs['content_type'] = 'application/json'
         return HttpResponse(data, **response_kwargs)
 
+    def get(self, request, *args, **kwargs):
+        ajax = ('ajax' in self.request.GET) or request.is_ajax()
+        lg.debug('\n ajax: ', ajax,'\n')
+        if not ajax:
+            return super().get(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.get_form(instance=self.object)
+        context = self.get_context_data(form=form)
+        return self.render_to_json_response(self.get_response_data(context))
+
     def post(self, request, *args, **kwargs):
-        success, context = super().post(request)
-        if not self.request.is_ajax():
+        success, context = self.get_posted(request)
+        ajax = ('ajax' in self.request.GET) or request.is_ajax()
+        if not ajax:
             if success:
                 return HttpResponseRedirect(self.object.get_absolute_url())
             return self.render_to_response(context)
         # Ajax request
-        response_data = {
-            'success' : success,
-            'action' : self.action,
-            'panel_html' : get_accordion_panel(request, item=self.object),
-        }
-        if not success:
-            response_data['form_html'] = render_to_string(
-                    'questions/question_form.html', context
-            )
+        response_data = super().get_response_data(context)
+        response_data['success'] = success
         return self.render_to_json_response(response_data)
 
-class EditQuestion(AjaxableResponseMixin, EditQuestionBase):
+
+class EditQuestion(AjaxyMixin, EditQuestionBase):
     action = 'edit question'
 
 
-class ValidateQuestion(EditQuestion):
+class ValidateQuestion(AjaxyMixin, EditQuestionBase):
     template_name = 'questions/validation.html'
     action = 'validate question'
 
@@ -285,26 +302,37 @@ class ValidateQuestion(EditQuestion):
         context['is_validated'] = is_validated
         return context
 
-@login_required
-def validate(request, question_id):
-    ajax = 'ajax' in request.GET
-    if not ajax:
-        return ValidateQuestion.as_view()(request, pk=question_id)
-    question = get_object_or_404(Question, id=question_id)
-    if question.is_validated:
-        return HttpResponse('validated')
-    validation_errors = validate_question(question, request.user)
-    if validation_errors is None:
-        return HttpResponse('validated')
-    error_html = render_to_string('questions/validation_errors.html', 
-            {'validation_errors' : validation_errors}
-    )
-    response_data = {
-        'error_html' : error_html,
-        'form_url' : reverse('EditQuestion', kwargs={'pk':question_id}),
-    }
-    return HttpResponse(
-                json.dumps(response_data), content_type="application/json"
-    )
+    def get_response_data(self, context):
+        response_data = super().get_response_data(context)
+        response_data['error_html'] = render_to_string(
+                'questions/validation_errors.html', context
+        )
+        return response_data
+        
 
-
+# @login_required
+# def validate(request, question_id):
+#     ajax = ('ajax' in request.GET) or request.is_ajax()
+#     if not ajax:
+#         return ValidateQuestion.as_view()(request, pk=question_id)
+#     question = get_object_or_404(Question, id=question_id)
+#     validation_errors = validate_question(question, request.user)
+#     if validation_errors is None:
+#         response_data = {
+#             'success' : True,
+#             'panel_html' : get_accordion_panel(request, item=question),
+#         }
+#     else:
+#         error_html = render_to_string('questions/validation_errors.html',
+#                 {'validation_errors' : validation_errors}
+#         )
+#         form_html = render_to_string('questions/question_form.html', context)
+#         response_data = {
+#             'error_html' : error_html,
+#             'form_url' : reverse('EditQuestion', kwargs={'pk':question_id}),
+#         }
+#     return HttpResponse(
+#                 json.dumps(response_data), content_type="application/json"
+#     )
+#
+#

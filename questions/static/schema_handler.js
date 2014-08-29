@@ -28,34 +28,38 @@ function openEditForm (event) {
 
 function openQuestionForm (event) {
     event.preventDefault();
-    $('#tabletop').load(this.href + ' form', function () {
-        $('#id_name').focus();
-    });
-    $('#tabletop').data('currentPanel',$(this).closest('.panel'));
-    
+    baa = this;
+    panel = $(this).closest('.panel');
+    $.ajax({
+        type: "GET",
+        url: this.href,
+        success: function (response, status){
+            $(panel).addClass('current-panel');
+            $('#tabletop').html(response.form_html);
+            $('#id_name').focus();
+        }
+    })
 }
 
 
 function validateQuestion(event) {
     event.preventDefault();
     $('#tabletop').data('currentAction','validate question');
-    url = this.href;
+    var url = this.href;
+    var panel = $(this).closest('.panel');
     $.ajax({
         type: "GET",
         url: url,
         data: 'ajax',
         success: function (response,status){
-            if (response == 'validated'){
-                alert('yes!');
-                // reload question panel
+            if (response.validated){
+                panel.html(response.panel_html);
             } else {
+                $(panel).addClass('current-panel');
                 $('#schema-accordions').addClass('hidden');
                 $('#error-spot').removeClass('hidden');
                 $('#error-spot').html(response.error_html);
-                $('#tabletop').load(response.form_url + ' form', function () {
-                    $('#id_name').focus();
-                    $('form.question-form').attr('action',url);
-                });
+                $('#tabletop').html(response.form_html);
                 $('#tabletop').data('currentAction','validate question');
             }
         }
@@ -72,6 +76,7 @@ function clearTabletop (event) {
     $('#tabletop').removeData('currentLabel');
     $('#tabletop').removeData('currentAction');
     $('#tabletop').removeData('currentPanel');
+    $('.current-panel').removeClass('current-panel');
 }
 
 function submitForm (event) {
@@ -91,12 +96,17 @@ function submitForm (event) {
                     $(response.place).append('<div id="ajax-placeholder">placeholder</div>');
                     $("#ajax-placeholder").replaceWith(response.panel_html);
                 } else if (response.action == 'edit question') {
-                    $('#tabletop').data('currentPanel').replaceWith(response.panel_html);
+                    $('.current-panel').replaceWith(response.panel_html);
+                } else if (response.action == 'validate question') {
+                    $('.current-panel').replaceWith(response.panel_html);
                 }
                 clearTabletop();
             }
             else {
                 $('#tabletop').html(response.form_html);
+                if ($('#tabletop').data('currentAction') == 'validate question') {
+                    $('#error-spot').html(response.error_html);                    
+                }
             }
         },
     });
@@ -106,7 +116,6 @@ function confirmDelete (event) {
     event.stopPropagation();
     event.preventDefault();
     var data = $(this).data();
-    moo = this;
     $('#delete-item-type').html(data.itemType);
     $('#delete-item-name').html(data.itemName);
     $("#confirm-delete").modal();
