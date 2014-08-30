@@ -72,6 +72,13 @@ urlpatterns = patterns('',
         name='SchemaWithQuestions'
     ),
 
+    # ex: /organization/schema/5/edit_and_add_questions/
+    url(
+        r'^schema/(?P<pk>\d+)/edit_and_add_questions/$',
+        login_required(EditSchemaWithQuestions.as_view()),
+        name='EditSchemaWithQuestions'
+    ),
+
     # ex: /organization/schema/1/add_topic/
     url(
         r'^schema/(?P<schema_id>\d+)/add_topic/$',

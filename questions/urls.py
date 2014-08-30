@@ -7,9 +7,6 @@ urlpatterns = patterns('',
     # ex: /questions/
     url(r'^$', index, name='QuestionList'),
     
-    # ex: /questions/mathjax
-    url(r'^mathjax$', mathjaxtest, name='mathjaxtest'),
-    
     # ex: /questions/5/
     url(r'^(?P<question_id>\d+)/$', detail, name='detail'),
     
@@ -21,6 +18,12 @@ urlpatterns = patterns('',
         r'^(?P<pk>\d+)/edit/$', 
         login_required(EditQuestion.as_view()), 
         name='edit'),
+    
+    # ex: /questions/5/edit/
+    url(
+        r'^(?P<pk>\d+)/edit/$', 
+        login_required(EditQuestion.as_view()), 
+        name='EditQuestion'),
     
     # ex: /questions/5/edit/
     url(
@@ -50,14 +53,11 @@ urlpatterns = patterns('',
     ),
 
     # ex: /questions/create_for_objective/345/
-    url(r'^create_for_objective/(?P<obj_id>\d+)/$', 
-            create_question, name='create_question_for_objective'),
+    url(
+        r'^create_for_objective/(?P<obj_id>\d+)/$',
+        login_required(CreateQuestion.as_view()), 
+        name='CreateQuestion'
+    ),
 
-
-
-    # ex: /questions/justcreate
-    # url(r'^justcreate', views.create_just_question, name='justcreate'),
-    # # ex: /questions/5/vote/
-    # url(r'^(?P<question_id>\d+)/vote/$', views.vote, name='vote'),
 )
 

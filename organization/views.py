@@ -82,6 +82,14 @@ class SchemaWithQuestions(SchemaDetails):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['add_question_links'] = True
+        context['edit_questions'] = True
+        return context
+
+
+class EditSchemaWithQuestions(SchemaWithQuestions):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['edit_schema'] = True
         return context
 
 
@@ -322,7 +330,7 @@ def edit_subtopic(request, subtopic_id):
 
 
 @login_required
-def get_accordion_panel(request, item_type='', item_id='', item=None):
+def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
     '''
     Returns the panel for a panel for the object of type `item_type`
     with id `item_id`.
@@ -345,7 +353,9 @@ def get_accordion_panel(request, item_type='', item_id='', item=None):
     template = "organization/accordions/{}_panel.html".format(item_type)
     variables = RequestContext(request, {
         item_type : item,
-        'edit_schema': True,
+        'edit_schema': kwargs.get('edit_schema', True),
+        'edit_questions': kwargs.get('edit_questions', True),
+        'add_question_links': kwargs.get('add_question_links', True),
         'question_display': 'simple_preview',
     })
     return render_to_string(template, variables)
