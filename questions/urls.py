@@ -5,7 +5,11 @@ from questions.views import *
 
 urlpatterns = patterns('',
     # ex: /questions/
-    url(r'^$', index, name='QuestionList'),
+    url(
+        r'^$', 
+        login_required(QuestionList.as_view()), 
+        name='QuestionList'
+    ),
     
     # ex: /questions/5/
     url(r'^(?P<question_id>\d+)/$', detail, name='detail'),
