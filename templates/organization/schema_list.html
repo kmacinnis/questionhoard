@@ -10,14 +10,17 @@
 	<li>
 		{{ schema.name }}
 		<a href="{% url 'SchemaDetails' pk=schema.id %}">(view)</a>
+		&nbsp;
 		<a href="{% url 'EditSchema' pk=schema.id %}">
 			(edit topics, subtopics, and objectives)
 		</a>
+		&nbsp;
 		<a href="{% url 'SchemaWithQuestions' pk=schema.id %}">
 			(add questions)
 		</a>
+		&nbsp;
 		<a href="{% url 'EditSchemaWithQuestions' pk=schema.id %}">
-			(edit topics, subtopics, and objectives and add questions)
+			(edit everything)
 		</a>
 	</li>
 {% endfor %}

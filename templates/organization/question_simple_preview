@@ -8,9 +8,3 @@
 		</a>
 	{% endif %}
 {% endif %} 
-<br/>
-{% if edit_questions %}
-	<a href="{% url 'EditQuestion' question.id %}" class='edit-question'>
-		edit question
-	</a>
-{% endif %}
