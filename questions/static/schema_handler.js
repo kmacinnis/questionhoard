@@ -36,7 +36,7 @@ function delRow (event) {
 }
 
 
-function toggleViewShortwell (event) {
+function toggleViewShortWell (event) {
     event.preventDefault();
     var shortwell = $("#well-prompt-short")
     if ($(shortwell).hasClass("hidden")) {
@@ -50,13 +50,12 @@ function toggleViewShortwell (event) {
 }
 
 function readyQuestionForm () {
-    $('#tabletop').on("click", ".add-row", addRow);
+    $('.add-row').click(addRow);
     $('[id$="DELETE"]').parent().append('<a href="#" class="del-row">Delete</a>');
     $('[id$="DELETE"]').hide();
     $('.delete-header').hide();
-    $('#tabletop').on("click", ".del-row", delRow);
-    $("#toggle-well-prompt-short").click(toggleviewshortwell);
-    
+    $('.del-row').click(delRow);
+    $("#toggle-well-prompt-short").click(toggleViewShortWell);
 }
 
 
