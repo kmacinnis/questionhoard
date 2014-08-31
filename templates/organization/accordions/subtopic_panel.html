@@ -3,21 +3,21 @@
 	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-topic-{{ topic.id }}" data-target="#panel-subtopic-{{ subtopic.id }}">     
 		<h4 id="label-subtopic-{{ subtopic.id }}" class="panel-title panel-toggle inline-block">    
 			{{ subtopic.name }}
+			{% if edit_schema %}
+				<span class="small inline-block">
+					<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
+						[edit]
+					</a>
+					<a class="item-delete" 
+						id="delete-subtopic-{{ subtopic.id }}" 
+						href="#" data-item-type="subtopic" 
+						data-item-name="{{ subtopic.name }}" 
+						data-confirmed-url="{% url 'delete_item' item_type='subtopic' item_id=subtopic.id %}">
+							[delete]
+					</a>
+				</span>
+			{% endif %}
 		</h4>
-		{% if edit_schema %}
-			<span class="small inline-block">
-				<a class="item-edit" id="edit-subtopic-{{ subtopic.id }}" data-formURL="{% url 'edit_subtopic' subtopic_id=subtopic.id %}">
-					[edit]
-				</a>
-				<a class="item-delete" 
-					id="delete-subtopic-{{ subtopic.id }}" 
-					href="#" data-item-type="subtopic" 
-					data-item-name="{{ subtopic.name }}" 
-					data-confirmed-url="{% url 'delete_item' item_type='subtopic' item_id=subtopic.id %}">
-						[delete]
-				</a>
-			</span>
-		{% endif %}
 	</div>
 
 	<div id="panel-subtopic-{{ subtopic.id }}" class="panel-body collapse">

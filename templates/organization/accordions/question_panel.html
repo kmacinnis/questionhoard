@@ -8,21 +8,21 @@
 	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
 		<h4 class="panel-title panel-toggle inline-block">
 			{{ question.name }}
+			{% if edit_questions %}
+				<span class="small inline-block">
+					<a class='edit-question' href="{% url 'EditQuestion' question.id %}" >
+						[edit]
+					</a>
+					<a class="item-delete" 
+						id="delete-question-{{ question.id }}" 
+						href="#" data-item-type="question" 
+						data-item-name="{{ question.name }}" 
+						data-confirmed-url="{% url 'delete_item' item_type='question' item_id=question.id %}">
+							[delete]
+					</a>
+				</span>
+			{% endif %}
 		</h4>
-		{% if edit_questions %}
-			<span class="small inline-block">
-				<a class='edit-question' href="{% url 'EditQuestion' question.id %}" >
-					[edit]
-				</a>
-				<a class="item-delete" 
-					id="delete-question-{{ question.id }}" 
-					href="#" data-item-type="question" 
-					data-item-name="{{ question.name }}" 
-					data-confirmed-url="{% url 'delete_item' item_type='question' item_id=question.id %}">
-						[delete]
-				</a>
-			</span>
-		{% endif %}
 		
 	</div>
 	<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
