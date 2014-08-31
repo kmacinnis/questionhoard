@@ -35,7 +35,7 @@
 					{% endfor %}   {# question loop #}
 				</div>
 				{% if add_question_links %}
-					<a class="add-question" href="{% url 'CreateQuestionForObjective' obj_id=objective.id  %}">
+					<a class="add-question" href="{% url 'CreateQuestion' obj_id=objective.id  %}">
 						Create new question for this objective.
 					</a>
 				{% endif %}

@@ -85,6 +85,7 @@
     text-overflow: '';
     width:100%;
     height:30px;
+    background-color: #E9E9E9;
 }
 .question-form .button {
     background-color: #2D6CA2;

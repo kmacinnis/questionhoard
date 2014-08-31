@@ -32,6 +32,7 @@ class QuestionList(ListView):
 
 @login_required
 def detail(request, question_id):
+    # TODO: Redo this, so that it doesn't have to rely on the formsets to display.
     q = get_object_or_404(Question, id=question_id)
     randvar_formset = RandVarsInline(instance=q)
     randvar_formset.extra = 0
@@ -97,6 +98,7 @@ class QuestionBase(object):
         return (True, context)
 
     def form_invalid_contextuple(self, form, formsets):
+        context = self.get_context_data()
         context['form'] = form
         context.update(formsets)
         return (False, context)
@@ -116,7 +118,7 @@ class QuestionBase(object):
         return response_data
 
 
-class CreateQuestionBase(CreateView, QuestionBase):
+class CreateQuestionBase(QuestionBase, CreateView):
     template_name = 'questions/create_question.html'
     model = Question
     form_class = QuestionEntryForm
@@ -126,6 +128,13 @@ class CreateQuestionBase(CreateView, QuestionBase):
     
     def get_object(self, **kwargs):
         return Question(created_by=self.request.user)
+    
+    def get_response_data(self, context):
+        response_data = super().get_response_data(context)
+        if 'obj_id' in self.kwargs:
+            obj_id = self.kwargs['obj_id']
+            response_data['place'] = '#accordion-objective-{}'.format(obj_id)
+        return response_data
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -146,7 +155,7 @@ class CreateQuestionBase(CreateView, QuestionBase):
         return contextuple
 
 
-class EditQuestionBase(UpdateView, QuestionBase):
+class EditQuestionBase(QuestionBase, UpdateView):
     model = Question
     template_name = 'questions/edit_question.html'
     just_form = 'questions/question_form.html'
@@ -177,18 +186,6 @@ class EditQuestionBase(UpdateView, QuestionBase):
         if form.is_valid() and all([f.is_valid() for f in formsets.values()]):
             return self.form_valid_contextuple(form, formsets)
         return self.form_invalid_contextuple(form, formsets)
-
-    def form_valid_contextuple(self, form, formsets):
-        context = self.get_context_data()
-        form.save()
-        for formset in formsets.values():
-            formset.save()
-        return (True, context)
-
-    def form_invalid_contextuple(self, form, formsets):
-        context['form'] = form
-        context.update(formsets)
-        return (False, context)
 
 
 class AjaxyMixin(object):
@@ -252,5 +249,5 @@ class ValidateQuestion(AjaxyMixin, EditQuestionBase):
                 'questions/validation_errors.html', context
         )
         return response_data
-        
+
 
