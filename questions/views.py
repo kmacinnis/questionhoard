@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from vanilla import CreateView, UpdateView, FormView, ListView
 import json
 
+from copy import deepcopy
+
 
 from questions.models import *
 from questions.forms import *
@@ -232,6 +234,9 @@ class ValidateQuestion(AjaxyMixin, EditQuestionBase):
     template_name = 'questions/validation.html'
     action = 'validate question'
 
+    def get_action_url(self, **kwargs):
+        return reverse('ValidateQuestion', kwargs={'pk': self.object.id})
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         is_validated = self.object.is_validated
@@ -251,3 +256,46 @@ class ValidateQuestion(AjaxyMixin, EditQuestionBase):
         return response_data
 
 
+class DuplicateQuestion(CreateQuestion):
+
+    def get_context_data(self, **kwargs):
+        orig_id = self.kwargs['orig_id']
+        orig = get_object_or_404(Question, id=orig_id)
+        dup = 
+        
+        
+        orig_randvar_formset = RandVarsInline(instance=orig)
+        randvar_formset = RandVarsInline()
+        randvar_formset.forms = orig_randvar_formset.initial_forms
+        
+        randvar_data = {}
+        for i, randvar in enumerate(randvar_set):
+            randvar_data['randvar_set-{}-varname'.format(i)] = randvar.varname
+            randvar_data['randvar_set-{}-varposs'.format(i)] = randvar.varposs
+        
+        
+        
+        condition_formset = ConditionsInline()
+        orig_condition_formset = ConditionsInline(instance=orig)
+        condition_formset.forms = orig_condition_formset.initial_forms
+        
+        answerchoices_formset = AnswerChoicesInline()
+        orig_answerchoices_formset = AnswerChoicesInline(instance=orig)
+        answerchoices_formset.forms = orig_answerchoices_formset.initial_forms
+        
+        formsets = [randvar_formset, condition_formset, answerchoices_formset]
+        for formset in formsets:
+            for subform in formset.forms:
+                subform.initial.pop('id')
+                subform.initial.pop('question')
+        context = RequestContext(self.request, {
+            'form' : form,
+            'randvar_formset' : randvar_formset,
+            'condition_formset' : condition_formset,
+            'answerchoices_formset' : answerchoices_formset,
+            'action' : 'Duplicate',
+            'action_url' : reverse('CreateQuestion'),
+        })
+        return context
+        
+        

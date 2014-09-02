@@ -65,3 +65,6 @@ class QuestionEntryForm(forms.ModelForm):
     class Meta:
         model = Question
         exclude = ('created_by',)
+        
+        # TODO: add hidden widgets for fields that don't show up in html form
+        # comment, packages, look for others
