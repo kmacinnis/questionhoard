@@ -1,8 +1,8 @@
 {{ request.path }}
 
 {{ formset.management_form }}
-{{ formset.non_form_errors.as_ul }}
-{{ formset.errors }}
+{# {{ formset.non_form_errors.as_ul }} #}
+{# {{ formset.errors }} #}
 <table id="{{ formset.prefix }}-table" class="formset">
 {% for form in formset.forms %}
     {% if forloop.first %}

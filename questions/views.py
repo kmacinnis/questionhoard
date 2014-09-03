@@ -71,7 +71,7 @@ class QuestionBase(object):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action_url'] = self.get_action_url()
+        context['action_url'] = self.get_action_url(**kwargs)
         context['randvar_formset'] = RandVarsInline(instance=self.object)
         context['condition_formset'] = ConditionsInline(instance=self.object)
         context['answerchoices_formset'] = AnswerChoicesInline(instance=self.object)
@@ -125,7 +125,7 @@ class CreateQuestionBase(QuestionBase, CreateView):
     model = Question
     form_class = QuestionEntryForm
     
-    def get_action_url(self):
+    def get_action_url(self, **kwargs):
         return reverse('CreateQuestion', kwargs=self.kwargs)
     
     def get_object(self, **kwargs):
@@ -140,7 +140,8 @@ class CreateQuestionBase(QuestionBase, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action_url'] = self.get_action_url()
+        context['action'] = 'Create'
+        context['action_url'] = self.get_action_url(**kwargs)
         context['randvar_formset'] = RandVarsInline()
         context['condition_formset'] = ConditionsInline()
         context['answerchoices_formset'] = AnswerChoicesInline()
@@ -202,9 +203,9 @@ class AjaxyMixin(object):
 
     def get(self, request, *args, **kwargs):
         ajax = ('ajax' in self.request.GET) or request.is_ajax()
+        self.object = self.get_object()
         if not ajax:
             return super().get(request, *args, **kwargs)
-        self.object = self.get_object()
         form = self.get_form(instance=self.object)
         context = self.get_context_data(form=form)
         return self.render_to_json_response(self.get_response_data(context))
@@ -258,44 +259,136 @@ class ValidateQuestion(AjaxyMixin, EditQuestionBase):
 
 class DuplicateQuestion(CreateQuestion):
 
+    def get_action_url(self, **kwargs):
+        return reverse('CreateQuestion', kwargs=self.kwargs)
+
     def get_context_data(self, **kwargs):
         orig_id = self.kwargs['orig_id']
         orig = get_object_or_404(Question, id=orig_id)
-        dup = 
         
+        if 'obj_id' in kwargs:
+            objective = get_object_or_404(Objective, id=obj_id)
+        else:
+            objective = None
         
-        orig_randvar_formset = RandVarsInline(instance=orig)
-        randvar_formset = RandVarsInline()
-        randvar_formset.forms = orig_randvar_formset.initial_forms
+        RandVarsInlineDup = inlineformset_factory(
+            Question,
+            RandVar,
+            extra = orig.randvar_set.count(),
+            )
+        RandVarsInlineDup.description = "Random Variable"
+        randvar_formset = RandVarsInlineDup(instance=Question())
         
-        randvar_data = {}
-        for i, randvar in enumerate(randvar_set):
-            randvar_data['randvar_set-{}-varname'.format(i)] = randvar.varname
-            randvar_data['randvar_set-{}-varposs'.format(i)] = randvar.varposs
+        ConditionsInlineDup = inlineformset_factory(
+            Question,
+            Condition,
+            extra = orig.condition_set.count(),
+            )
+        ConditionsInlineDup.description = "Condtion"
+        condition_formset = ConditionsInlineDup(instance=Question())
+
+        AnswerChoicesInlineDup = inlineformset_factory(
+            Question,
+            AnswerChoice,
+            extra = orig.answerchoice_set.count(),
+            )
+        AnswerChoicesInlineDup.description = "AnswerChoice"
+        answerchoices_formset = AnswerChoicesInlineDup
         
+        dup = get_object_or_404(Question, id=orig_id)
+        dup.pk = None
+        dup.name += ' (copy)'
+        if dup.comment:
+            dup.comment += '\n'
+        dup.comment += 'Duplicated from question {}'.format(orig_id)
+        form = QuestionEntryForm(instance=dup)
         
-        
-        condition_formset = ConditionsInline()
-        orig_condition_formset = ConditionsInline(instance=orig)
-        condition_formset.forms = orig_condition_formset.initial_forms
-        
-        answerchoices_formset = AnswerChoicesInline()
-        orig_answerchoices_formset = AnswerChoicesInline(instance=orig)
-        answerchoices_formset.forms = orig_answerchoices_formset.initial_forms
-        
-        formsets = [randvar_formset, condition_formset, answerchoices_formset]
-        for formset in formsets:
-            for subform in formset.forms:
-                subform.initial.pop('id')
-                subform.initial.pop('question')
         context = RequestContext(self.request, {
             'form' : form,
             'randvar_formset' : randvar_formset,
             'condition_formset' : condition_formset,
             'answerchoices_formset' : answerchoices_formset,
             'action' : 'Duplicate',
-            'action_url' : reverse('CreateQuestion'),
+            'action_url' : self.get_action_url(**kwargs),
+            'objective' : get
         })
         return context
+
+    def get_response_data(self, context):
+        orig_id = self.kwargs['orig_id']
+        orig = get_object_or_404(Question, id=orig_id)
+        
+        response_data = super().get_response_data(context)
+
+        objects_and_attributes = [
+            ('randvar_set', orig.randvar_set.all(), ('varname','varposs')),
+            ('condition_set', orig.condition_set.all(), ('condition_text', )),
+            ('answerchoice_set', orig.answerchoice_set.all(), 
+                ('choice_text', 'choice_expr', 'choice_type', 'pin', 'comment'))
+        ]
+
+        initial_data = []
+        
+        for set_name, obj_list, attributes in objects_and_attributes:
+            for i, obj in enumerate(obj_list):
+                for attr in attributes:
+                    initial_data.append({
+                        'id' : '#id_{}-{}-{}'.format(set_name, i, attr),
+                        'value' : obj.__getattribute__(attr)
+                    })
+                
+        
+        response_data['formset_data'] = initial_data
+        return response_data
+        
+        # for i, randvar in enumerate(orig.randvar_set.all()):
+        #     for attr in ('varname', 'varposs'):
+        #     initial_data.append({
+        #         'id' : '#id_randvar_set-{}-varposs'.format(i),
+        #         'value'
+        #
+        #     })
+        #     randvar_data['randvar_set-%s-varposs' % i] = randvar.varposs
+        #
+        # count = orig.randvar_set.count()
+        # randvar_data = {
+        #     'randvar_set-TOTAL_FORMS' : count,
+        #     'randvar_set-INITIAL_FORMS' : count,
+        # }
+        # randvar_formset = RandVarsInline(randvar_data, initial=randvar_initial)
+        
+        # cond_initial = [
+        #     {'condition_text' : cond.condition_text}
+        #     for cond in orig.condition_set.all()
+        # ]
+        # count = orig.condition_set.count()
+        # cond_data = {
+        #     'condition_set-TOTAL_FORMS' : count,
+        #     'ondition_set-INITIAL_FORMS' : count
+        # }
+        # for i, cond in enumerate(orig.condition_set.all()):
+        #     cond_data['condition_set-%s-condition_text'%i] = cond.condition_text
+        # cond_data['condition_set-TOTAL_FORMS'] = i+1
+        # cond_data['condition_set-INITIAL_FORMS'] = i+1
+        #
+        # ans_data = {}
+        # for i, ans in enumerate(orig.answerchoice_set.all()):
+        #     ans_data['answerchoice_set-%s-choice_text' % i] = ans.choice_text
+        #     ans_data['answerchoice_set-%s-choice_expr' % i] = ans.choice_expr
+        #     ans_data['answerchoice_set-%s-choice_type' % i] = ans.choice_type
+        #     ans_data['answerchoice_set-%s-pin' % i] = ans.pin
+        #     ans_data['answerchoice_set-%s-comment' % i] = ans.comment
+        # ans_data['answerchoice_set-TOTAL_FORMS'] = i+1
+        # ans_data['answerchoice_set-INITIAL_FORMS'] = i+1
+        #
+        #
+        # # randvar_formset = RandVarsInline(randvar_data, initial=randvar_initial)
+        # # randvar_formset.data = randvar_data
+        # condition_formset = ConditionsInline()
+        # condition_formset.data = cond_data
+        # answerchoices_formset = AnswerChoicesInline()
+        # answerchoices_formset.data = ans_data
+        #      
+        
         
         

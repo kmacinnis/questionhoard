@@ -65,5 +65,5 @@
         {% include "dataset_table.html" with dataset=answerchoices_dataset %}
     </p>
 
-    <a href=" {% url EditQuestion  question.id  %}">Edit Question</a>
+    <a href=" {% url 'EditQuestion'  question.id  %}">Edit Question</a>
 </div>

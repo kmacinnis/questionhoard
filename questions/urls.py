@@ -70,5 +70,12 @@ urlpatterns = patterns('',
         name='DuplicateQuestion'
     ),
 
+    # ex: /questions/5/duplicate/obj44/
+    url(
+        r'^(?P<orig_id>\d+)/duplicate/obj(?P<obj_id>\d+)/$', 
+        login_required(DuplicateQuestion.as_view()), 
+        name='DuplicateQuestion'
+    ),
+
 )
 

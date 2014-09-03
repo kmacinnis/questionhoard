@@ -67,6 +67,26 @@ function openAddForm (event) {
     $('#tabletop').data('currentAction','add');
 }
 
+function duplicateQuestion (event) {
+    event.preventDefault();
+    panel = $(this).closest('.panel');
+    $.ajax({
+        type: "GET",
+        url: this.href,
+        success: function (response, status){
+            $(panel).addClass('current-panel');
+            $('#tabletop').html(response.form_html);
+            readyQuestionForm();
+            for (i in response.formset_data) {
+                fdata = response.formset_data[i];
+                $(fdata.id).attr('value',fdata.value);
+            }
+            $('#id_name').focus();
+        }
+    })
+}
+
+
 function openEditForm (event) {
     // event.stopPropagation();
     event.preventDefault();
@@ -80,7 +100,6 @@ function openEditForm (event) {
 
 function openQuestionForm (event) {
     event.preventDefault();
-    baa = this;
     panel = $(this).closest('.panel');
     $.ajax({
         type: "GET",
@@ -211,6 +230,7 @@ $(document).ready(function () {
     $('#schema-accordions').on("click", ".add-item", openAddForm);
     $('#schema-accordions').on("click", ".add-question", openQuestionForm);
     $('#schema-accordions').on("click", ".edit-question", openQuestionForm);
+    $('#schema-accordions').on("click", ".duplicate-question", duplicateQuestion);    
     $('#schema-accordions').on("click", ".item-delete", confirmDelete);
     $('#schema-accordions').on("click", ".validate-link", validateQuestion);
     
