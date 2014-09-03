@@ -259,8 +259,11 @@ class ValidateQuestion(AjaxyMixin, EditQuestionBase):
 
 class DuplicateQuestion(CreateQuestion):
 
-    def get_action_url(self, **kwargs):
-        return reverse('CreateQuestion', kwargs=self.kwargs)
+    def get_action_url(self, **_kwargs):
+        kwargs = self.kwargs
+        if 'obj_id' in kwargs:
+            return reverse('CreateQuestion', kwargs={'obj_id':kwargs['obj_id']})
+        return reverse('CreateQuestion')
 
     def get_context_data(self, **kwargs):
         orig_id = self.kwargs['orig_id']
@@ -310,7 +313,7 @@ class DuplicateQuestion(CreateQuestion):
             'answerchoices_formset' : answerchoices_formset,
             'action' : 'Duplicate',
             'action_url' : self.get_action_url(**kwargs),
-            'objective' : get
+            'objective' : objective,
         })
         return context
 
@@ -340,55 +343,5 @@ class DuplicateQuestion(CreateQuestion):
         
         response_data['formset_data'] = initial_data
         return response_data
-        
-        # for i, randvar in enumerate(orig.randvar_set.all()):
-        #     for attr in ('varname', 'varposs'):
-        #     initial_data.append({
-        #         'id' : '#id_randvar_set-{}-varposs'.format(i),
-        #         'value'
-        #
-        #     })
-        #     randvar_data['randvar_set-%s-varposs' % i] = randvar.varposs
-        #
-        # count = orig.randvar_set.count()
-        # randvar_data = {
-        #     'randvar_set-TOTAL_FORMS' : count,
-        #     'randvar_set-INITIAL_FORMS' : count,
-        # }
-        # randvar_formset = RandVarsInline(randvar_data, initial=randvar_initial)
-        
-        # cond_initial = [
-        #     {'condition_text' : cond.condition_text}
-        #     for cond in orig.condition_set.all()
-        # ]
-        # count = orig.condition_set.count()
-        # cond_data = {
-        #     'condition_set-TOTAL_FORMS' : count,
-        #     'ondition_set-INITIAL_FORMS' : count
-        # }
-        # for i, cond in enumerate(orig.condition_set.all()):
-        #     cond_data['condition_set-%s-condition_text'%i] = cond.condition_text
-        # cond_data['condition_set-TOTAL_FORMS'] = i+1
-        # cond_data['condition_set-INITIAL_FORMS'] = i+1
-        #
-        # ans_data = {}
-        # for i, ans in enumerate(orig.answerchoice_set.all()):
-        #     ans_data['answerchoice_set-%s-choice_text' % i] = ans.choice_text
-        #     ans_data['answerchoice_set-%s-choice_expr' % i] = ans.choice_expr
-        #     ans_data['answerchoice_set-%s-choice_type' % i] = ans.choice_type
-        #     ans_data['answerchoice_set-%s-pin' % i] = ans.pin
-        #     ans_data['answerchoice_set-%s-comment' % i] = ans.comment
-        # ans_data['answerchoice_set-TOTAL_FORMS'] = i+1
-        # ans_data['answerchoice_set-INITIAL_FORMS'] = i+1
-        #
-        #
-        # # randvar_formset = RandVarsInline(randvar_data, initial=randvar_initial)
-        # # randvar_formset.data = randvar_data
-        # condition_formset = ConditionsInline()
-        # condition_formset.data = cond_data
-        # answerchoices_formset = AnswerChoicesInline()
-        # answerchoices_formset.data = ans_data
-        #      
-        
-        
-        
+
+

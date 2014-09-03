@@ -15,6 +15,7 @@
             <ul class="question-list-links">
                 <li>[<a href="{% url 'detail' question.id %}">Details</a>]</li>
                 <li>[<a href="{% url 'EditQuestion' question.id %}">Edit</a>]</li>
+                {# <li>[<a href="{% url  'delete_item' 'question' question.id %}">Delete</a>]</li> #}
                 
                 {% if question.is_validated %}
                 
