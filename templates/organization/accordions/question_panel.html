@@ -34,7 +34,6 @@
 	<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
 		<div class="panel-inner">
 
-{{ objective.id }}
 			{% if question_display %}
 				{% include "organization/question_"|add:question_display %}
 			{% endif %}

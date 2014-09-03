@@ -324,9 +324,9 @@ class DuplicateQuestion(CreateQuestion):
         response_data = super().get_response_data(context)
 
         objects_and_attributes = [
-            ('randvar_set', orig.randvar_set.all(), ('varname','varposs')),
-            ('condition_set', orig.condition_set.all(), ('condition_text', )),
-            ('answerchoice_set', orig.answerchoice_set.all(), 
+            ('randvar_set', orig.randvar_set.order_by('id'), ('varname','varposs')),
+            ('condition_set', orig.condition_set.order_by('id'), ('condition_text', )),
+            ('answerchoice_set', orig.answerchoice_set.order_by('id'), 
                 ('choice_text', 'choice_expr', 'choice_type', 'pin', 'comment'))
         ]
 
