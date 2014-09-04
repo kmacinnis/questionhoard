@@ -79,7 +79,7 @@ function duplicateQuestion (event) {
             readyQuestionForm();
             for (i in response.formset_data) {
                 fdata = response.formset_data[i];
-                $(fdata.id).attr('value',fdata.value);
+                $(fdata.id).val(fdata.value);
             }
             $('#id_name').focus();
         }

@@ -2,9 +2,6 @@ from sympy import *
 from math import copysign
 
 
-
-
-
 posneg = [S(1),S(-1)]
 one_digit_primes = [S(2),S(3),S(5),S(7)]
 small_two_digit_primes = [S(11),S(13),S(17),S(19)]
@@ -37,3 +34,4 @@ def round(x, d=0):
     p = 10**d
     return floor((x * p) + copysign(0.5, x))/p
 
+ 
