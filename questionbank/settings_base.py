@@ -76,5 +76,5 @@ STATIC_URL = '/static/'
 
 ADMINS = (('Kate','kate@raindancing.net'), )
 
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = '/tmp/dragon-messages'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/tmp/dragon-messages'
