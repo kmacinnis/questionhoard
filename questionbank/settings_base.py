@@ -76,5 +76,10 @@ STATIC_URL = '/static/'
 
 ADMINS = (('Kate','kate@raindancing.net'), )
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/tmp/dragon-messages'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'macinnis.k@gmail.com'
+EMAIL_HOST_PASSWORD = 'pf2510954'
+DEFAULT_FROM_EMAIL = 'macinnis.k@gmail.com'
+DEFAULT_TO_EMAIL = 'macinnis.k@gmail.com'
