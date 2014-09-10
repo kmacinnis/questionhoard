@@ -134,6 +134,21 @@ def make_inline(latex):
     return latex.replace(r'\[',r'\(').replace(r'\]',r'\)')
 
 
+def question_locals(question, vardict):
+    safelocals = vardict.copy()
+
+    # Bring in the symbolic variables
+    separator = re.compile(r'[\,\;\s|]')
+    sym_vars = separator.split(question.symbol_vars)
+    sym_vars = [v for v in sym_vars if v]
+    for v in sym_vars:
+        exec('{v} = Symbol("{v}")'.format(v=v), safeglobals, safelocals)
+
+    # Run code to establish all variable values
+    exec(question.code, safeglobals, safelocals)
+    return safelocals
+
+
 def output_question(question, vardict, set_choice_position=True):
     """
     Returns a dictionary 
@@ -222,6 +237,8 @@ def validate_question(question, user):
           are _probably_ safe to run (no double underscores, no known attacks)
           If not, logs warning in bad_code model.
         ✓ Every varposs returns an iterable when eval'ed
+        * The product of the lengths of all varposses should be less than
+          100,000
         ✓ Conditions should evaluate to a boolean
         ✓ Code runs without errors
         ✓ Symbolic variables can all be symbol()ed
@@ -433,6 +450,17 @@ def validate_question(question, user):
                 validation_errors['condition'].append(err_mess.strip())
     
     
+    # Check that
+    m = Mul(*[len(eval(v.varposs)) for v in question.randvar_set.all()])
+    max_possible = 10**6
+    if m > max_possible:
+        err_mess = '''Bloop 298:
+        The product of the sizes of the sets of possibilities is {m}.
+        This value must be less than {max_possible}.
+        '''.format(m=m, max_possible=max_possible)
+        validation_errors['randvar'].append('err_mess')
+    
+    
     if validation_errors:
         return fail_response(validation_errors)
     
@@ -475,7 +503,6 @@ def validate_question(question, user):
             ERROR: {error}
             '''.format(error=exception,code=choice_expr)
             validation_errors['anschoice'].append(err_mess.strip())
-    
     if validation_errors:
         return fail_response(validation_errors)
     else:
