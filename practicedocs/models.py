@@ -36,7 +36,7 @@ class BlockRecipe(models.Model):
         ordering = ['order']
     def __str__(self):
         return 'Block {order} of {doc}'.format(
-                    order=self.order, doc=self.document)
+                    order=self.order, doc=self.document.title)
 
 
 class Document(models.Model):
