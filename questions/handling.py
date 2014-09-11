@@ -452,7 +452,7 @@ def validate_question(question, user):
     
     # Check that
     m = sympy.Mul(
-        *[len(eval(v.varposs,safeglobals))) for v in question.randvar_set.all()]
+        *[len(eval(v.varposs, safeglobals)) for v in question.randvar_set.all()]
     )
     max_possible = 10**6
     if m > max_possible:
