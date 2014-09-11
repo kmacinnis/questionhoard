@@ -451,7 +451,7 @@ def validate_question(question, user):
     
     
     # Check that
-    m = Mul(*[len(eval(v.varposs)) for v in question.randvar_set.all()])
+    m = sympy.Mul(*[len(eval(v.varposs)) for v in question.randvar_set.all()])
     max_possible = 10**6
     if m > max_possible:
         err_mess = '''Bloop 298:
