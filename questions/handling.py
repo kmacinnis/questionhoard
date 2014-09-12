@@ -216,7 +216,19 @@ def preview_question(question):
     
     # For now, preview just takes the first possible option.
     
-    return output_question(question, vardicts[0])
+    text = output_question(question, vardicts[0])
+    
+    convert_dict = {
+        r'\thinspace' : '\u202f',
+        r'\,' : '\u202f',
+        r'\ ' : ' ',
+        r'\:' : '\u2001',
+        r'\%' : '%',
+    }
+    for latex, unicode in convert_dict.items():
+        text = text.replace(latex, unicode)
+    return text
+    
 
 
 
