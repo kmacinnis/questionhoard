@@ -216,7 +216,7 @@ def preview_question(question):
     
     # For now, preview just takes the first possible option.
     
-    text = output_question(question, vardicts[0])
+    text = output_question(question, vardicts[0])['questiontext']
     
     convert_dict = {
         # r'\thinspace' : '\u202f',

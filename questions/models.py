@@ -25,8 +25,7 @@ class Question(models.Model):
     
     def preview(self):
         # TODO: questions with graphics will need a graphic preview
-        preview_dict = questions.handling.preview_question(self)
-        return preview_dict['questiontext']
+        return questions.handling.preview_question(self)
     
     @property
     def is_validated(self):
