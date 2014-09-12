@@ -1,6 +1,5 @@
 from sympy import *
-from math import copysign
-
+import math
 
 posneg = [S(1),S(-1)]
 one_digit_primes = [S(2),S(3),S(5),S(7)]
@@ -17,7 +16,8 @@ pythagorean_triples = [(S(i[0]),S(i[1]),S(i[2])) for i in
         (20,21,29), (28,45,53), (28,45,53), (36,77,85)]]
 unitcirclefractions = flatten([(i,-i) for i in [sqrt(i)/2 for i in (1,2,3)]])
 
-def plus_minus(s):
+def plus_minus(*args):
+    s = flatten(args)
     return sorted(set(flatten([(i,-i) for i in s])))
 
 def integers_between(a,b):
@@ -32,6 +32,6 @@ def has_duplicates(*args):
 
 def round(x, d=0):
     p = 10**d
-    return floor((x * p) + copysign(0.5, x))/p
+    return math.floor((x * p) + math.copysign(0.5, x))/p
 
  

@@ -349,7 +349,7 @@ def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
             'question' : Question,
         }[item_type]
         item = get_object_or_404(Item, id=item_id)
-        
+    
     template = "organization/accordions/{}_panel.html".format(item_type)
     variables = RequestContext(request, {
         item_type : item,
@@ -358,6 +358,9 @@ def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
         'add_question_links': kwargs.get('add_question_links', True),
         'question_display': 'simple_preview',
     })
+    if item_type == 'question':
+        if item.objective_set.count() == 1:
+            variables['objective'] = item.objective_set.first()
     return render_to_string(template, variables)
 
 @login_required
