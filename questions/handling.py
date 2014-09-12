@@ -225,8 +225,8 @@ def preview_question(question):
         # r'\:' : '\u2001',
         r'\%' : '%',
     }
-    for latex, unicode in convert_dict.items():
-        text = text.replace(latex, unicode)
+    for latex, uni in convert_dict.items():
+        text = text.replace(latex, uni)
     return text
     
 
