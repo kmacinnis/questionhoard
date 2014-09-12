@@ -219,10 +219,10 @@ def preview_question(question):
     text = output_question(question, vardicts[0])
     
     convert_dict = {
-        r'\thinspace' : '\u202f',
-        r'\,' : '\u202f',
+        # r'\thinspace' : '\u202f',
+        r'\,' : ' ',
         r'\ ' : ' ',
-        r'\:' : '\u2001',
+        # r'\:' : '\u2001',
         r'\%' : '%',
     }
     for latex, unicode in convert_dict.items():
