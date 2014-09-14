@@ -32,7 +32,10 @@ def has_duplicates(*args):
 
 def round(x, d=0):
     p = 10**d
-    return math.floor((x * p) + math.copysign(0.5, x))/p
+    rounded = math.floor((x * p) + math.copysign(0.5, x))/p
+    if d == 0:
+        return int(rounded)
+    return rounded
 
 def x_equals(*thelist):
     from sympy.core.compatibility import iterable
