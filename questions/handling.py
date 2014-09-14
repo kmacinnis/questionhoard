@@ -207,13 +207,17 @@ def output_question(question, vardict, set_choice_position=True):
 
 
 def make_screen_friendly(text):
+    
     convert_dict = {
         r'\,' : ' ',
         r'\ ' : ' ',
         r'\%' : '%',
     }
-    for latex, uni in convert_dict.items():
-        text = text.replace(latex, uni)
+    try:
+        for latex, uni in convert_dict.items():
+            text = text.replace(latex, uni)
+    except AttributeError:
+        pass
     return text    
 
 
