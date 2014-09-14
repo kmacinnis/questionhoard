@@ -206,8 +206,22 @@ def output_question(question, vardict, set_choice_position=True):
     return output
 
 
+def make_screen_friendly(text):
+    convert_dict = {
+        r'\,' : ' ',
+        r'\ ' : ' ',
+        r'\%' : '%',
+    }
+    for latex, uni in convert_dict.items():
+        text = text.replace(latex, uni)
+    return text    
+
 
 def preview_question(question):
+    '''
+    Returns a dictionary with the parts of a question 
+    suitable for displaying online.
+    '''
     try:
         vardicts = question.validation.vardicts
     except ObjectDoesNotExist:
@@ -216,18 +230,26 @@ def preview_question(question):
     
     # For now, preview just takes the first possible option.
     
-    text = output_question(question, vardicts[0])['questiontext']
+    output = output_question(question, vardicts[0])
+    output['questiontext'] = make_screen_friendly(output['questiontext'])
+    for choice in output['choices']:
+        choice['text'] = make_screen_friendly(choice['text'])
+    output['Q'] = make_screen_friendly(output['Q'])
+    output['A'] = make_screen_friendly(output['A'])
+    return output
+
+
+
+def preview_questiontext(question):
+    try:
+        vardicts = question.validation.vardicts
+    except ObjectDoesNotExist:
+        
+        return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
-    convert_dict = {
-        # r'\thinspace' : '\u202f',
-        r'\,' : ' ',
-        r'\ ' : ' ',
-        # r'\:' : '\u2001',
-        r'\%' : '%',
-    }
-    for latex, uni in convert_dict.items():
-        text = text.replace(latex, uni)
-    return text
+    # For now, preview just takes the first possible option.
+    text = output_question(question, vardicts[0])['questiontext']
+    return make_screen_friendly(text)
     
 
 
