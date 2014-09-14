@@ -34,4 +34,10 @@ def round(x, d=0):
     p = 10**d
     return math.floor((x * p) + math.copysign(0.5, x))/p
 
- 
+def x_equals(*thelist):
+    from sympy.core.compatibility import iterable
+    
+    if len(thelist) == 1 and iterable(thelist[0]):
+        thelist = thelist[0]
+    strlist = ["$x=%s$" % latex(i) for i in sorted(thelist)]
+    return ", ".join(strlist)
