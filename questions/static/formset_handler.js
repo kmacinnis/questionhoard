@@ -43,10 +43,10 @@ function toggleviewshortwell (event) {
 
 
 $(document).ready(function () {
-    $('.add-item').click(addrow);
+    $('.add-row').click(addrow);
     $('[id$="DELETE"]').parent().append('<a href="#" class="del-item">Delete</a>');
     $('[id$="DELETE"]').hide();
     $('.delete-header').hide();
-    $('.del-item').click(delrow);
+    $('.del-row').click(delrow);
     $("#toggle-well-prompt-short").click(toggleviewshortwell);
 });
