@@ -37,10 +37,8 @@ def round(x, d=0):
         return int(rounded)
     return rounded
 
-def x_equals(*thelist):
-    from sympy.core.compatibility import iterable
-    
-    if len(thelist) == 1 and iterable(thelist[0]):
-        thelist = thelist[0]
+def x_equals(*args):
+    thelist = flatten(args)
     strlist = ["$x=%s$" % latex(i) for i in sorted(set(thelist))]
     return ", ".join(strlist)
+

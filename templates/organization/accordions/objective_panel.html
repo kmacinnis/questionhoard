@@ -22,7 +22,7 @@
 		</h4>
 		
 	</div>
-	{% if edit_questions %}
+	{% if edit_questions or question_display == "addable" %}
 		<div id="panel-objective-{{ objective.id }}" class="panel-body collapse">
 			<div class="panel-inner">
 
