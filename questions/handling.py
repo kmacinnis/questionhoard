@@ -495,8 +495,8 @@ def validate_question(question, user):
     max_possible = 10**6
     if m > max_possible:
         err_mess = '''Error:
-        The product of the sizes of the sets of possibilities is {m:,}.
-        This value must be less than {max_possible:,}.
+        The product of the sizes of the sets of possibilities is {m}.
+        This value must be less than {max_possible}.
         '''.format(m=m, max_possible=max_possible)
         validation_errors['randvar'].append(err_mess.strip())
     
