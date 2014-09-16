@@ -498,7 +498,7 @@ def validate_question(question, user):
         The product of the sizes of the sets of possibilities is {m}.
         This value must be less than {max_possible}.
         '''.format(m=m, max_possible=max_possible)
-        validation_errors['randvar'].append('err_mess')
+        validation_errors['randvar'].append(err_mess.strip())
     
     
     if validation_errors:
