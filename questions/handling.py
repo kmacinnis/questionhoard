@@ -446,7 +446,7 @@ def validate_question(question, user):
         try:
             evaled = eval(poss, safeglobals, safelocals)
         except (SyntaxError, NameError) as exception:
-            err_mess = '''Bloop 244:
+            err_mess = '''Error:
             The code "{code}" returned an error:
             ERROR: {error}'''.format(code=poss,error=exception)
             validation_errors['randvar'].append(err_mess.strip())
@@ -454,7 +454,7 @@ def validate_question(question, user):
         try:
             evaled.__iter__
         except SyntaxError:
-            err_mess = '''Bloop 252:
+            err_mess = '''Error:
             The code "{code}" returned <{value}>, which is not a
             set, list, or tuple of values.
             '''.format(code=poss, value=evaled)
@@ -472,7 +472,7 @@ def validate_question(question, user):
             try:
                 evaled = eval(cond, safeglobals, vardict)
             except (SyntaxError, NameError) as exception:
-                err_mess = '''Bloop 269:
+                err_mess = '''Error:
                 The code "{code}" returned an error
                 with values {vals}.
                 ERROR: {error}
@@ -480,7 +480,7 @@ def validate_question(question, user):
                 validation_errors['condition'].append(err_mess.strip())
                 break
             if evaled not in (True, False):
-                err_mess = '''Bloop 274:
+                err_mess = '''Error:
                 The code "{code}" does not evaluate to a boolean
                 with values {vals}.
                 It evaluates to {evaled}
@@ -494,9 +494,9 @@ def validate_question(question, user):
     )
     max_possible = 10**6
     if m > max_possible:
-        err_mess = '''Bloop 298:
-        The product of the sizes of the sets of possibilities is {m}.
-        This value must be less than {max_possible}.
+        err_mess = '''Error:
+        The product of the sizes of the sets of possibilities is {m:,}.
+        This value must be less than {max_possible:,}.
         '''.format(m=m, max_possible=max_possible)
         validation_errors['randvar'].append(err_mess.strip())
     
