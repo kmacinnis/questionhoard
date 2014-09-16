@@ -1,6 +1,7 @@
 {% autoescape off %}\documentclass{exam}
 {% if False and prefs.font_size != 10 %}\usepackage[fontsize={{ prefs.fontsize}} ]{scrextend}{% endif %}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{mathpazo}
 \usepackage{color}
 {% for package in packages %}
@@ -15,7 +16,14 @@
 \CorrectChoiceEmphasis{\color{red} }
 \printanswers
 
-\firstpageheader{ {{ header_left }} } { {{ header_center }} } { {{ header_right }} }
+
+\firstpageheader{ 
+    { {{ exam.generated_set.course.name }} \\ {{ exam.generated_set.course.semester }}  }
+    {}
+    { Name:\enspace\makebox[2in]{\hrulefill}\\Form {{ exam.form }} }
+    }
+% \firstpageheader{ {{ header_left }} } { {{ header_center }} } { {{ header_right }} }
+
 \footer{}{\thepage}{}
 \parindent=0in
 
@@ -27,7 +35,6 @@
  {#  \newcommand{\closecorrect}{\ifprintanswers \endgroup \fi} #}
 \extraheadheight[.3in]{0in}
 
-{{ header_stuff }}
 
 \begin{document}
 \examtitle{ {{ exam.title }} }
