@@ -17,6 +17,7 @@ class ExamRecipeForm(forms.ModelForm):
             'display_title',
             'form_number_style',
             'number_of_forms',
+            'max_number_choices',
         )
 
 
