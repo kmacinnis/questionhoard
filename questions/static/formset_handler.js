@@ -9,9 +9,9 @@ function addrow (event) {
     $("#" + item + "-table tbody").append(new_row_code);
     $('#id_' + item + '-TOTAL_FORMS').attr('value', count+1);
     var delbox = $("#id_" + item + "-" + count + "-DELETE");
-    delbox.parent().append('<a href="#" class="del-item">Delete</a>');
+    delbox.parent().append('<a href="#" class="del-row">Delete</a>');
     delbox.hide();
-    $('.del-item').click(delrow);
+    $('.del-row').click(delrow);
 
 }
 
@@ -44,7 +44,7 @@ function toggleviewshortwell (event) {
 
 $(document).ready(function () {
     $('.add-row').click(addrow);
-    $('[id$="DELETE"]').parent().append('<a href="#" class="del-item">Delete</a>');
+    $('[id$="DELETE"]').parent().append('<a href="#" class="del-row">Delete</a>');
     $('[id$="DELETE"]').hide();
     $('.delete-header').hide();
     $('.del-row').click(delrow);
