@@ -82,6 +82,8 @@ class ExamRecipeItem(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        ordering = ['order']
 
 
 class ExamRecipeQuestion(ExamRecipeItem):
@@ -91,6 +93,9 @@ class ExamRecipeQuestion(ExamRecipeItem):
 class ExamRecipePool(ExamRecipeItem):
     questions = models.ManyToManyField(Question, blank=True)
     choose = models.IntegerField()
+
+    def __str__(self):
+        return 'Pool: {}'.format(self.name)
 
 
 class GeneratedSet(models.Model):

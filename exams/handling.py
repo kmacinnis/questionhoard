@@ -74,6 +74,7 @@ def create_answer_choices(questions, max_choices=99):
             except ValueError:
                 pass
         correct_position = random.choice(poss_correct_places)
+        prev2, prev1 = prev1, correct_position
         choices = handle_ordering(
                 all_choices, correct_position=correct_position
         )
