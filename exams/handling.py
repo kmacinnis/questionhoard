@@ -29,7 +29,7 @@ def get_possible_correct_placement(choices):
     LAST = AnswerChoice.LAST
 
     if set([c['pin'] for c in choices]) == {RANDOM}:
-        return range(len(choices))
+        return list(range(len(choices)))
     correct_pin = [c['pin'] for c in choices if c['correct']][0]
     if correct_pin == LAST:
         return [len(choices) - 1]
@@ -58,7 +58,7 @@ def get_form_number(style, num):
         raise ValueError("form_number_style must be letter or number")
 
 def create_answer_choices(questions, max_choices=99):
-    prev1, prev2 = -1, -2
+    prev2, prev1 = -2, -1
     for q in questions:
         choices = output_question(
             q.question, q.vardict, set_choice_position=False)['choices']
