@@ -338,6 +338,7 @@ class EditPool(UpdateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['topics'] = Topic.objects.all()
+        context['schema'] = self.object.exam().schema()
         return context
 
     def get_success_url(self):

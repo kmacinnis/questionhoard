@@ -38,6 +38,9 @@ class ExamRecipe(models.Model):
     def get_absolute_url(self):
         return reverse('ExamRecipeDetail', args=(str(self.id),))
 
+    def schema(self):
+        return self.course.course_type.schema
+
 
 class ExamPartRecipe(models.Model):
     exam = models.ForeignKey(ExamRecipe)
@@ -82,6 +85,8 @@ class ExamRecipeItem(models.Model):
 
     def __str__(self):
         return self.name
+    def exam(self):
+        return self.part.exam
     class Meta:
         ordering = ['order']
 
