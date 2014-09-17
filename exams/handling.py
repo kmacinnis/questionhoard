@@ -67,7 +67,7 @@ def create_answer_choices(questions, max_choices=99):
             choice['temp_order'] = min([sorting[t] for t in choice['type']])
         choices.sort(key=itemgetter('temp_order'))
         all_choices = choices[:max_choices]
-        poss_correct_places = get_possible_correct_placement(all_choices[q])
+        poss_correct_places = get_possible_correct_placement(all_choices)
         if (prev1 == prev2) and (len(poss_correct_places) != 1):
             try:
                 poss_correct_places.remove(prev1)
