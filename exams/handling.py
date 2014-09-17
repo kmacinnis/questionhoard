@@ -58,8 +58,7 @@ def get_form_number(style, num):
         raise ValueError("form_number_style must be letter or number")
 
 def create_answer_choices(questions, max_choices=99):
-    all_choices = {}
-    all_correct_places = {}
+    prev1, prev2 = -1, -2
     for q in questions:
         choices = output_question(
             q.question, q.vardict, set_choice_position=False)['choices']
@@ -67,17 +66,16 @@ def create_answer_choices(questions, max_choices=99):
         for choice in choices:
             choice['temp_order'] = min([sorting[t] for t in choice['type']])
         choices.sort(key=itemgetter('temp_order'))
-        all_choices[q] = choices[:max_choices]
-        all_correct_places[q] = get_possible_correct_placement(all_choices[q])
-    all_arrangements = list(product(*[all_correct_places[q] for q in questions]))
-    okay_arrangements = [
-        arrangement for arrangement in all_arrangements
-        if max(len(list(g)) for k,g in groupby(arrangement)) <= 3
-    ]
-    arrangement = random.choice(okay_arrangements)
-    for q, correct_position in zip(questions,arrangement):
+        all_choices = choices[:max_choices]
+        poss_correct_places = get_possible_correct_placement(all_choices[q])
+        if (prev1 == prev2) and (len(poss_correct_places) != 1):
+            try:
+                poss_correct_places.remove(prev1)
+            except ValueError:
+                pass
+        correct_position = random.choice(poss_correct_places)
         choices = handle_ordering(
-                all_choices[q], correct_position=correct_position
+                all_choices, correct_position=correct_position
         )
         for choice in choices:
             answer_choice = ExamAnswerChoice(
