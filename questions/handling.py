@@ -246,7 +246,8 @@ def preview_questiontext(question):
         return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
     # For now, preview just takes the first possible option.
-    text = output_question(question, vardicts[0])['questiontext']
+    vardict = question.validation.vardicts[0]
+    text = output_question(question, vardict)['questiontext']
     return make_screen_friendly(text)
     
 
