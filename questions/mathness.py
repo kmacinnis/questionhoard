@@ -1,5 +1,6 @@
 from sympy import *
 import math
+from sympy.core.compatibility import iterable
 
 posneg = [S(1),S(-1)]
 one_digit_primes = [S(2),S(3),S(5),S(7)]
@@ -42,3 +43,28 @@ def x_equals(*args):
     strlist = ["$x=%s$" % latex(i) for i in sorted(set(thelist))]
     return ", ".join(strlist)
 
+def display_set(*args, format_func=latex):
+    if (len(args) == 1) and iterable(args[0]):
+        args = args[0]
+    interior = ', '.join([format_func(i) for i in args])
+    return r'\left{ %s \right}' % interior
+
+def frac(expr):
+    if type(expr) in (Point, Tuple, tuple):
+        interior = ', '.join([frac(i) for i in expr])
+        return r'\left( %s \right)' % interior
+    if isinstance(expr, basestring):
+        return expr
+    if expr.is_Add:
+        temp = '+'.join([frac(i) for i in (expr.as_ordered_terms())])
+        return temp.replace('+-','-')
+    n,d = expr.as_numer_denom()
+    if d == 1:
+        return latex(n)
+    if expr.is_negative or n.as_coeff_Mul()[0].is_negative:
+        return '-%s' % frac(-expr)
+    else:
+        return '\\frac{%s}{%s}' % (latex(n),latex(d))
+
+def dfrac(expr):
+    return frac(expr).replace(r'\frac',r'dfrac')
