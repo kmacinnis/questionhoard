@@ -211,6 +211,7 @@ def make_screen_friendly(text):
     convert_dict = {
         r'\,' : ' ',
         r'\ ' : ' ',
+        r'\quad' : '  ',
         r'\%' : '%',
     }
     try:
@@ -224,12 +225,11 @@ def make_screen_friendly(text):
 def preview_question(question):
     '''
     Returns a dictionary with the parts of a question 
-    suitable for displaying online.
+    suitable for displaying online. Uses a random instance of a question.
     '''
     if not question.is_validated:
         return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
-    # For now, preview just takes the first possible option.
     
     output = output_question(question, question.random_vardict())
     output['questiontext'] = make_screen_friendly(output['questiontext'])
@@ -242,10 +242,7 @@ def preview_question(question):
 
 
 def preview_questiontext(question):
-    try:
-        vardicts = question.validation.vardicts
-    except ObjectDoesNotExist:
-        
+    if not question.is_validated:
         return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
     # For now, preview just takes the first possible option.

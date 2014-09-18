@@ -43,25 +43,25 @@ def x_equals(*args):
     strlist = ["$x=%s$" % latex(i) for i in sorted(set(thelist))]
     return ", ".join(strlist)
 
-def frac(expr):
-    if type(expr) in (Point, Tuple, tuple):
-        interior = ', '.join([frac(i) for i in expr])
+def frac(expression):
+    if type(expression) in (Point, Tuple, tuple):
+        interior = ', '.join([frac(i) for i in expression])
         return r'\left( %s \right)' % interior
-    if isinstance(expr, str):
-        return expr
-    if expr.is_Add:
-        temp = '+'.join([frac(i) for i in (expr.as_ordered_terms())])
+    if isinstance(expression, str):
+        return expression
+    if expression.is_Add:
+        temp = '+'.join([frac(i) for i in (expression.as_ordered_terms())])
         return temp.replace('+-','-')
-    n,d = expr.as_numer_denom()
+    n,d = expression.as_numer_denom()
     if d == 1:
         return latex(n)
-    if expr.is_negative or n.as_coeff_Mul()[0].is_negative:
-        return '-%s' % frac(-expr)
+    if expression.is_negative or n.as_coeff_Mul()[0].is_negative:
+        return '-%s' % frac(-expression)
     else:
         return '\\frac{%s}{%s}' % (latex(n),latex(d))
 
-def dfrac(expr):
-    return frac(expr).replace(r'\frac',r'dfrac')
+def dfrac(expression):
+    return frac(expression).replace(r'\frac',r'dfrac')
 
 def display_set(*args, format_func=frac):
     if (len(args) == 1) and iterable(args[0]):
