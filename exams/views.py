@@ -353,6 +353,7 @@ def ajax_add_question_to_pool(request):
     question = get_object_or_404(Question,id=question_id)
     pool = get_object_or_404(ExamRecipePool,id=pool_id)
     pool.questions.add(question)
+    pool.save()
     
     variables = RequestContext(request, {'question':question})
     return render_to_response('exams/pool_question.html',variables)
