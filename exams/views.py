@@ -215,6 +215,8 @@ def generate_exam(request, recipe_id):
                     # )
                     # q.save()
                 elif isinstance(item,ExamRecipePool):
+                    if item.questions.count() < item.choose:
+                        continue
                     question_list = random.sample(
                             list(item.questions.all()), item.choose
                     )
@@ -222,7 +224,7 @@ def generate_exam(request, recipe_id):
                         question_counter += 1
                         append_question(q, item, part, question_counter)
                 else:
-                    raise ValueError("That's weird")
+                    raise ValueError("ExamRecipeItem should only be subclassed as ExamRecipeQuestion or ExamRecipePool")
             if part_recipe.question_style == 'mc':
                 create_answer_choices(
                         part.examquestion_set.all(), 
