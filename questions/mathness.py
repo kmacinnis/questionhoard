@@ -55,7 +55,7 @@ def frac(expression):
     n,d = expression.as_numer_denom()
     if d == 1:
         return latex(n)
-    if expression.is_negative or n.as_coeff_Mul()[0].is_negative:
+    if n.as_coeff_Mul()[0].is_negative:
         return '-%s' % frac(-expression)
     else:
         return '\\frac{%s}{%s}' % (latex(n),latex(d))
