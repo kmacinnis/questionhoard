@@ -33,7 +33,7 @@ def has_duplicates(*args):
 
 def has_perfect_square_factor(num):
     for d in range(2, int(sqrt(num)+1)):
-        if n % d == 0:
+        if num % d == 0:
             return True
     return False
 
