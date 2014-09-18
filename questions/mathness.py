@@ -31,6 +31,12 @@ def is_rel_prime(*args):
 def has_duplicates(*args):
     return len(args) != len(set(args))
 
+def has_perfect_square_factor(num):
+    for d in range(2, int(sqrt(num)+1)):
+        if n % d == 0:
+            return True
+    return False
+
 def round(x, d=0):
     p = 10**d
     rounded = math.floor((x * p) + math.copysign(0.5, x))/p
