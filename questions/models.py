@@ -35,9 +35,9 @@ class Question(models.Model):
             return False
     
     def random_vardict(self):
-        try:
+        if self.is_validated:
             return random.choice(self.validation.vardicts)
-        except ObjectDoesNotExist:
+        else:
             raise ValueError("Question has not yet been validated.")
 
 

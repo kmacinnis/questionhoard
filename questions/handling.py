@@ -226,15 +226,12 @@ def preview_question(question):
     Returns a dictionary with the parts of a question 
     suitable for displaying online.
     '''
-    try:
-        vardicts = question.validation.vardicts
-    except ObjectDoesNotExist:
-        
+    if not question.is_validated:
         return defaultdict(lambda: 'ERROR! Question has not been validated.')
     
     # For now, preview just takes the first possible option.
     
-    output = output_question(question, vardicts[0])
+    output = output_question(question, question.random_vardict())
     output['questiontext'] = make_screen_friendly(output['questiontext'])
     for choice in output['choices']:
         choice['text'] = make_screen_friendly(choice['text'])
