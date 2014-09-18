@@ -46,14 +46,14 @@ def x_equals(*args):
 def display_set(*args, format_func=latex):
     if (len(args) == 1) and iterable(args[0]):
         args = args[0]
-    interior = ', '.join([format_func(i) for i in args])
-    return r'\left{ %s \right}' % interior
+    interior = ', '.join([format_func(i) for i in sorted(set(args))])
+    return r'\left\{ %s \right\}' % interior
 
 def frac(expr):
     if type(expr) in (Point, Tuple, tuple):
         interior = ', '.join([frac(i) for i in expr])
         return r'\left( %s \right)' % interior
-    if isinstance(expr, basestring):
+    if isinstance(expr, str):
         return expr
     if expr.is_Add:
         temp = '+'.join([frac(i) for i in (expr.as_ordered_terms())])
