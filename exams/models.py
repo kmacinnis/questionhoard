@@ -134,6 +134,9 @@ class ExamPart(models.Model):
     order = models.IntegerField()
     question_style = models.CharField(max_length=3)
 
+    class Meta:
+        ordering = ['exam','order']
+
 
 class ExamQuestion(models.Model):
     question = models.ForeignKey(Question)
@@ -144,6 +147,9 @@ class ExamQuestion(models.Model):
     question_text = models.TextField()
     space_after = models.CharField(max_length=10)
 
+    class Meta:
+        ordering = ['part','order']
+
 
 class ExamAnswerChoice(models.Model):
     exam_question = models.ForeignKey(ExamQuestion)
@@ -152,6 +158,8 @@ class ExamAnswerChoice(models.Model):
     correct = models.BooleanField(default=False)
     comment = models.TextField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['position']
 
 
 FONTS = Choices(

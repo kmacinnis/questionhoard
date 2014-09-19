@@ -1,7 +1,8 @@
 function delblock (event) {
     event.preventDefault();
-    var block = $(this).closest(".blockform");
-    var block_id = block.attr("id");
+    alert('in!');
+    block = $(this).closest(".questionform");
+    block_id = block.attr("id");
     $("#" + block_id + "-DELETE").attr('checked',true);
     block.hide();
 }
@@ -41,3 +42,9 @@ $(document).ready(function () {
     $('.add-question').click(addblock);
     $('.delete-block').click(delblock);
 })
+
+
+
+function donothing () {
+    var x = 3;
+}
