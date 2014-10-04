@@ -21,8 +21,6 @@ safeglobals = {key : value for key, value
                     in mathness.__dict__.items() if key[:2] != '__'}
 
 
-
-
 def crossproduct(*args):
     """Returns the cross product of any number of lists (or other iterables)"""
     return list(iterproduct(*args))

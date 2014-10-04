@@ -57,6 +57,40 @@ def get_form_number(style, num):
     else:
         raise ValueError("form_number_style must be letter or number")
 
+def create_answer_choices_with_generators(questions, max_choices=99):
+    all_choices = {}
+    all_correct_places = {}
+    for q in questions:
+        choices = output_question(
+            q.question, q.vardict, set_choice_position=False)['choices']
+        choices = [c for c in choices if c['type'] <= wanted_choicetypes]
+        for choice in choices:
+            choice['temp_order'] = min([sorting[t] for t in choice['type']])
+        choices.sort(key=itemgetter('temp_order'))
+        all_choices[q] = choices[:max_choices]
+        all_correct_places[q] = get_possible_correct_placement(all_choices[q])
+    all_arrangements = product(*[all_correct_places[q] for q in questions])
+    okay_arrangements = [
+        arrangement for arrangement in all_arrangements
+        if max(len(list(g)) for k,g in groupby(arrangement)) <= 3
+    ]
+    arrangement = random.choice(okay_arrangements)
+    for q, correct_position in zip(questions,arrangement):
+        choices = handle_ordering(
+                all_choices[q], correct_position=correct_position
+        )
+        for choice in choices:
+            answer_choice = ExamAnswerChoice(
+                exam_question = q,
+                position = choice['position'],
+                choice_text = choice['text'],
+                correct = choice['correct'],
+            )
+            if 'comment' in choice:
+                answer_choice.comment = choice['comment']
+            answer_choice.save()
+
+
 def create_answer_choices(questions, max_choices=99):
     prev2, prev1 = -2, -1
     for q in questions:
