@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Edit Exam Part Recipe{% endblock title %}
+
+{% block external %}
+	{% include "scripts_jquery_ui_bootstrap.html" %}
+	{% include "scripts_mathjax.html" %}
+	{% load static %}
+    // <script src="{% static 'questionformset_handler.js' %}"></script>
+	
+{% endblock external %}
+
+{% block content %}
+
+<div id="part-recipe-id" class="hidden">{{ object.id }}</div>
+
+<div class="row">
+	<div class="col-md-4">
+		{% include "organization/accordions/schema_base.html" with question_display="addable" %}
+	</div>
+	<div class="col-md-8">
+
+		<div "pool-list">
+			<h5>Question Pools:</h5>
+			{% for pool in object.pool_list %}
+				<p>
+					<a href="{% url 'EditPool' pool.id %}">{{ pool.name }}</a>
+				</p>
+			{% endfor %}
+			<a href="{% url 'AddPoolToPart' exampartrecipe.id %}">Add question pool</a>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

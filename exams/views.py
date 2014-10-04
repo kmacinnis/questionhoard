@@ -106,7 +106,7 @@ class EditPartRecipe(UpdateView):
         ep = self.object
         context = super().get_context_data(**kwargs)
         context['question_formset'] = QuestionInlineFormSet(instance=ep)
-        context['schema'] = ep.exam.course.course_type.schema
+        context['schema'] = ep.exam.schema
         context['edit_schema'] = False
         return context
         
@@ -123,6 +123,11 @@ class EditPartRecipe(UpdateView):
             context['form'] = form
             context['question_formset'] = question_formset
             return self.render_to_response(context)
+
+
+class UpdatePartRecipe(EditPartRecipe):
+    '''This will replace EditPartRecipe, and will not use formsets at all.'''
+    template_name = 'exams/update_part.html'
 
 
 @login_required
