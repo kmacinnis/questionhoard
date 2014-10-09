@@ -50,7 +50,7 @@ class ExamPartRecipe(models.Model):
     order = models.IntegerField()
     QUESTION_TYPES = BASIC_QUESTION_TYPES + [('mix', 'mixture'),]
     question_style = models.CharField(max_length=3, choices=QUESTION_TYPES)
-    # randomize_question_order = models.BooleanField(default=False)
+    randomize_question_order = models.BooleanField(default=False)
     
     def __str__(self):
         return "{0} ({1})".format(self.title,self.id)
