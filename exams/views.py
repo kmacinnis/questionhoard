@@ -225,7 +225,7 @@ def generate_exam(request, recipe_id):
                         part.examquestion_set.filter(item__question_style='mc'),
                         max_choices=exam_recipe.max_number_choices
                 )
-            if part_recipe.randomize_question_order:
+            if part_recipe.shuffled:
                 randlist = list(part.examquestion_set.all())
                 random.shuffle(randlist)
                 for i, q in enumerate(randlist):

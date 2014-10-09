@@ -50,7 +50,7 @@ class ExamPartRecipe(models.Model):
     order = models.IntegerField()
     QUESTION_TYPES = BASIC_QUESTION_TYPES + [('mix', 'mixture'),]
     question_style = models.CharField(max_length=3, choices=QUESTION_TYPES)
-    randomize_question_order = models.BooleanField(default=False)
+    shuffled = models.BooleanField(default=False)
     
     def __str__(self):
         return "{0} ({1})".format(self.title,self.id)
@@ -58,8 +58,10 @@ class ExamPartRecipe(models.Model):
     def question_style_text(self):
         return self.QUESTION_TYPES[self.question_style]
     
-    def simple_questions_count(self):
-        return len(self.simple_questions_list())
+    def question_count(self):
+        simple_qs = len(self.simple_questions_list())
+        pool_qs = sum([p.choose for p in self.pool_list()])
+        return simple_qs + pool_qs
 
     def simple_questions_list(self):
         all_items = self.examrecipeitem_set.select_subclasses()

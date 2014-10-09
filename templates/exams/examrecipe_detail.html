@@ -39,12 +39,12 @@
 				<a href="{% url 'EditPartRecipe' part.id %}" class="edit-link">edit</a>
 			{% endif %}
 			<br/>
-			{{ part.simple_questions_count }} Questions
 			<ul>
-				{% for question in part.simple_questions_list %}
-					<li>{{ question.name }}</li>
+				{% for item in part.examrecipeitem_set.select_subclasses %}
+					<li>{{ item.description }}</li>
 				{% endfor %}
 			</ul>
+            ({{ part.question_count }} questions total)
 		</li>
 	{% endfor %}
 </ul>

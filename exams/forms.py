@@ -36,13 +36,15 @@ class PartRecipeForm(forms.ModelForm):
             'show_title',
             'instructions',
             'question_style',
-            'randomize_question_order',
+            'shuffled',
         )
+        labels = {
+            'shuffled' : 'shuffle questions in this part',
+        }
         widgets = {
             'title' : forms.TextInput(attrs=CLASS_CONTROL),
             'instructions' : forms.Textarea(attrs=CLASS_CONTROL),
             # 'show_title' : forms.CheckboxInput(attrs=CLASS_CONTROL),
-            
         }
 
 class ExamQuestionInlineForm(forms.ModelForm):
