@@ -282,6 +282,8 @@ def duplicate_exam_recipe(request, recipe_id):
     recipe_copy.id = None
     recipe_copy.frozen = False
     recipe_copy.private_title += ' (copy)'
+    if request.user != recipe_copy.created_by:
+        recipe_copy.created_by = request.user
     recipe_copy.save()
     for part in exam_recipe.exampartrecipe_set.all():
         part_copy = deepcopy(part)
@@ -308,9 +310,11 @@ def duplicate_exam_recipe(request, recipe_id):
                 name = p.name,
                 question_style = p.question_style,
                 space_after = p.space_after,
-                # choose = p.choose,
+                choose = p.choose,
             )
-            raise NotImplementedError
+            for q in p.questions.all():
+                p_copy.questions.add(q)
+            p_copy.save()
     return HttpResponseRedirect(recipe_copy.get_absolute_url())
 
 
