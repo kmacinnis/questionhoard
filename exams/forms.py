@@ -36,6 +36,7 @@ class PartRecipeForm(forms.ModelForm):
             'show_title',
             'instructions',
             'question_style',
+            'randomize_question_order',
         )
         widgets = {
             'title' : forms.TextInput(attrs=CLASS_CONTROL),
