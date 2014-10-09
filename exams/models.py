@@ -94,6 +94,9 @@ class ExamRecipeItem(models.Model):
 
 class ExamRecipeQuestion(ExamRecipeItem):
     question = models.ForeignKey(Question)
+    
+    def description(self):
+        return "Question: {}".format(self.name)
 
 
 class ExamRecipePool(ExamRecipeItem):
@@ -102,6 +105,10 @@ class ExamRecipePool(ExamRecipeItem):
 
     def __str__(self):
         return 'Pool: {}'.format(self.name)
+
+    def description(self):
+        qlist = '; '.join([q.name for q in self.questions.all()])
+        return 'Pool (Choose {0} randomly): {1}'.format(self.choose, qlist)
 
 
 class GeneratedSet(models.Model):
