@@ -312,9 +312,9 @@ def duplicate_exam_recipe(request, recipe_id):
                 space_after = p.space_after,
                 choose = p.choose,
             )
+            p_copy.save()
             for q in p.questions.all():
                 p_copy.questions.add(q)
-            p_copy.save()
     return HttpResponseRedirect(recipe_copy.get_absolute_url())
 
 
