@@ -163,7 +163,6 @@ def generate_exam(request, recipe_id):
         vardict = question.random_vardict()
         text = output_question(
                 question, vardict, set_choice_position=False)['questiontext']
-        
         new_question = ExamQuestion(
             question = question,
             vardict = vardict,
@@ -205,20 +204,6 @@ def generate_exam(request, recipe_id):
                 if isinstance(item,ExamRecipeQuestion):
                     question_counter += 1
                     append_question(item.question, item, part, question_counter)
-                    # vardict = item.question.random_vardict()
-                    # text = output_question(
-                    #     item.question,vardict, set_choice_position=False
-                    # )['questiontext']
-                    # q = ExamQuestion(
-                    #     question = item.question,
-                    #     vardict = vardict,
-                    #     part = part,
-                    #     item = item,
-                    #     question_text = text,
-                    #     order = question_counter,
-                    #     space_after = item.space_after,
-                    # )
-                    # q.save()
                 elif isinstance(item,ExamRecipePool):
                     if item.questions.count() < item.choose:
                         continue
@@ -240,6 +225,12 @@ def generate_exam(request, recipe_id):
                         part.examquestion_set.filter(item__question_style='mc'),
                         max_choices=exam_recipe.max_number_choices
                 )
+            if part_recipe.randomize_question_order:
+                randlist = list(part.examquestion_set.all())
+                random.shuffle(randlist)
+                for i, q in enumerate(randlist):
+                    q.order = i
+                    q.save()
     exam_recipe.frozen = True
     exam_recipe.save()
     return HttpResponseRedirect(exam_recipe.get_absolute_url())  
