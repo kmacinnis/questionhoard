@@ -23,7 +23,7 @@
 <p>Display Title: {{ exam_recipe.display_title }}</p>
 <p>Form Number Style: {{ exam_recipe.form_number_style }}</p>
 <p>Number of Forms: {{ exam_recipe.number_of_forms }}</p>
-<p><a href="{% url 'EditExamRecipe' exam_recipe.id %}">Edit Basic Info</a></p>   
+<p><a href="{% url 'EditExamRecipe' exam_recipe.id %}">Edit Basic Info</a></p>
 
 
 <h5>Exam Parts</h5>
@@ -44,7 +44,10 @@
 					<li>{{ item.description }}</li>
 				{% endfor %}
 			</ul>
-            ({{ part.question_count }} questions total)
+			{{ part.question_count }} questions total.
+			{% if not part.shuffled %}
+				Questions will be shuffled into a random order for each exam.
+			{% endif %}
 		</li>
 	{% endfor %}
 </ul>
