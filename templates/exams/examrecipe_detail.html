@@ -14,8 +14,6 @@
 {% endblock external %}
 
 
-
-
 {% block content %}
 
 <h5>Basic Exam Info</h5>
@@ -45,7 +43,7 @@
 				{% endfor %}
 			</ul>
 			{{ part.question_count }} questions total.
-			{% if not part.shuffled %}
+			{% if part.shuffled %}
 				Questions will be shuffled into a random order for each exam.
 			{% endif %}
 		</li>
