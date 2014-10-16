@@ -44,10 +44,15 @@
 						{{ form.instructions.errors }}
 						{{ form.instructions }}
 					</div>
-					<div class="form-group col-md-12">
+					<div class="form-group col-md-8">
 						<label for="id_question_style" class="control-label">Question style</label>
 						{{ form.question_style.errors }}
 						{{ form.question_style }}
+					</div>
+					<div class="form-group col-md-4">
+						{{ form.shuffled.errors }}
+						{{ form.shuffled }}
+						<label for="id_shuffled" class="control-label">Randomly shuffle question order</label>
 					</div>
 				</div>
 

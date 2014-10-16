@@ -1,0 +1,48 @@
+
+<form style="padding: 8px;" id="focus-pool-form" method="post" action="/exams/pool/" >
+	{{ form.non_field_errors }}
+	{{ form.errors }}
+	{% csrf_token %}
+	{{ form.part.as_hidden }}
+	{{ form.order.as_hidden }}
+
+	<div class="col-md-12">
+		<label for="id_name">Name:</label>
+		{{ form.name.errors }}
+		{{ form.name }}
+	</div>
+	{% if exampart.question_style == 'mix' %}
+		<p>
+			<label for="id_question_style">Question style:</label>
+			{{ form.question_style.errors }}
+			{{ form.question_style }}
+		</p>
+	{% endif %}
+	<div class="col-md-4">
+		<label for="id_space_after">Space after:</label>
+		{{ form.space_after.errors }}
+		{{ form.space_after }}
+	</div>
+	<div class="col-md-4">
+		<label for="id_choose">Choose:</label>
+		{{ form.choose.errors }}
+		{{ form.choose }}
+	</div>
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-md-12">
+		<label>Question list:</label>
+
+		<ul id="focus-pool-list">
+			{% for question in question_list %}
+				<li data-id="{{ question.id }}">
+					{{ question.name }}
+					<a class="remove-from-pool" href="#">[Remove]</a>
+				</li>
+			{% empty %}
+				<li id="empty-pool">There are no questions assigned to this pool yet</li>
+			{% endfor %}
+		</ul>
+	</div>
+	 <input class="btn btn-primary" type="submit" value="Save" />
+	 <input class="btn form-cancel" type="submit" value="Cancel"/>
+</form>

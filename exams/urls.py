@@ -61,6 +61,14 @@ urlpatterns = patterns('',
         login_required(EditPartRecipe.as_view()),
         name='EditPartRecipe'
     ),
+    
+    # ex: /exams/1/update_exam_part/
+    url(
+        r'^(?P<pk>\d+)/update_exam_part/$',
+        login_required(UpdatePartRecipe.as_view()),
+        name='UpdatePartRecipe'
+    ),
+    
     url(
         r'^(?P<pk>\d+)/edit-exam-part/$',
         login_required(EditPartRecipe.as_view()),
@@ -133,8 +141,26 @@ urlpatterns = patterns('',
         name='set_preferences'
     ),
     
+    # ex: /exams/add_question_to_exam/
+    url(
+        r'^add_question_to_exam/$',
+        add_question_to_exam,
+        name='add_question_to_exam'
+    ),
     
+    # ex: /exams/remove_item_from_exam/
+    url(
+        r'^remove_item_from_exam/$',
+        remove_item_from_exam,
+        name='remove_item_from_exam'
+    ),
     
+    # ex: /exams/pool/
+    url(
+        r'^pool/$',
+        pool_details,
+        name='pool_details'
+    )
     
 )
 

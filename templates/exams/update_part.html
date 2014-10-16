@@ -5,7 +5,52 @@
 	{% include "scripts_jquery_ui_bootstrap.html" %}
 	{% include "scripts_mathjax.html" %}
 	{% load static %}
-    // <script src="{% static 'questionformset_handler.js' %}"></script>
+	<script src="{% static "examitem-handler.js" %}"></script>
+	
+	
+	<style>
+	.exam-item { 
+		margin: 0 5px 5px 5px; 
+		padding: 10px; 
+/*		font-size: 1.2em;*/
+		height: 3em; 
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius:5px;
+		color: #555555;
+	/*	background-color: #f5f5f5;*/
+		background-color: #E0EBFB;
+	/*	border-color: #dddddd;*/
+	/*	border-color: #555555;*/
+		line-height: 1.7em;
+	}
+	.placeholder-highlight	{
+		height: 3em; 
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius:5px;
+		border: 1px solid #fcefa1;
+		background: #fbf9ee;
+		color: #363636;
+	}
+	.hidden {
+		display: none;
+	}
+	select.small-select {
+		font-size: small;
+	}
+	
+	#focus-pool {
+		background-color: #87D1DD;
+		border: 1px solid #87D1DD;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius:5px;
+		
+		
+	}
+
+	</style>
 	
 {% endblock external %}
 
@@ -19,15 +64,36 @@
 	</div>
 	<div class="col-md-8">
 
-		<div "pool-list">
-			<h5>Question Pools:</h5>
-			{% for pool in object.pool_list %}
+		<div class="well well-sm row">
+			<div id="part-info" data-part-id="{{ object.id }}" data-question-style="{{ object.question_style }}" data-nothing="whatever">
 				<p>
-					<a href="{% url 'EditPool' pool.id %}">{{ pool.name }}</a>
+					{{ object.title }} <br/>
+					(This title  
+					{{ object.show_title|yesno:"will, will not" }}
+					appear on the actual exam.)
 				</p>
-			{% endfor %}
-			<a href="{% url 'AddPoolToPart' exampartrecipe.id %}">Add question pool</a>
+				<p>Instructions:<br/>{{ object.instructions }}</p>
+				<p>Question style:<br/>{{ object.question_style_text|capfirst }}</p>
+				<p>
+					Space after: 
+					<span id="space-after" data-changing="">5mm</span>
+					<a id="change-space-after" href="#">change</a>
+				</p>
+			</div>
+			<div id="part-items">
+				{% for item in part.examrecipeitem_set.select_subclasses %}
+					{% include "exams/item.html" %}
+				{% endfor %}
+			</div>
+			<div id="focus-pool" class="hidden" data-active="">
+				
+			</div>
+			<div class="instructions">
+				To add questions to the exam, select from the topics on the left.
+				To add a question pool, <a id="new-question-pool" href="#">click here.</a>
+			</div>
 		</div>
+
 	</div>
 </div>
 

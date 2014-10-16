@@ -1,17 +1,19 @@
 from django.shortcuts import get_object_or_404, render_to_response
-from vanilla import ListView, DetailView, CreateView, UpdateView
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.db.models import Max
 from django.db import transaction
+from django.db.models import Max
 from django.core.urlresolvers import reverse
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from vanilla import ListView, DetailView, CreateView, UpdateView
 
 
 from copy import deepcopy
 from collections import Counter
 import random
+import json
 
 from exams.models import *
 from exams.forms import *
@@ -41,6 +43,7 @@ class ExamRecipeDetail(DetailView):
 
 class PartRecipeDetail(DetailView):
     model = ExamPartRecipe
+    context_object_name = 'part'
 
 
 class CreateExamRecipe(CreateView):
@@ -125,9 +128,18 @@ class EditPartRecipe(UpdateView):
             return self.render_to_response(context)
 
 
-class UpdatePartRecipe(EditPartRecipe):
+class UpdatePartRecipe(UpdateView):
     '''This will replace EditPartRecipe, and will not use formsets at all.'''
+    model = ExamPartRecipe
     template_name = 'exams/update_part.html'
+    context_object_name = 'part'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['schema'] = self.object.exam.schema
+        context['edit_schema'] = False
+        return context
+    
 
 
 @login_required
@@ -253,7 +265,7 @@ def view_exam(request, exam_id, filetype):
 @login_required
 def unfreeze_exam_recipe(request, exam_recipe_id=None, action=None):
     exam_recipe = get_object_or_404(ExamRecipe, id=exam_recipe_id)
-    if request.user != exam_recipe.created_by:
+    if not (request.user == exam_recipe.created_by or request.user.is_superuser):
         raise Http404
     if action == 'keep':
         for exam_set in exam_recipe.generatedset_set.all():
@@ -367,6 +379,77 @@ def ajax_remove_question_from_pool(request):
     pool.questions.remove(question)
     return HttpResponse('success')
 
+
+def render_to_json_response(context, **response_kwargs):
+    data = json.dumps(context)
+    response_kwargs['content_type'] = 'application/json'
+    return HttpResponse(data, **response_kwargs)
+
+def add_question_to_exam(request):
+    '''Ajax function'''
+    question_id = request.GET['question_id']
+    exampart_id = request.GET['exampart_id']
+    question = get_object_or_404(Question,id=question_id)
+    exampart = get_object_or_404(ExamPartRecipe, id=exampart_id)
+    exam_owner = exampart.exam.created_by
+    if (request.user == exam_owner) or request.user.is_superuser:
+        new_q = ExamRecipeQuestion(
+            question = question,
+            part = exampart,
+            order = request.GET['order'],
+            question_style = request.GET['question_style'],
+            space_after = request.GET['space_after'],
+        )
+        new_q.save()
+        response_data = {
+            'success' : True,
+            'item_div' : render_to_string('exams/item.html', {'item': new_q})
+        }
+    else:
+        response_data = {
+            'success': False,
+            'err_mess': 'You do not have permission to add items to this exam.'
+        }
+    return render_to_json_response(response_data)
+
+def remove_item_from_exam(request):
+    item_id = request.GET['item_id']
+    item = get_object_or_404(ExamRecipeItem, id=item_id)
+    item_owner = item.exam().created_by
+    if (request.user == item_owner) or request.user.is_superuser:
+        item.delete()
+        response_data = {
+            'success' : True,
+        }
+    else:
+        response_data = {
+            'success' : False,
+            'err_mess' : 'You do not have permission to remove this item.',
+        }
+    return render_to_json_response(response_data)
+
+def pool_details(request):
+    if request.POST:
+        pool_id = request.POST['pool_id']
+        return HttpResponse('Hello %s'%pool_id)
+    elif request.GET:
+        exampart_id = request.GET['exampart_id']
+        exampart = get_object_or_404(ExamPartRecipe, id=exampart_id)
+        pool_id = request.GET['pool_id']
+    
+        if pool_id == 'new':
+            pool = ExamRecipePool(name='New Pool', choose=1, part=exampart)
+            question_list = []
+        else:
+            pool = get_object_or_404(ExamRecipePool, id=pool_id)
+            question_list = pool.questions.all()
+        form = PoolForm(instance=pool)
+        variables = RequestContext(request, {
+            'exampart' : exampart,
+            'pool' : pool,
+            'form' : form,
+        })
+        return render_to_response('exams/focus_pool.html', variables)
 
 @login_required
 def set_preferences(request):

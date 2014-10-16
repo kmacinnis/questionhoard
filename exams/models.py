@@ -90,6 +90,8 @@ class ExamRecipeItem(models.Model):
         return self.name
     def exam(self):
         return self.part.exam
+    def type(self):
+        return "unknown"
     class Meta:
         ordering = ['order']
 
@@ -99,6 +101,9 @@ class ExamRecipeQuestion(ExamRecipeItem):
     
     def description(self):
         return "Question: {}".format(self.name)
+
+    def type(self):
+        return 'question'
 
 
 class ExamRecipePool(ExamRecipeItem):
@@ -111,6 +116,9 @@ class ExamRecipePool(ExamRecipeItem):
     def description(self):
         qlist = '; '.join([q.name for q in self.questions.all()])
         return 'Pool (Choose {0} randomly): {1}'.format(self.choose, qlist)
+
+    def type(self):
+        return 'pool'
 
 
 class GeneratedSet(models.Model):

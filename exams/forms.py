@@ -78,39 +78,49 @@ QuestionInlineFormSet = inlineformset_factory(
 
 
 
-class ExamPoolInlineForm(forms.ModelForm):
-    class Meta:
-        model = ExamRecipePool
-        fields = (
-            'order',
-            'choose',
-            'name',
-            'question_style',
-            'space_after',
-        )
-        widgets = {
-            'question': forms.HiddenInput(),
-            'order': forms.HiddenInput(),
-            'space_after': forms.TextInput(attrs=CLASS_CONTROL),
-            'name': forms.HiddenInput(),
-            'question_style': forms.Select(attrs={'class':'small-select'}),
-            'choose':forms.TextInput(attrs=CLASS_CONTROL)
-        }
+# class ExamPoolInlineForm(forms.ModelForm):
+#     class Meta:
+#         model = ExamRecipePool
+#         fields = (
+#             'order',
+#             'choose',
+#             'name',
+#             'question_style',
+#             'space_after',
+#         )
+#         widgets = {
+#             'question': forms.HiddenInput(),
+#             'order': forms.HiddenInput(),
+#             'space_after': forms.TextInput(attrs=CLASS_CONTROL),
+#             'name': forms.TextInput(attrs=CLASS_CONTROL),
+#             'question_style': forms.Select(attrs={'class':'small-select'}),
+#             'choose':forms.TextInput(attrs=CLASS_CONTROL)
+#         }
 
 class PoolForm(forms.ModelForm):
+    # pool_id = forms.IntegerField(widget=forms.HiddenInput())
+    
     class Meta:
         model = ExamRecipePool
         fields = (
+            'id',
             'part',
             'order',
             'name',
             'question_style',
             'space_after',
             'choose',
+            'questions'
         )
         widgets = {
+            'id' : forms.TextInput(),
             'part' : forms.HiddenInput(),
             'order' : forms.HiddenInput(),
+            'space_after': forms.TextInput(attrs=CLASS_CONTROL),
+            'name' : forms.TextInput(attrs=CLASS_CONTROL),
+            'choose' : forms.TextInput(attrs=CLASS_CONTROL),
+            'questions' : forms.HiddenInput(attrs=CLASS_CONTROL),
+            
         }
 
 

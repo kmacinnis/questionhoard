@@ -6,7 +6,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
-		<h4 class="panel-title panel-toggle inline-block">
+		<h4 id="question-name-{{ question.id }}" class="panel-title panel-toggle inline-block">
 			{{ question.name }}
 			{% if edit_questions %}
 				<span class="small inline-block">
