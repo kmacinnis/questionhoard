@@ -11,13 +11,15 @@
 		{{ form.name.errors }}
 		{{ form.name }}
 	</div>
-	{% if exampart.question_style == 'mix' %}
-		<p>
-			<label for="id_question_style">Question style:</label>
-			{{ form.question_style.errors }}
+	<p>
+		<label for="id_question_style">Question style:</label>
+		{{ form.question_style.errors }}
+		{% if exampart.question_style == 'mix' %}
 			{{ form.question_style }}
-		</p>
-	{% endif %}
+		{% else %}
+			{{ form.question_style.as_hidden }}
+		{% endif %}
+	</p>
 	<div class="col-md-4">
 		<label for="id_space_after">Space after:</label>
 		{{ form.space_after.errors }}

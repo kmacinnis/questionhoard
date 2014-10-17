@@ -430,26 +430,59 @@ def remove_item_from_exam(request):
 
 def pool_details(request):
     if request.POST:
+        exampart = get_object_or_404(ExamPartRecipe, id=request.POST['part_id'])
         pool_id = request.POST['pool_id']
-        return HttpResponse('Hello %s'%pool_id)
-    elif request.GET:
+        if pool_id == 'new':
+            form = PoolForm(request.POST)
+            pool = ExamRecipePool()
+        else:
+            pool = get_object_or_404(ExamRecipePool, id=pool_id)
+            form = PoolForm(request.POST, instance=pool)
+        if form.is_valid():
+            pool = ExamRecipePool(
+                name = form.cleaned_data['name'],
+                choose = form.cleaned_data['choose'],
+                part = exampart,
+                order = form.cleaned_data['order'],
+                space_after = form.cleaned_data['space_after'],
+            )
+            # if exampart.question_style == 'mix':
+            #     pool.question_style = form.cleaned_data['question_style']
+            # else:
+            #     pool.question_style = exampart.question_style
+            pool.save()
+            # pool.questions.add(form.)
+            
+            response_data = {
+                'submitted' : True,
+                'item_div' : render_to_string('exams/item.html', {'item': pool})
+            }
+            return render_to_json_response(response_data)
+
+    else: # request.GET
         exampart_id = request.GET['exampart_id']
         exampart = get_object_or_404(ExamPartRecipe, id=exampart_id)
         pool_id = request.GET['pool_id']
     
         if pool_id == 'new':
             pool = ExamRecipePool(name='New Pool', choose=1, part=exampart)
+            if exampart.question_style != 'mix':
+                pool.question_style = exampart.question_style
             question_list = []
         else:
             pool = get_object_or_404(ExamRecipePool, id=pool_id)
             question_list = pool.questions.all()
         form = PoolForm(instance=pool)
-        variables = RequestContext(request, {
-            'exampart' : exampart,
-            'pool' : pool,
-            'form' : form,
-        })
-        return render_to_response('exams/focus_pool.html', variables)
+    variables = RequestContext(request, {
+        'exampart' : exampart,
+        'pool' : pool,
+        'form' : form,
+    })
+    response_data = {
+        'submitted' : False,
+        'form' : render_to_string('exams/focus_pool.html', variables)
+    }
+    return render_to_json_response(response_data)
 
 @login_required
 def set_preferences(request):

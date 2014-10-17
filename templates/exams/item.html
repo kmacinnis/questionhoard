@@ -9,14 +9,16 @@
 			Space after: {{ item.space_after }}
 			</div>
 		{% elif item.type == 'pool' %}
-			Pool: {{ item.name }}
-			<ul>
-				{% for question in item.questions.all %}
-					<li> {{ question.name }} </li>
-				{% endfor %}
-			</ul>
-			{{ item.choose }} question{{ item.choose|pluralize }} 
-			will be used from this pool.
+			<div class='col-md-10'>
+				Pool: {{ item.name }}
+				<ul>
+					{% for question in item.questions.all %}
+						<li> {{ question.name }} </li>
+					{% endfor %}
+				</ul>
+				{{ item.choose }} question{{ item.choose|pluralize }} 
+				will be used from this pool.
+			</div>
 		{% endif %}
 		<div class='col-md-2 small'>
 			<a href="#" class='edit-item' data-item-id="{{ item.id }}">[Edit]</a>

@@ -92,7 +92,7 @@ function showFocusPool(pool_id) {
         url: '/exams/pool/',
         data: send_data,
         success: function (response, status){
-            $('#focus-pool').html(response);
+            $('#focus-pool').html(response.form);
             $("#focus-pool").removeClass("hidden");
             $("#part-items").addClass("hidden");
             $(".instructions").addClass("hidden");
@@ -103,26 +103,35 @@ function showFocusPool(pool_id) {
     });
 }
 
+function talkToMe (event) {
+    event.preventDefault();
+    alert('hi there!');
+}
+
 function saveFocusPool(event) {
     event.preventDefault();
-    alert("in");
+    event.stopPropagation();
     $("#id_order").val($('.exam-item').length + 1);
     var k =  $("#focus-pool-list").children();
     var question_list = $(k).map(function (i, elem) {return $(elem).data("id");}).get();
     $("#id_questions").val(question_list);
     send_data = $(this).serializeArray();
     send_data.push({name: 'pool_id', value: $("#focus-pool").data('pool_id') });
+    send_data.push({name: 'part_id', value: $('#part-info').data('partId') });
     console.log(send_data);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: '/exams/pool/',
-    //     data: send_data,
-    //     success: function (response, status){
-    //         hideFocusPool();
-    //         $('#part-items').append(response);
-    //     }
-    // });
-    
+    $.ajax({
+        type: 'POST',
+        url: '/exams/pool/',
+        data: send_data,
+        success: function (response, status){
+            if (response.submitted) {
+                $('#part-items').append(response.item_div);
+                hideFocusPool();
+            } else {
+                $('#focus-pool').html(response.form);
+            }
+        }
+    });
 }
 
 function editQuestionPool(event) {
@@ -134,7 +143,8 @@ function newQuestionPool(event) {
     showFocusPool('new');
 }
 
-function hideFocusPool() {
+function hideFocusPool(event) {
+    event.stopPropagation();
     event.preventDefault();
     $("#focus-pool").addClass("hidden");
     $("#part-items").removeClass("hidden");
@@ -152,7 +162,7 @@ $(document).ready(function () {
     $("#new-question-pool").click(newQuestionPool);
     $("#focus-pool").on("click",".remove-from-pool", removeQuestionFromPool);
     $('#focus-pool').on("click", ".form-cancel", hideFocusPool);
-    $('#focus-pool-form').on(saveFocusPool);
+    $('#focus-pool').on("submit", "form", saveFocusPool);
     
 });
 
