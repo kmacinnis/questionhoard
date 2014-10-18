@@ -114,10 +114,12 @@ function saveFocusPool(event) {
     $("#id_order").val($('.exam-item').length + 1);
     var k =  $("#focus-pool-list").children();
     var question_list = $(k).map(function (i, elem) {return $(elem).data("id");}).get();
-    $("#id_questions").val(question_list);
+    $("#id_questions").val("[" + question_list + "]");
     send_data = $(this).serializeArray();
     send_data.push({name: 'pool_id', value: $("#focus-pool").data('pool_id') });
     send_data.push({name: 'part_id', value: $('#part-info').data('partId') });
+    send_data.push({name: 'question_list', value: question_list });
+    
     console.log(send_data);
     $.ajax({
         type: 'POST',
@@ -126,7 +128,7 @@ function saveFocusPool(event) {
         success: function (response, status){
             if (response.submitted) {
                 $('#part-items').append(response.item_div);
-                hideFocusPool();
+                hideFocusPool(event);
             } else {
                 $('#focus-pool').html(response.form);
             }
@@ -153,6 +155,13 @@ function hideFocusPool(event) {
     $("#focus-pool").data('active', false);
 }
 
+function updateQuestionList(event) {
+    var k =  $("#focus-pool-list").children();
+    var question_list = $(k).map(function (i, elem) {return $(elem).data("id");}).get();
+    $("#id_questions").val("[" + question_list + "]");
+    console.log($("#id_questions"));
+    
+}
 
 
 $(document).ready(function () {
@@ -163,6 +172,7 @@ $(document).ready(function () {
     $("#focus-pool").on("click",".remove-from-pool", removeQuestionFromPool);
     $('#focus-pool').on("click", ".form-cancel", hideFocusPool);
     $('#focus-pool').on("submit", "form", saveFocusPool);
+    $('#focus-pool').on('click', 'form', updateQuestionList);
     
 });
 

@@ -2,6 +2,7 @@
 	<div class='row'>
 		{% if item.type == 'question' %}
 			<div class='col-md-8'>
+				{{ item.order }}
 				{{ item.question.name }}
 			</div>
 			<div class='col-md-2 small'>
@@ -10,8 +11,9 @@
 			</div>
 		{% elif item.type == 'pool' %}
 			<div class='col-md-10'>
+				{{ item.order }}
 				Pool: {{ item.name }}
-				<ul>
+				<ul class="pool-question-list">
 					{% for question in item.questions.all %}
 						<li> {{ question.name }} </li>
 					{% endfor %}

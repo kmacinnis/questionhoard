@@ -428,8 +428,9 @@ def remove_item_from_exam(request):
         }
     return render_to_json_response(response_data)
 
-def pool_details(request):
+def focus_pool(request):
     if request.POST:
+        print(request.POST)
         exampart = get_object_or_404(ExamPartRecipe, id=request.POST['part_id'])
         pool_id = request.POST['pool_id']
         if pool_id == 'new':
@@ -446,12 +447,9 @@ def pool_details(request):
                 order = form.cleaned_data['order'],
                 space_after = form.cleaned_data['space_after'],
             )
-            # if exampart.question_style == 'mix':
-            #     pool.question_style = form.cleaned_data['question_style']
-            # else:
-            #     pool.question_style = exampart.question_style
             pool.save()
-            # pool.questions.add(form.)
+            question_list = request.POST['question_list'].split(',')
+            pool.questions.add(*question_list)
             
             response_data = {
                 'submitted' : True,

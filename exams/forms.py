@@ -110,7 +110,6 @@ class PoolForm(forms.ModelForm):
             'question_style',
             'space_after',
             'choose',
-            'questions'
         )
         widgets = {
             'id' : forms.TextInput(),
@@ -118,9 +117,7 @@ class PoolForm(forms.ModelForm):
             'order' : forms.HiddenInput(),
             'space_after': forms.TextInput(attrs=CLASS_CONTROL),
             'name' : forms.TextInput(attrs=CLASS_CONTROL),
-            'choose' : forms.TextInput(attrs=CLASS_CONTROL),
-            'questions' : forms.HiddenInput(attrs=CLASS_CONTROL),
-            
+            'choose' : forms.TextInput(attrs=CLASS_CONTROL),            
         }
 
 

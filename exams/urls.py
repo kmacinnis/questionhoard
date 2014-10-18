@@ -158,8 +158,8 @@ urlpatterns = patterns('',
     # ex: /exams/pool/
     url(
         r'^pool/$',
-        pool_details,
-        name='pool_details'
+        focus_pool,
+        name='focus_pool'
     )
     
 )
