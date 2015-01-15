@@ -23,7 +23,7 @@
 			</div>
 		{% endif %}
 		<div class='col-md-2 small'>
-			<a href="#" class='edit-item' data-item-id="{{ item.id }}">[Edit]</a>
+			<a href="{% url 'EditExamItem' item_id=item.id %}" class='edit-item' data-item-id="{{ item.id }}" data-item-type="{{ item.type }}">[Edit]</a>
 			<a href="#" class='remove-item' data-item-id="{{ item.id }}">[Remove]</a>
 		</div>
 	</div>

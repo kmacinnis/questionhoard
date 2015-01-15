@@ -160,7 +160,14 @@ urlpatterns = patterns('',
         r'^pool/$',
         focus_pool,
         name='focus_pool'
-    )
+    ),
+    
+    # ex: /exams/edit_item/123/
+    url(
+        r'^edit_item/(?P<item_id>\d+)/$',
+        edit_item,
+        name = 'EditExamItem'
+    ),
     
 )
 

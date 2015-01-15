@@ -47,7 +47,6 @@ function addQuestion (event) {
     }
 }
 
-
 function removeItem(event) {
     event.preventDefault();
     var item_id = $(this).data('itemId');
@@ -64,7 +63,6 @@ function removeItem(event) {
             }
         }
     });
-    
 }
 
 function changeSpaceAfter(event) {
@@ -103,11 +101,6 @@ function showFocusPool(pool_id) {
     });
 }
 
-function talkToMe (event) {
-    event.preventDefault();
-    alert('hi there!');
-}
-
 function saveFocusPool(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -120,7 +113,6 @@ function saveFocusPool(event) {
     send_data.push({name: 'part_id', value: $('#part-info').data('partId') });
     send_data.push({name: 'question_list', value: question_list });
     
-    console.log(send_data);
     $.ajax({
         type: 'POST',
         url: '/exams/pool/',
@@ -136,8 +128,26 @@ function saveFocusPool(event) {
     });
 }
 
-function editQuestionPool(event) {
+function editItem(event) {
     event.preventDefault();
+    event.stopPropagation();
+    var url = $(this).attr('href');
+    var item_type = $(this).data('itemType');
+    var item_id = $(this).data('itemId');
+    if (item_type == 'question') {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: send_data,
+            success: function (response, status) {
+                if (response.success) {
+                    $(this).closest('.exam-item').html(response.form);
+                }
+            }
+        })
+    } else if (item_type == 'pool') {
+        showFocusPool(item_id);
+    }
 }
 
 function newQuestionPool(event) {
@@ -155,24 +165,17 @@ function hideFocusPool(event) {
     $("#focus-pool").data('active', false);
 }
 
-function updateQuestionList(event) {
-    var k =  $("#focus-pool-list").children();
-    var question_list = $(k).map(function (i, elem) {return $(elem).data("id");}).get();
-    $("#id_questions").val("[" + question_list + "]");
-    console.log($("#id_questions"));
-    
-}
 
 
 $(document).ready(function () {
     $('#accordion-main').on("click", ".add-question", addQuestion);
     $('#part-items').on("click", ".remove-item", removeItem);
+    $('#part-items').on("click",".edit-item", editItem);
     $("#change-space-after").click(changeSpaceAfter);
     $("#new-question-pool").click(newQuestionPool);
     $("#focus-pool").on("click",".remove-from-pool", removeQuestionFromPool);
     $('#focus-pool').on("click", ".form-cancel", hideFocusPool);
     $('#focus-pool').on("submit", "form", saveFocusPool);
-    $('#focus-pool').on('click', 'form', updateQuestionList);
     
 });
 

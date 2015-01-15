@@ -472,7 +472,6 @@ def focus_pool(request):
             question_list = pool.questions.all()
         form = PoolForm(instance=pool)
     variables = RequestContext(request, {
-        'exampart' : exampart,
         'pool' : pool,
         'form' : form,
     })
@@ -481,6 +480,26 @@ def focus_pool(request):
         'form' : render_to_string('exams/focus_pool.html', variables)
     }
     return render_to_json_response(response_data)
+
+def edit_item(request, item_id):
+    try:
+        item = ExamRecipeItem.objects.get_subclass(id=item_id)
+    except DoesNotExist:
+        raise Http404
+    item_type = item.type()
+    # Right now, this should only be called for ExamRecipeQuestion's
+    
+    
+
+    if request.POST:
+        pass
+    else: #request.GET
+        pass
+        # TODO: make a tiny form to replace the item_div.  Form only needs
+        # space_after and question_style (if the exampart is 'mix')
+            
+            
+            
 
 @login_required
 def set_preferences(request):

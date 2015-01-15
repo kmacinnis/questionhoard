@@ -1,0 +1,16 @@
+<div class='exam-item'>
+	<div class='row'>
+		<form id="edit-form" method="post" action="/save/" class="basic-grey">
+		    {% csrf_token %}
+		    {{ form.as_p }}
+			<div class='col-md-8'>
+				{{ item.question.name }}
+			</div>
+			<div class='col-md-2 small'>
+			
+			Space after: {{ form.space_after }}
+			</div>
+		    <input type="submit" value="save" />
+		</form>
+	</div>
+</div>

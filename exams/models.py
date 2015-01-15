@@ -91,7 +91,7 @@ class ExamRecipeItem(models.Model):
     def exam(self):
         return self.part.exam
     def type(self):
-        return "unknown"
+        return ExamRecipeItem.objects.get_subclass(id=self.id).type()
     class Meta:
         ordering = ['order']
 

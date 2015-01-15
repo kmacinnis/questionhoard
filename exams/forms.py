@@ -120,6 +120,14 @@ class PoolForm(forms.ModelForm):
             'choose' : forms.TextInput(attrs=CLASS_CONTROL),            
         }
 
+class ItemMiniForm(forms.ModelForm):
+    class Meta:
+        model = ExamRecipeQuestion
+        fields = (
+            'question_style',
+            'space_after',
+        )
+    
 
 class PreferencesForm(forms.ModelForm):
     class Meta:
