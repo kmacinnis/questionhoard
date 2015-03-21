@@ -31,7 +31,6 @@ INSTALLED_APPS = (
     'practicedocs',
     'exams',
     'zother',
-    'simplified',
 )
 
 MIDDLEWARE_CLASSES = (

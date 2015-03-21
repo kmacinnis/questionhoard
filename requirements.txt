@@ -1,8 +1,6 @@
-Django==1.6.5
-Pillow==2.4.0
-South==0.8.4
 colorize==1.0.0
 coverage==3.7.1
+Django==1.6.5
 django-bootstrap3==4.4.0
 django-debug-toolbar==1.2.1
 django-discover-runner==1.0
@@ -13,9 +11,11 @@ django-smuggler==0.4.1
 django-vanilla-views==1.0.3
 gnureadline==6.3.3
 ipython==2.0.0
+Pillow==2.4.0
 readline==6.2.4.1
 rebar==0.1
 selenium==2.41.0
 six==1.6.1
+South==0.8.4
 sqlparse==0.1.11
 sympy==0.7.5
