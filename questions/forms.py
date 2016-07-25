@@ -12,6 +12,7 @@ valid_varname = re.compile(r'[A-Za-z]\w*')
 class RandVarsInlineForm(forms.ModelForm):
     class Meta:
         model = RandVar
+        fields = '__all__'
     
     def run_validators(self):
         return
@@ -46,6 +47,7 @@ RandVarsInline.description = "Random Variable"
 ConditionsInline = inlineformset_factory(
     Question,
     Condition,
+    fields = '__all__',
     extra = 1,
     )
 ConditionsInline.description = "Condtion"
@@ -53,6 +55,7 @@ ConditionsInline.description = "Condtion"
 AnswerChoicesInline = inlineformset_factory(
     Question,
     AnswerChoice,
+    fields = '__all__',
     extra = 1,
     )
 AnswerChoicesInline.description = "AnswerChoice"

@@ -24,7 +24,7 @@ class ExamRecipeForm(forms.ModelForm):
 PartRecipeFormSet = inlineformset_factory(
     ExamRecipe,
     ExamPartRecipe,
-    
+    fields = '__all__',
 )
 
 
@@ -132,6 +132,7 @@ class ItemMiniForm(forms.ModelForm):
 class PreferencesForm(forms.ModelForm):
     class Meta:
         model = FormattingPreferences
+        fields = '__all__'
         widgets = {
             'user' : forms.HiddenInput(),
         }
