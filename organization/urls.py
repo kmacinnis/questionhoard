@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from organization.views import *
 import zother.views as zviews
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # ex: /organization/topics/
     url(r'^topics/$', TopicList.as_view(), name='TopicList'),
@@ -141,4 +141,4 @@ urlpatterns = patterns('',
         related_courses,
         name='related_courses'
     )
-)
+]

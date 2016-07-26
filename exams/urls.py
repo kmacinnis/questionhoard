@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from exams.views import *
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # ex: /exams/
     url(
@@ -169,5 +169,5 @@ urlpatterns = patterns('',
         name = 'EditExamItem'
     ),
     
-)
+]
 

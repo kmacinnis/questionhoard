@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from questions.views import *
 
-urlpatterns = patterns('',
+urlpatterns = [
     # ex: /questions/
     url(
         r'^$', 
@@ -77,5 +77,5 @@ urlpatterns = patterns('',
         name='DuplicateQuestion'
     ),
 
-)
+]
 
