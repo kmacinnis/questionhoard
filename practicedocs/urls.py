@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 
 from practicedocs.views import *
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # ex: /practicedocs/
     url(r'^$', DocRecipeList.as_view(), name='DocRecipeList'),
@@ -28,5 +28,5 @@ urlpatterns = patterns('',
 
     # ex: /practicedocs/new_blockrecipe_form/
     url(r'^new_blockrecipe_form/$', ajax_add_blockrecipe),
-)
+]
 

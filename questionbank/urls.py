@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.views import login
 from django.views.generic import TemplateView
 from zother import views as zviews
 
@@ -10,14 +11,14 @@ from zother import views as zviews
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     url(r'^questions/', include('questions.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', zviews.main_page),
-    url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    url(r'^login/$', login),
+    url(r'^accounts/login/$', login),
     url(r'^logout/$', zviews.logout_page),
     url(r'^register/$', zviews.register_page),
     url(r'^register/success/$',
@@ -29,10 +30,10 @@ urlpatterns = patterns('',
     url(r'^organization/', include('organization.urls')),
     # url(r'^org/', include('organization.urls')),
     url(r'^exams/', include('exams.urls')),
-)
+]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    ]
