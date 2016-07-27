@@ -40,6 +40,7 @@ class CreateDocRecipe(CreateView):
         form = DocRecipeNameForm(request.POST, instance=recipe)
         if form.is_valid():
             return self.form_valid(form)
+        return self.form_invalid(form)
 
 
 def view_document(request, document_id, filetype):

@@ -39,6 +39,7 @@ class CreateCourse(CreateView):
         form = CourseInfoForm(request.POST, instance=course)
         if form.is_valid():
             return self.form_valid(form)
+        return self.form_invalid(form)
 
     def get_success_url(self):
         return reverse('CourseDetails', kwargs={'pk': self.object.id})

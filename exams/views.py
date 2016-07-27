@@ -64,9 +64,7 @@ class CreateExamRecipe(CreateView):
         form = ExamRecipeForm(request.POST, instance=recipe)
         if form.is_valid():
             return self.form_valid(form)
-        return HttpResponse('oops')
-        # TODO: I think this needs to return something when the form is not valid?
-        # MAYBE????
+        return self.form_invalid(form)
 
 
 class CreateExamPartRecipe(CreateView):
@@ -88,6 +86,7 @@ class CreateExamPartRecipe(CreateView):
         form = PartRecipeForm(request.POST, instance=part)
         if form.is_valid():
             return self.form_valid(form)
+        return self.form_invalid(form)
 
 
 class EditExamRecipe(UpdateView):
