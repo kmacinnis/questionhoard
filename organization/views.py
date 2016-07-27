@@ -24,14 +24,17 @@ class TopicList(ListView):
 
 class CourseDetails(DetailView):
     model = Course
+    fields = '__all__'
     context_object_name = 'course'
 
 class EditCourseDetails(UpdateView):
     model = Course
+    fields = '__all__'
     context_object_name = 'course'
 
 class CreateCourse(CreateView):
     model = Course
+    fields = '__all__'
     form_class = CourseInfoForm
 
     def post(self, request):
@@ -56,6 +59,7 @@ def course_list(request):
 
 class CreateSchema(CreateView):
     model= Schema
+    fields = '__all__'
     template_name = 'organization/create_schema.html'
     
     def get_success_url(self):
@@ -64,6 +68,7 @@ class CreateSchema(CreateView):
 
 class SchemaDetails(DetailView):
     model = Schema
+    fields = '__all__'
     context_object_name = 'schema'
 
     def get_context_data(self, **kwargs):
@@ -96,6 +101,7 @@ class EditSchemaWithQuestions(SchemaWithQuestions):
 
 class SchemaList(ListView):
     model = Schema
+    fields = '__all__'
 
 
 @login_required
