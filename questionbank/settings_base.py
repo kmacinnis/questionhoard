@@ -26,11 +26,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'questions',
-    'organization',
-    'practicedocs',
-    'exams',
-    'zother',
+    'questions.apps.QuestionsConfig',
+    'organization.apps.OrganizationConfig',
+    'practicedocs.apps.PracticeDocsConfig',
+    'exams.apps.ExamsConfig',
+    'zother.apps.ZotherConfig',
 )
 
 MIDDLEWARE_CLASSES = (
