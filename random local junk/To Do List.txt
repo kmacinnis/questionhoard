@@ -1,6 +1,0 @@
-To Do:
-* Check docstring of questions.handling.validate_question for more validation items
-* Add user preferences for exam formatting
-* Add courses to organization
-
-
