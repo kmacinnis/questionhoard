@@ -1,11 +1,11 @@
 {# When including this, you must pass in a variable: question_display #}
 {# possible values: "simple_preview", "addable"     #}
-{# If this is included from the edit schema page, there will be  #}
-{# a variable edit_schema=True #}
+{# If this is included from the edit book page, there will be  #}
+{# a variable edit_book=True #}
 
 
 <div class="panel panel-default">
-	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ subtopic.id }}-{{ objective.id }}" data-target="#panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-objective-{{ section.id }}-{{ objective.id }}" data-target="#panel-question-{{ section.id }}-{{ objective.id }}-{{ question.id }}">
 		<h4 id="question-name-{{ question.id }}" class="panel-title panel-toggle inline-block">
 			{{ question.name }}
 			{% if edit_questions %}
@@ -31,7 +31,7 @@
 		</h4>
 		
 	</div>
-	<div id="panel-question-{{ subtopic.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
+	<div id="panel-question-{{ section.id }}-{{ objective.id }}-{{ question.id }}" class="panel-body collapse">
 		<div class="panel-inner">
 
 			{% if question_display %}

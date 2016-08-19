@@ -5,7 +5,7 @@ import os
 from questions.models import Question
 
 
-class Schema(models.Model):
+class Book(models.Model):
     name = models.CharField(max_length=300)
     description = models.TextField(blank=True, null=True)
     def __str__(self):
@@ -21,8 +21,8 @@ class Objective(models.Model):
         return self.name
 
 
-class Topic(models.Model):
-    schema = models.ForeignKey(Schema)
+class Chapter(models.Model):
+    book = models.ForeignKey(Book)
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
@@ -33,9 +33,9 @@ class Topic(models.Model):
         ordering = ['order']
 
 
-class Subtopic(models.Model):
+class Section(models.Model):
     name = models.CharField(max_length=120)
-    topic = models.ForeignKey(Topic)
+    chapter = models.ForeignKey(Chapter)
     description = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     objectives = models.ManyToManyField(Objective)
@@ -63,7 +63,7 @@ class Textbook(models.Model):
 
 class CourseType(models.Model):
     name = models.CharField(max_length=200)
-    schema = models.ForeignKey(Schema)
+    book = models.ForeignKey(Book)
     textbook = models.ForeignKey(Textbook, blank=True, null=True)
     def __str__(self):
         return self.name

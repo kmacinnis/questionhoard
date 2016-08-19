@@ -18,7 +18,7 @@ import json
 from exams.models import *
 from exams.forms import *
 from exams.handling import get_form_number, create_answer_choices
-from organization.models import Topic
+from organization.models import Chapter
 from questions.handling import output_question
 from zother.handle_latex import return_pdf, return_tex
 
@@ -108,8 +108,8 @@ class EditPartRecipe(UpdateView):
         ep = self.object
         context = super().get_context_data(**kwargs)
         context['question_formset'] = QuestionInlineFormSet(instance=ep)
-        context['schema'] = ep.exam.schema
-        context['edit_schema'] = False
+        context['book'] = ep.exam.book
+        context['edit_book'] = False
         return context
         
     def form_valid(self, form):
@@ -135,8 +135,8 @@ class UpdatePartRecipe(UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['schema'] = self.object.exam.schema
-        context['edit_schema'] = False
+        context['book'] = self.object.exam.book
+        context['edit_book'] = False
         return context
     
 
@@ -350,8 +350,8 @@ class EditPool(UpdateView):
     
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['topics'] = Topic.objects.all()
-        context['schema'] = self.object.exam().schema()
+        context['chapters'] = Chapter.objects.all()
+        context['book'] = self.object.exam().book()
         return context
 
     def get_success_url(self):

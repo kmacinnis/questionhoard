@@ -38,8 +38,8 @@ class ExamRecipe(models.Model):
     def get_absolute_url(self):
         return reverse('ExamRecipeDetail', args=(str(self.id),))
 
-    def schema(self):
-        return self.course.course_type.schema
+    def book(self):
+        return self.course.course_type.book
 
 
 class ExamPartRecipe(models.Model):

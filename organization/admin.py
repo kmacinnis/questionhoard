@@ -1,28 +1,28 @@
 from django.contrib import admin
 from organization.models import *
 
-class SubtopicInline(admin.TabularInline):
-    model = Subtopic
+class SectionInline(admin.TabularInline):
+    model = Section
     extra = 4
     fields = [
         'name',
         'order',
     ]
 
-class TopicAdmin(admin.ModelAdmin):
+class ChapterAdmin(admin.ModelAdmin):
     fields = [
         'name',
         'description',
         'comment',
-        'schema',
+        'book',
         'order',
     ]
-    inlines = [SubtopicInline]
+    inlines = [SectionInline]
 
 
-admin.site.register(Topic, TopicAdmin)
-admin.site.register(Schema)
+admin.site.register(Chapter, ChapterAdmin)
+admin.site.register(Book)
 admin.site.register(CourseType)
 admin.site.register(Objective)
-admin.site.register(Subtopic)
+admin.site.register(Section)
 admin.site.register(Course)

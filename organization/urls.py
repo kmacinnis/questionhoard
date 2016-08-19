@@ -6,8 +6,8 @@ import zother.views as zviews
 
 urlpatterns = [
 
-    # ex: /organization/topics/
-    url(r'^topics/$', TopicList.as_view(), name='TopicList'),
+    # ex: /organization/chapters/
+    url(r'^chapters/$', ChapterList.as_view(), name='ChapterList'),
     
     # ex: /organization/courses/
     url(
@@ -37,79 +37,79 @@ urlpatterns = [
         name='EditCourseDetails'
     ),
 
-    # ex: /organization/schema/
+    # ex: /organization/book/
     url(
-        r'^schema/$',
-        login_required(SchemaList.as_view()),
-        name='SchemaList'
+        r'^book/$',
+        login_required(BookList.as_view()),
+        name='BookList'
     ),
 
-    # ex: /organization/schema/create/
+    # ex: /organization/book/create/
     url(
-        r'^schema/create/$',
-        login_required(CreateSchema.as_view()),
-        name='CreateSchema'
+        r'^book/create/$',
+        login_required(CreateBook.as_view()),
+        name='CreateBook'
     ),
 
-    # ex: /organization/schema/5/details/
+    # ex: /organization/book/5/details/
     url(
-        r'^schema/(?P<pk>\d+)/details/$',
-        login_required(SchemaDetails.as_view()),
-        name='SchemaDetails'
+        r'^book/(?P<pk>\d+)/details/$',
+        login_required(BookDetails.as_view()),
+        name='BookDetails'
     ),
 
-    # ex: /organization/schema/5/edit/
+    # ex: /organization/book/5/edit/
     url(
-        r'^schema/(?P<pk>\d+)/edit/$',
-        login_required(EditSchema.as_view()),
-        name='EditSchema'
+        r'^book/(?P<pk>\d+)/edit/$',
+        login_required(EditBook.as_view()),
+        name='EditBook'
     ),
     
-    # ex: /organization/schema/5/add_questions/
+    # ex: /organization/book/5/add_questions/
     url(
-        r'^schema/(?P<pk>\d+)/add_questions/$',
-        login_required(SchemaWithQuestions.as_view()),
-        name='SchemaWithQuestions'
+        r'^book/(?P<pk>\d+)/add_questions/$',
+        login_required(BookWithQuestions.as_view()),
+        name='BookWithQuestions'
     ),
 
-    # ex: /organization/schema/5/edit_and_add_questions/
+    # ex: /organization/book/5/edit_and_add_questions/
     url(
-        r'^schema/(?P<pk>\d+)/edit_and_add_questions/$',
-        login_required(EditSchemaWithQuestions.as_view()),
-        name='EditSchemaWithQuestions'
+        r'^book/(?P<pk>\d+)/edit_and_add_questions/$',
+        login_required(EditBookWithQuestions.as_view()),
+        name='EditBookWithQuestions'
     ),
 
-    # ex: /organization/schema/1/add_topic/
+    # ex: /organization/book/1/add_chapter/
     url(
-        r'^schema/(?P<schema_id>\d+)/add_topic/$',
-        add_topic,
-        name='add_topic'
+        r'^book/(?P<book_id>\d+)/add_chapter/$',
+        add_chapter,
+        name='add_chapter'
     ),
     
-    # ex: /organization/topic/1/add_subtopic/
+    # ex: /organization/chapter/1/add_section/
     url(
-        r'^topic/(?P<topic_id>\d+)/add_subtopic/$',
-        add_subtopic,
-        name='add_subtopic'
+        r'^chapter/(?P<chapter_id>\d+)/add_section/$',
+        add_section,
+        name='add_section'
     ),
     
-    # ex: /organization/topic/1/edit/
+    # ex: /organization/chapter/1/edit/
     url(
-        r'^topic/(?P<topic_id>\d+)/edit/$',
-        edit_topic,
-        name='edit_topic'
+        r'^chapter/(?P<chapter_id>\d+)/edit/$',
+        edit_chapter,
+        name='edit_chapter'
     ),
     
-    # ex: /organization/subtopic/1/edit/
+    # ex: /organization/section/1/edit/
     url(
-        r'^subtopic/(?P<subtopic_id>\d+)/edit/$',
-        edit_subtopic,
-        name='edit_subtopic'
+        r'^section/(?P<section_id>\d+)/edit/$',
+        edit_section,
+        name='edit_section'
     ),
     
-    # ex: /organization/subtopic/1/add_objective/
+    # ex: /organization/section/1/add_objective/
     url(
-        r'^subtopic/(?P<subtopic_id>\d+)/add_objective/$',
+        r'^section/(?P<section_id>\d+)/add_objective/$',
         add_objective,
         name='add_objective'
     ),
@@ -121,14 +121,14 @@ urlpatterns = [
         name='edit_objective'
     ),
     
-    # ex: /organization/get_accordion_panel/topic/1/
+    # ex: /organization/get_accordion_panel/chapter/1/
     url(
         r'^get_accordion_panel/(?P<item_type>\w+)/(?P<item_id>\d+)/$',
         get_accordion_panel,
         name='get_accordion_panel'
     ),
     
-    # ex: /organization/delete_item/topic/1/
+    # ex: /organization/delete_item/chapter/1/
     url(
         r'^delete_item/(?P<item_type>\w+)/(?P<item_id>\d+)/$',
         delete_item,

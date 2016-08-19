@@ -1,5 +1,5 @@
 from django import forms
-from organization.models import Course, Topic, Subtopic, Objective
+from organization.models import Course, Chapter, Section, Objective
 
 
 
@@ -10,15 +10,15 @@ class CourseInfoForm(forms.ModelForm):
         exclude = ('instructor','assistants','is_active')
 
 
-class TopicForm(forms.ModelForm):
+class ChapterForm(forms.ModelForm):
     class Meta:
-        model = Topic
-        exclude = ('schema', 'order')
+        model = Chapter
+        exclude = ('book', 'order')
 
-class SubtopicForm(forms.ModelForm):
+class SectionForm(forms.ModelForm):
     class Meta:
-        model = Subtopic
-        exclude = ('topic', 'order', 'objectives')
+        model = Section
+        exclude = ('chapter', 'order', 'objectives')
 
 class ObjectiveForm(forms.ModelForm):
     class Meta:

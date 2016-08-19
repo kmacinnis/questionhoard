@@ -1,0 +1,47 @@
+
+<div class="panel panel-default">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-chapter-{{ chapter.id }}" data-target="#panel-section-{{ section.id }}">     
+		<h4 id="label-section-{{ section.id }}" class="panel-title panel-toggle inline-block">    
+			<span class="glyphicon glyphicon-triangle-right"></span>
+			{{ section.name }}
+			{% if edit_book %}
+				<span class="small inline-block">
+					<a class="item-edit" id="edit-section-{{ section.id }}" data-formURL="{% url 'edit_section' section_id=section.id %}">
+						[edit]
+					</a>
+					<a class="item-delete" 
+						id="delete-section-{{ section.id }}" 
+						href="#" data-item-type="section" 
+						data-item-name="{{ section.name }}" 
+						data-confirmed-url="{% url 'delete_item' item_type='section' item_id=section.id %}">
+							[delete]
+					</a>
+				</span>
+			{% endif %}
+		</h4>
+	</div>
+
+	<div id="panel-section-{{ section.id }}" class="panel-body collapse">
+		<div class="panel-inner">
+			{% if section.objectives.all %}
+				Objectives:
+			{% endif %}
+
+			<!-- objective accordion -->
+			<div class="panel-group" id="accordion-section-{{ section.id }}">
+				{% for objective in section.objectives.all %}
+					{% include "organization/accordions/objective_panel.html" %}
+				{% endfor %}  {# objective loop #}
+			</div>
+		</div>
+		
+		{% if edit_book %}
+			<a id="id-add-objective-to-section-{{ section.id }}"
+				data-formURL="{% url 'add_objective' section_id=section.id %}"
+				href="#"
+				class="add-item">
+				Add objective to section "{{ section.name }}"
+			</a>
+		{% endif %}
+	</div>
+</div>

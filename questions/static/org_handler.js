@@ -7,6 +7,8 @@ function notify (event) {
 }
 
 
+
+
 function addRow (event) {
     event.preventDefault();
     var button_id = this.attributes["id"].value;
@@ -131,7 +133,7 @@ function validateQuestion(event) {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             } else {
                 $(panel).addClass('current-panel');
-                $('#schema-accordions').addClass('hidden');
+                $('#book-accordions').addClass('hidden');
                 $('#error-spot').removeClass('hidden');
                 $('#error-spot').html(response.error_html);
                 $('#tabletop').html(response.form_html);
@@ -144,7 +146,7 @@ function validateQuestion(event) {
 
 function clearTabletop (event) {
     if ('validate question' == $('#tabletop').data('currentAction')) {
-        $('#schema-accordions').removeClass('hidden');
+        $('#book-accordions').removeClass('hidden');
         $('#error-spot').addClass('hidden');
         $('#error-spot').html('');
     };
@@ -226,20 +228,24 @@ function actualDelete (event) {
 
 
 $(document).ready(function () {
-    $('#schema-accordions').on("click", ".item-edit", openEditForm);
-    $('#schema-accordions').on("click", ".add-item", openAddForm);
-    $('#schema-accordions').on("click", ".add-question", openQuestionForm);
-    $('#schema-accordions').on("click", ".edit-question", openQuestionForm);
-    $('#schema-accordions').on("click", ".duplicate-question", duplicateQuestion);    
-    $('#schema-accordions').on("click", ".item-delete", confirmDelete);
-    $('#schema-accordions').on("click", ".validate-link", validateQuestion);
+    $('#book-accordions').on("click", ".item-edit", openEditForm);
+    $('#book-accordions').on("click", ".add-item", openAddForm);
+    $('#book-accordions').on("click", ".add-question", openQuestionForm);
+    $('#book-accordions').on("click", ".edit-question", openQuestionForm);
+    $('#book-accordions').on("click", ".duplicate-question", duplicateQuestion);    
+    $('#book-accordions').on("click", ".item-delete", confirmDelete);
+    $('#book-accordions').on("click", ".validate-link", validateQuestion);
     
     $('#confirm-btn').on("click", actualDelete);
 
     $('#tabletop').on("click", ".form-cancel", clearTabletop);
     $('#tabletop').on( "submit", "form", submitForm);
     
-    
+    $('.collapse').on('shown.bs.collapse', function(){
+    $(this).parent().find(".glyphicon-menu-right").removeClass("glyphicon-menu-right").addClass("glyphicon-menu-down");
+    }).on('hidden.bs.collapse', function(){
+    $(this).parent().find(".glyphicon-menu-down").removeClass("glyphicon-menu-down").addClass("glyphicon-menu-right");
+    });
     
     
     

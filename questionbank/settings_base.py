@@ -70,7 +70,7 @@ TEMPLATES = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+# https://docs.djangoproject.com/en/1.6/chapters/i18n/
 
 LANGUAGE_CODE = 'en-us'
 

@@ -1,9 +1,9 @@
 <div class="panel panel-default">
-	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-subtopic-{{ subtopic.id }}" data-target="#panel-objective-{{ objective.id }}">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-section-{{ section.id }}" data-target="#panel-objective-{{ objective.id }}">
 		<h4 id="label-objective-{{ objective.id }}" class="panel-title panel-toggle inline-block">
 			{{ objective.name }}
-			{% if edit_schema %}
-				{% if objective.subtopic_set.count == 1 %}
+			{% if edit_book %}
+				{% if objective.section_set.count == 1 %}
 					<span class="small inline-block">
 						<a class="item-edit" id="edit-objective-{{ objective.id }}" href="#">
 							[edit]

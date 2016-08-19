@@ -12,9 +12,9 @@ from exams.models import ExamRecipe
 import json
 
 
-class TopicList(ListView):
-    model = Topic
-    context_object_name = 'topics'
+class ChapterList(ListView):
+    model = Chapter
+    context_object_name = 'chapters'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,19 +57,19 @@ def course_list(request):
     return render_to_response('organization/course_list.html', variables)
 
 
-class CreateSchema(CreateView):
-    model= Schema
+class CreateBook(CreateView):
+    model= Book
     fields = '__all__'
-    template_name = 'organization/create_schema.html'
+    template_name = 'organization/create_book.html'
     
     def get_success_url(self):
-        return reverse('EditSchema', kwargs={'pk': self.object.id})
+        return reverse('EditBook', kwargs={'pk': self.object.id})
 
 
-class SchemaDetails(DetailView):
-    model = Schema
+class BookDetails(DetailView):
+    model = Book
     fields = '__all__'
-    context_object_name = 'schema'
+    context_object_name = 'book'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,14 +77,14 @@ class SchemaDetails(DetailView):
         return context
 
 
-class EditSchema(SchemaDetails):
+class EditBook(BookDetails):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['edit_schema'] = True
+        context['edit_book'] = True
         return context
 
 
-class SchemaWithQuestions(SchemaDetails):
+class BookWithQuestions(BookDetails):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['add_question_links'] = True
@@ -92,22 +92,22 @@ class SchemaWithQuestions(SchemaDetails):
         return context
 
 
-class EditSchemaWithQuestions(SchemaWithQuestions):
+class EditBookWithQuestions(BookWithQuestions):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['edit_schema'] = True
+        context['edit_book'] = True
         return context
 
 
-class SchemaList(ListView):
-    model = Schema
+class BookList(ListView):
+    model = Book
     fields = '__all__'
 
 
 @login_required
-def add_topic(request, schema_id):
+def add_chapter(request, book_id):
     """
-    On GET, returns the form to be used to add a topic.
+    On GET, returns the form to be used to add a chapter.
     On POST, returns a json object:
         {   success     : whether the form was valid,
             panel_url   : if form.is_valid, the new panel for the accordion,
@@ -119,26 +119,26 @@ def add_topic(request, schema_id):
     def form_html(form):
         variables = RequestContext(request,
         {
-            'schema' : schema,
+            'book' : book,
             'form' : form,
             'form_title' : form_title,
-            'action_url' : reverse('add_topic', kwargs={'schema_id':schema.id})
+            'action_url' : reverse('add_chapter', kwargs={'book_id':book.id})
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
-    schema = get_object_or_404(Schema, id=schema_id)
-    form_title = "Add topic to schema “{}”".format(schema.name)
+    book = get_object_or_404(Book, id=book_id)
+    form_title = "Add chapter to book “{}”".format(book.name)
 
     if request.POST:
-        topic = Topic(schema=schema, order=schema.topic_set.count())
-        form = TopicForm(request.POST,instance=topic)
+        chapter = Chapter(book=book, order=book.chapter_set.count())
+        form = ChapterForm(request.POST,instance=chapter)
         if form.is_valid():
             form.save()
             response_data = {
                 'success' : True,
                 'place' : '#accordion-main',
                 'action' : 'add',
-                'panel_html' : get_accordion_panel(request, item=topic),
+                'panel_html' : get_accordion_panel(request, item=chapter),
             }
         else: # form not valid
             response_data = {
@@ -149,18 +149,18 @@ def add_topic(request, schema_id):
                 json.dumps(response_data), content_type="application/json"
             )
     # request.GET:
-    return form_html(TopicForm())
+    return form_html(ChapterForm())
 
 @login_required
-def edit_topic(request, topic_id):
+def edit_chapter(request, chapter_id):
     """
-    On GET, returns the form to be used to edit the topic.
+    On GET, returns the form to be used to edit the chapter.
     On POST, returns a json object:
         {   success     : whether the form was valid,
             form_html   : if form not valid, the html to represent the form
             action      : "edit"
             label       : the id of the panel label
-            name        : the new name of the subtopic
+            name        : the new name of the section
             
         }
     """
@@ -169,24 +169,24 @@ def edit_topic(request, topic_id):
         variables = RequestContext(request,
         {
             'form' : form,
-            'form_title' : 'Edit Topic',
-            'item_type' : 'topic',
-            'item_id' : topic_id,
-            'action_url' : reverse('edit_topic', kwargs={'topic_id':topic.id}),
+            'form_title' : 'Edit Chapter',
+            'item_type' : 'chapter',
+            'item_id' : chapter_id,
+            'action_url' : reverse('edit_chapter', kwargs={'chapter_id':chapter.id}),
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
-    topic = get_object_or_404(Topic, id=topic_id)
+    chapter = get_object_or_404(Chapter, id=chapter_id)
 
     if request.POST:
-        form = TopicForm(request.POST,instance=topic)
+        form = ChapterForm(request.POST,instance=chapter)
         if form.is_valid():
             form.save()
             response_data = {
                 'success' : True,
                 'action' : 'edit',
-                'label' : '#label-topic-{}'.format(topic.id),
-                'name' : topic.name
+                'label' : '#label-chapter-{}'.format(chapter.id),
+                'name' : chapter.name
                 
             }
         else: # form not valid
@@ -198,28 +198,28 @@ def edit_topic(request, topic_id):
                 json.dumps(response_data), content_type="application/json"
             )
     # request.GET:
-    return form_html(TopicForm(instance=topic))
+    return form_html(ChapterForm(instance=chapter))
 
 @login_required
-def edit_topic_old(request, topic_id):
-    topic = get_object_or_404(Topic, id=topic_id)
+def edit_chapter_old(request, chapter_id):
+    chapter = get_object_or_404(Chapter, id=chapter_id)
     
     if request.POST:
-        form = TopicForm(request.POST, instance=topic)
+        form = ChapterForm(request.POST, instance=chapter)
         if form.is_valid():
             form.save()
             return HttpResponse('success')
     else: # request.GET
-        form = TopicForm(instance=topic)
+        form = ChapterForm(instance=chapter)
     variables = RequestContext(request, 
         {
             'form' : form,
-            'form_title' : 'Edit Topic',
-            'item_type' : 'topic',
-            'item_id' : topic_id,
-            'action_url' : reverse('edit_topic', kwargs={'topic_id':topic.id}),
+            'form_title' : 'Edit Chapter',
+            'item_type' : 'chapter',
+            'item_id' : chapter_id,
+            'action_url' : reverse('edit_chapter', kwargs={'chapter_id':chapter.id}),
         })
-    return render_to_response('organization/schema_form.html',variables)
+    return render_to_response('organization/book_form.html',variables)
 
 @login_required
 def delete_item(request, item_type, item_id):
@@ -227,8 +227,8 @@ def delete_item(request, item_type, item_id):
     if not 'confirmed' in request.GET:
         raise Http404
     Item = {
-        'topic' : Topic,
-        'subtopic' : Subtopic,
+        'chapter' : Chapter,
+        'section' : Section,
         'objective' : Objective,
         'question' : Question,
         'examrecipe' : ExamRecipe,
@@ -238,9 +238,9 @@ def delete_item(request, item_type, item_id):
     return HttpResponse('deleted')
 
 @login_required
-def add_subtopic(request, topic_id):
+def add_section(request, chapter_id):
     """
-    On GET, returns the form to be used to add a subtopic.
+    On GET, returns the form to be used to add a section.
     On POST, returns a json object:
         {   success     : whether the form was valid,
             panel_url   : if form.is_valid, the new panel for the accordion,
@@ -252,27 +252,27 @@ def add_subtopic(request, topic_id):
     def form_html(form):
         variables = RequestContext(request,
         {
-            'schema' : topic.schema,
-            'topic' : topic,
+            'book' : chapter.book,
+            'chapter' : chapter,
             'form' : form,
             'form_title' : form_title,
-            'action_url' : reverse('add_subtopic', kwargs={'topic_id':topic.id})
+            'action_url' : reverse('add_section', kwargs={'chapter_id':chapter.id})
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
-    topic = get_object_or_404(Topic, id=topic_id)
-    form_title = "Add subtopic to topic “{}”".format(topic.name)
+    chapter = get_object_or_404(Chapter, id=chapter_id)
+    form_title = "Add section to chapter “{}”".format(chapter.name)
 
     if request.POST:
-        subtopic = Subtopic(topic=topic, order=topic.subtopic_set.count())
-        form = SubtopicForm(request.POST,instance=subtopic)
+        section = Section(chapter=chapter, order=chapter.section_set.count())
+        form = SectionForm(request.POST,instance=section)
         if form.is_valid():
             form.save()
             response_data = {
                 'success' : True,
-                'place' : '#accordion-topic-{}'.format(topic.id),
+                'place' : '#accordion-chapter-{}'.format(chapter.id),
                 'action' : 'add',
-                'panel_html' : get_accordion_panel(request, item=subtopic),
+                'panel_html' : get_accordion_panel(request, item=section),
             }
         else: # form not valid
             response_data = {
@@ -283,18 +283,18 @@ def add_subtopic(request, topic_id):
                 json.dumps(response_data), content_type="application/json"
             )
     # request.GET:
-    return form_html(TopicForm())
+    return form_html(ChapterForm())
 
 @login_required
-def edit_subtopic(request, subtopic_id):
+def edit_section(request, section_id):
     """
-    On GET, returns the form to be used to edit the subtopic.
+    On GET, returns the form to be used to edit the section.
     On POST, returns a json object:
         {   success     : whether the form was valid,
             form_html   : if form not valid, the html to represent the form
             action      : "edit"
             label       : the id of the panel label
-            name        : the new name of the subtopic
+            name        : the new name of the section
         }
     """
     
@@ -302,26 +302,26 @@ def edit_subtopic(request, subtopic_id):
         variables = RequestContext(request,
         {
             'form' : form,
-            'form_title' : 'Edit Subtopic',
-            'item_type' : 'subtopic',
-            'item_id' : subtopic_id,
+            'form_title' : 'Edit Section',
+            'item_type' : 'section',
+            'item_id' : section_id,
             'action_url' : reverse(
-                    'edit_subtopic', 
-                    kwargs={'subtopic_id':subtopic.id})
+                    'edit_section', 
+                    kwargs={'section_id':section.id})
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
-    subtopic = get_object_or_404(Subtopic, id=subtopic_id)
+    section = get_object_or_404(Section, id=section_id)
 
     if request.POST:
-        form = SubtopicForm(request.POST, instance=subtopic)
+        form = SectionForm(request.POST, instance=section)
         if form.is_valid():
             form.save()
             response_data = {
                 'success' : True,
                 'action' : 'edit',
-                'label' : '#label-subtopic-{}'.format(subtopic.id),
-                'name' : subtopic.name,
+                'label' : '#label-section-{}'.format(section.id),
+                'name' : section.name,
             }
         else: # form not valid
             response_data = {
@@ -332,7 +332,7 @@ def edit_subtopic(request, subtopic_id):
                 json.dumps(response_data), content_type="application/json"
             )
     # request.GET:
-    return form_html(SubtopicForm(instance=subtopic))
+    return form_html(SectionForm(instance=section))
 
 
 
@@ -350,8 +350,8 @@ def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
         item_type = type(item).__name__.lower()
     else:
         Item = {
-            'topic' : Topic,
-            'subtopic' : Subtopic,
+            'chapter' : Chapter,
+            'section' : Section,
             'objective' : Objective,
             'question' : Question,
         }[item_type]
@@ -360,7 +360,7 @@ def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
     template = "organization/accordions/{}_panel.html".format(item_type)
     variables = RequestContext(request, {
         item_type : item,
-        'edit_schema': kwargs.get('edit_schema', True),
+        'edit_book': kwargs.get('edit_book', True),
         'edit_questions': kwargs.get('edit_questions', True),
         'add_question_links': kwargs.get('add_question_links', True),
         'question_display': 'simple_preview',
@@ -371,7 +371,7 @@ def get_accordion_panel(request, item_type='', item_id='', item=None, **kwargs):
     return render_to_string(template, variables)
 
 @login_required
-def add_objective(request, subtopic_id):
+def add_objective(request, section_id):
     """
     On GET, returns the form to be used to add an objective.
     On POST, returns a json object:
@@ -386,28 +386,28 @@ def add_objective(request, subtopic_id):
     # and offers the user a choice to use an existing one or create a new one
     
     def form_html(form):
-        form_title = "Add objective to subtopic “{}”".format(subtopic.name)
+        form_title = "Add objective to section “{}”".format(section.name)
         variables = RequestContext(request,
         {
-            'subtopic' : subtopic,
+            'section' : section,
             'form' : form,
             'form_title' : form_title,
             'action_url' : reverse('add_objective', 
-                                    kwargs={'subtopic_id':subtopic.id})
+                                    kwargs={'section_id':section.id})
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
-    subtopic = get_object_or_404(Subtopic, id=subtopic_id)
+    section = get_object_or_404(Section, id=section_id)
 
     if request.POST:
         form = ObjectiveForm(request.POST)
         if form.is_valid():
             form.save()
             objective = form.instance
-            objective.subtopic_set.add(subtopic)
+            objective.section_set.add(section)
             response_data = {
                 'success' : True,
-                'place' : '#accordion-subtopic-{}'.format(subtopic.id),
+                'place' : '#accordion-section-{}'.format(section.id),
                 'action' : 'add',
                 'panel_html' : get_accordion_panel(request, item=objective)
                 
@@ -426,13 +426,13 @@ def add_objective(request, subtopic_id):
 @login_required
 def edit_objective(request, objective_id):
     """
-    On GET, returns the form to be used to edit the subtopic.
+    On GET, returns the form to be used to edit the section.
     On POST, returns a json object:
         {   success     : whether the form was valid,
             form_html   : if form not valid, the html to represent the form
             action      : "edit"
             label       : the id of the panel label
-            name        : the new name of the subtopic
+            name        : the new name of the section
         }
     """
     
@@ -447,7 +447,7 @@ def edit_objective(request, objective_id):
                     'edit_objective', 
                     kwargs={'objective_id':objective.id})
         })
-        return render_to_response('organization/schema_form.html',variables)
+        return render_to_response('organization/book_form.html',variables)
     
     objective = get_object_or_404(Objective, id=objective_id)
 
@@ -475,9 +475,9 @@ def edit_objective(request, objective_id):
 @login_required
 def related_courses(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    schema = course.course_type.schema
+    book = course.course_type.book
     related_courses = (request.user.course_set
-        .filter(course_type__schema=schema)
+        .filter(course_type__book=book)
         .exclude(id=course.id)
         .order_by('-start_date')
     )

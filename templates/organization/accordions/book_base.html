@@ -1,0 +1,19 @@
+{# When including this, you must pass in a variable: question_display #}
+{# possible values: "simple_preview", "addable"     #}
+{# If this is included from the edit book page, there will be  #}
+{# a variable edit_book=True #}
+
+
+<div class="panel-group" id="accordion-main">
+	{% if edit_book %}Chapters:{% endif %}
+	{% for chapter in book.chapter_set.all %}
+		{% include "organization/accordions/chapter_panel.html" %}
+	{% endfor %} {# chapter loop #}
+</div>
+{% if edit_book %}
+	<a id="id-add-chapter-to-book-{{ book.id }}" 
+		data-formURL="{% url 'add_chapter' book_id=book.id %}" 
+		href="#" class="add-item">
+		Add chapter to book "{{ book.name }}"
+	</a>
+{% endif %}

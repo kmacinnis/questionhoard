@@ -13,7 +13,7 @@ from practicedocs.forms import *
 from practicedocs.handling import *
 from questions.handling import output_question
 from zother.handle_latex import return_pdf, return_tex
-from organization.models import Topic
+from organization.models import Chapter
 
 # Create your views here.
 
@@ -82,7 +82,7 @@ class EditDocRecipe(UpdateView):
         context = super().get_context_data(**kwargs)
         context['blockrecipe_formset'] = BlockRecipeFormSet(
                                                 instance=self.object)
-        context['topics'] = Topic.objects.all()
+        context['chapters'] = Chapter.objects.all()
         return context
 
     def form_valid(self, form):

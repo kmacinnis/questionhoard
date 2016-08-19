@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block title %}Schema Details{% endblock title %}
+{% block title %}Book Details{% endblock title %}
 
 {% block external %}
 
@@ -10,7 +10,7 @@
 
 	{% include "scripts_bootstrap.html" %}
 	{% include "scripts_mathjax.html" %}
-	<script src="{% static 'schema_handler.js' %}"></script>
+	<script src="{% static 'org_handler.js' %}"></script>
 	<script src="{% static 'formset_handler.js' %}"></script> 
 
 
@@ -26,7 +26,7 @@
 		height:90vh;
 		background-color:#A5A7B8;
 	}
-	div #schema-accordions {
+	div #book-accordions {
 		height:90vh;
 		overflow-y:auto;
 	}
@@ -71,8 +71,8 @@
 <div class="row">
 	<div class="col-md-4 hidden" id="error-spot">
 	</div>
-	<div class="col-md-4" id="schema-accordions" >
-		{% include "organization/accordions/schema_base.html" %}
+	<div class="col-md-4" id="book-accordions" >
+		{% include "organization/accordions/book_base.html" %}
 	</div>								
 	<div class="col-md-8 tabletop-empty tabletop" id="tabletop">
 		

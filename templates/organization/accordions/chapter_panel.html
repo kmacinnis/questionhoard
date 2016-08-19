@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion-main" data-target="#panel-chapter-{{ chapter.id }}">    
+		<h4 id="label-chapter-{{ chapter.id }}" class="panel-title panel-toggle inline-block">
+			{{ chapter.name }}
+			{% if edit_book %}
+				<span class="small inline-block">
+					<a class="item-edit" id="edit-chapter-{{ chapter.id }}" href="#" data-formURL="{% url 'edit_chapter' chapter_id=chapter.id %}">
+						[edit]
+					</a>
+					<a class="item-delete" 
+						id="delete-chapter-{{ chapter.id }}" 
+						href="#" data-item-type="chapter" 
+						data-item-name="{{ chapter.name }}" 
+						data-confirmed-url="{% url 'delete_item' item_type='chapter' item_id=chapter.id %}">
+							[delete]
+					</a>
+				</span>
+			{% endif %}
+			<span class="glyphicon glyphicon-menu-down"></span>
+		</h4>
+	</div>
+	<div id="panel-chapter-{{ chapter.id }}" class="panel-body collapse">
+		<div class="panel-inner">
+
+			Sections:
+			<!-- section accordion --> 
+
+			<div class="panel-group" id="accordion-chapter-{{ chapter.id }}">
+				{% for section in chapter.section_set.all %}
+					{% include "organization/accordions/section_panel.html" %}
+				{% endfor %} {# section loop #}
+			</div>
+		</div>
+		{% if edit_book %}
+			<a id="id-add-section-to-chapter-{{ chapter.id }}" data-formURL="{% url 'add_section' chapter_id=chapter.id %}" href="#" class="add-item">
+				Add section to chapter "{{ chapter.name }}"
+			</a>
+		{% endif %}
+		
+	</div>
+</div>

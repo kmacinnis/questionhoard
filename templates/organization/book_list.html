@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Book List{% endblock title %}
+
+{% block content %}
+
+<h3>Available Books</h3>
+<ul>
+{% for book in object_list %}
+	<li>
+		{{ book.name }}
+		<a href="{% url 'BookDetails' pk=book.id %}">(view)</a>
+		&nbsp;
+		<a href="{% url 'EditBook' pk=book.id %}">
+			(edit chapters, sections, and objectives)
+		</a>
+		&nbsp;
+		<a href="{% url 'BookWithQuestions' pk=book.id %}">
+			(add questions)
+		</a>
+		&nbsp;
+		<a href="{% url 'EditBookWithQuestions' pk=book.id %}">
+			(edit everything)
+		</a>
+	</li>
+{% endfor %}
+</ul>
+<p>
+	<a href="{% url 'CreateBook' %}">Create new book</a>
+</p>
+
+{% endblock content %}
