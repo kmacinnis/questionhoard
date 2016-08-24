@@ -6,9 +6,6 @@ import zother.views as zviews
 
 urlpatterns = [
 
-    # ex: /organization/chapters/
-    url(r'^chapters/$', ChapterList.as_view(), name='ChapterList'),
-    
     # ex: /organization/courses/
     url(
         r'^courses/$',

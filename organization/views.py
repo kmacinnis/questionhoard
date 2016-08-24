@@ -12,15 +12,6 @@ from exams.models import ExamRecipe
 import json
 
 
-class ChapterList(ListView):
-    model = Chapter
-    context_object_name = 'chapters'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['add_question_links'] = True
-        return context
-
 
 class CourseDetails(DetailView):
     model = Course
