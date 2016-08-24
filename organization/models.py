@@ -5,18 +5,19 @@ import os
 from questions.models import Question
 
 
-class Book(models.Model):
-    name = models.CharField(max_length=300)
-    description = models.TextField(blank=True, null=True)
-    def __str__(self):
-        return self.name
-
-
 class Objective(models.Model):
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     questions = models.ManyToManyField(Question)
+    def __str__(self):
+        return self.name
+
+
+class Book(models.Model):
+    name = models.CharField(max_length=300)
+    description = models.TextField(blank=True, null=True)
+    public = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 
@@ -58,7 +59,7 @@ class Textbook(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to=get_image_path)
     def __str__(self):
         return "{title}, {edition} ed.".format(
-                title=self.title,edition=self.edition)
+                title=self.title, edition=self.edition)
 
 
 class CourseType(models.Model):

@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, render_to_response
 from vanilla import ListView, DetailView, CreateView, UpdateView
 from django.views.generic import View
-from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 import random
@@ -17,17 +18,23 @@ from organization.models import Chapter
 
 # Create your views here.
 
-class DocRecipeList(ListView):
+class DocRecipeList(LoginRequiredMixin, ListView):
     model = DocumentRecipe
 
+    def get_queryset(self):
+        return DocumentRecipe.objects.filter(created_by=self.request.user)
+    
 
 class DocRecipeDetail(DetailView):
     model = DocumentRecipe
 
 
-class DocList(ListView):
+class DocList(LoginRequiredMixin, ListView):
     model = Document
     context_object_name = 'docs'
+    
+    def get_queryset(self):
+        return Document.objects.filter(created_by=self.request.user)
 
 
 class CreateDocRecipe(CreateView):
