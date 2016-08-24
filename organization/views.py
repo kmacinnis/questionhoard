@@ -34,7 +34,6 @@ class EditCourseDetails(UpdateView):
 
 class CreateCourse(CreateView):
     model = Course
-    fields = '__all__'
     form_class = CourseInfoForm
 
     def post(self, request):
