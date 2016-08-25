@@ -7,7 +7,7 @@ from django.db.models import Max
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from vanilla import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 
 from copy import deepcopy

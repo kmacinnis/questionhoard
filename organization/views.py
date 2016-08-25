@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.db.models.base import ModelBase
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from vanilla import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from organization.models import *
 from organization.forms import *
 from exams.models import ExamRecipe

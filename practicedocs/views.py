@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render_to_response
-from vanilla import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views.generic import View
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
