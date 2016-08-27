@@ -5,9 +5,12 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, UpdateView, FormView, ListView
-import json
 
+# TODO: Make this work with django.views.generic instead of vanilla:
+from vanilla import CreateView, UpdateView, FormView, ListView
+
+
+import json
 from copy import deepcopy
 
 

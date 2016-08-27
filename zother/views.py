@@ -55,3 +55,5 @@ def register_page(request):
         variables,
         RequestContext(request)
     )
+
+

@@ -5,6 +5,7 @@ from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 
 import random
@@ -16,8 +17,25 @@ from questions.handling import output_question
 from zother.handle_latex import return_pdf, return_tex
 from organization.models import Chapter
 
-# Create your views here.
 
+class PublicOrUsersOwnMixin(LoginRequiredMixin):
+    user_field_name = 'user'
+    boolean_field_name = None
+    allow_superuser = True
+
+    def get_object(self):
+        user = self.request.user
+        if self.allow_superuser and user.is_superuser:
+            return super().get_object()
+        filt = {self.user_field_name: user}
+        q = Q(**filt)
+        if self.boolean_field_name is not None:
+            filt = {self.boolean_field_name : True}
+            q = q | Q(**filt)
+        self.queryset = self.get_queryset().filter(q)
+        return super().get_object()
+        
+        
 class DocRecipeList(LoginRequiredMixin, ListView):
     model = DocumentRecipe
 
@@ -25,8 +43,14 @@ class DocRecipeList(LoginRequiredMixin, ListView):
         return DocumentRecipe.objects.filter(created_by=self.request.user)
     
 
-class DocRecipeDetail(DetailView):
+class DocRecipeDetail(PublicOrUsersOwnMixin, DetailView):
     model = DocumentRecipe
+    user_field_name = 'created_by'
+
+
+class DocDetail(PublicOrUsersOwnMixin, DetailView):
+    model = Document
+    user_field_name = 'created_by'
 
 
 class DocList(LoginRequiredMixin, ListView):
