@@ -5,7 +5,7 @@ from django.forms.models import inlineformset_factory
 from exams.models import *
 
 
-from zother.forms import CLASS_CONTROL
+from utils.forms import CLASS_CONTROL
 
 
 class ExamRecipeForm(forms.ModelForm):

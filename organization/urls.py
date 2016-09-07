@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 
 from organization.views import *
-import zother.views as zviews
+import utils.views as zviews
 
 urlpatterns = [
 

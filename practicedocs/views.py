@@ -14,7 +14,7 @@ from practicedocs.models import *
 from practicedocs.forms import *
 from practicedocs.handling import *
 from questions.handling import output_question
-from zother.handle_latex import return_pdf, return_tex
+from utils.handle_latex import return_pdf, return_tex
 from organization.models import Chapter
 
 

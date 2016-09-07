@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 
 
-from zother.views import main_page
+from utils.views import main_page
 # from handling import condense_list_of_dicts
 
 

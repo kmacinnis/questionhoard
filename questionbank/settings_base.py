@@ -29,7 +29,7 @@ INSTALLED_APPS = (
     'organization.apps.OrganizationConfig',
     'practicedocs.apps.PracticeDocsConfig',
     'exams.apps.ExamsConfig',
-    'zother.apps.ZotherConfig',
+    'utils.apps.UtilsConfig',
 )
 
 MIDDLEWARE_CLASSES = (

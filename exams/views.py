@@ -20,7 +20,7 @@ from exams.forms import *
 from exams.handling import get_form_number, create_answer_choices
 from organization.models import Chapter
 from questions.handling import output_question
-from zother.handle_latex import return_pdf, return_tex
+from utils.handle_latex import return_pdf, return_tex
 
 
 class ExamRecipeList(ListView):

@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.views import login
 from django.views.generic import TemplateView
-from zother import views as zviews
+from utils import views as zviews
 
 
 
