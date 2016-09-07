@@ -5,7 +5,6 @@ from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 
 
 import random
@@ -15,39 +14,10 @@ from practicedocs.forms import *
 from practicedocs.handling import *
 from questions.handling import output_question
 from utils.handle_latex import return_pdf, return_tex
+from utils.mixins import PublicOrUsersOwnMixin
 from organization.models import Chapter
 
 
-class PublicOrUsersOwnMixin(LoginRequiredMixin):
-    '''Intended as a mixin to DetailView classes, 
-    this allows a user to view'''
-    user_field_name = 'user'
-    boolean_field_name = None
-    allow_superuser = True
-
-    # def get_object(self):
-    #     user = self.request.user
-    #     if self.allow_superuser and user.is_superuser:
-    #         return super().get_object()
-    #     filt = {self.user_field_name: user}
-    #     q = Q(**filt)
-    #     if self.boolean_field_name is not None:
-    #         filt = {self.boolean_field_name : True}
-    #         q = q | Q(**filt)
-    #     self.queryset = self.get_queryset().filter(q)
-    #     return super().get_object()
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = super().get_queryset()
-        if self.allow_superuser and user.is_superuser:
-            return queryset
-        filt = {self.user_field_name: user}
-        q = Q(**filt)
-        if self.boolean_field_name is not None:
-            filt = {self.boolean_field_name : True}
-            q = q | Q(**filt)
-        return queryset.filter(q)
         
         
 class DocRecipeList(LoginRequiredMixin, ListView):
@@ -59,13 +29,14 @@ class DocRecipeList(LoginRequiredMixin, ListView):
 
 class DocRecipeDetail(PublicOrUsersOwnMixin, DetailView):
     model = DocumentRecipe
-    boolean_field_name = 'public'
+    pubilc_field_name = 'public'
     user_field_name = 'created_by'
 
 
 class DocDetail(PublicOrUsersOwnMixin, DetailView):
     model = Document
     user_field_name = 'created_by'
+    pubilc_field_name = 'public'
 
 
 class DocList(LoginRequiredMixin, ListView):
