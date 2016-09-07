@@ -18,20 +18,29 @@
 
 	<h3>Things that you can do:</h3>
 	<ul>
-		<li><a href="{% url 'CreateBook' %}">Create book</a></li>
-		<li><a href="{% url 'BookList' %}">View all books</a></li>
-		<li><a href="{% url 'CreateCourse' %}">Create course</a></li>
-		<li><a href="{% url 'course_list' %}">View your courses</a></li>
-		<li>
-			<a href="{% url 'CreateQuestion' %}">Create question</a>
-			(although it's a better idea to view a book, and create questions linked to objectives)
-		</li> 
-		<li><a href="{% url 'QuestionList' %}">List all questions</a></li>
-		<li><a href="{% url 'ExamRecipeList' %}">List your exam recipes</a> (There's work to do on the exam-course connection)</li>
-		<li><a href="{% url 'CreateExamRecipe' %}">Create a new exam recipe</a></li>
-		<li><a href="{% url 'DocList' %}">View all practice documents</a></li>
-		<li><a href="{% url 'DocRecipeList' %}">View all practice document recipes</a></li>
-		<li><a href="{% url 'CreateDocRecipe' %}">Create new practice document recipe</a></li>
+        <li>Practice Documents</li>
+        <ul>
+    		<li><a href="{% url 'CreateDocRecipe' %}">Create new practice document recipe</a></li>
+    		<li><a href="{% url 'DocRecipeList' %}">View your practice document recipes</a></li>
+    		<li><a href="{% url 'DocList' %}">View your practice documents</a></li>
+		</ul>
+        <li>Exams</li>
+        <ul>
+    		<li><a href="{% url 'CreateExamRecipe' %}">Create a new exam recipe</a></li>
+            <li><a href="{% url 'ExamRecipeList' %}">List your exam recipes</a> </li>
+        </ul>
+        <li>Organization</li>
+        <ul>
+    		<li><a href="{% url 'CreateCourse' %}">Create course</a></li>
+    		<li><a href="{% url 'course_list' %}">View your courses</a></li>
+    		<li><a href="{% url 'CreateBook' %}">Create book</a></li>
+    		<li><a href="{% url 'BookList' %}">View all books</a></li>
+        </ul>
+        {# <li><a href="{% url 'QuestionList' %}">List all questions</a></li> #}
+        {# <li> #}
+        {#     <a href="{% url 'CreateQuestion' %}">Create question</a> #}
+        {#     (although it's a better idea to view a book, and create questions linked to objectives) #}
+        {# </li>  #}
 	</ul>
 
 </div>
