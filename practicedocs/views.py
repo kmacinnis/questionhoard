@@ -19,21 +19,35 @@ from organization.models import Chapter
 
 
 class PublicOrUsersOwnMixin(LoginRequiredMixin):
+    '''Intended as a mixin to DetailView classes, 
+    this allows a user to view'''
     user_field_name = 'user'
     boolean_field_name = None
     allow_superuser = True
 
-    def get_object(self):
+    # def get_object(self):
+    #     user = self.request.user
+    #     if self.allow_superuser and user.is_superuser:
+    #         return super().get_object()
+    #     filt = {self.user_field_name: user}
+    #     q = Q(**filt)
+    #     if self.boolean_field_name is not None:
+    #         filt = {self.boolean_field_name : True}
+    #         q = q | Q(**filt)
+    #     self.queryset = self.get_queryset().filter(q)
+    #     return super().get_object()
+
+    def get_queryset(self):
         user = self.request.user
+        queryset = super().get_queryset()
         if self.allow_superuser and user.is_superuser:
-            return super().get_object()
+            return queryset
         filt = {self.user_field_name: user}
         q = Q(**filt)
         if self.boolean_field_name is not None:
             filt = {self.boolean_field_name : True}
             q = q | Q(**filt)
-        self.queryset = self.get_queryset().filter(q)
-        return super().get_object()
+        return queryset.filter(q)
         
         
 class DocRecipeList(LoginRequiredMixin, ListView):
@@ -45,6 +59,7 @@ class DocRecipeList(LoginRequiredMixin, ListView):
 
 class DocRecipeDetail(PublicOrUsersOwnMixin, DetailView):
     model = DocumentRecipe
+    boolean_field_name = 'public'
     user_field_name = 'created_by'
 
 

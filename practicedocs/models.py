@@ -16,6 +16,7 @@ class DocumentRecipe(models.Model):
     title = models.CharField(max_length=60)
     created_by = models.ForeignKey(User)
     date_created = models.DateField(auto_now_add=True)
+    public = models.BooleanField(default=False)
     def __str__(self):
         return self.title
     def get_absolute_url(self):
@@ -44,6 +45,7 @@ class Document(models.Model):
     recipe = models.ForeignKey(DocumentRecipe)
     date_created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
+    public = models.BooleanField(default=False)
     def __str__(self):
         return self.title
 

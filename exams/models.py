@@ -31,6 +31,7 @@ class ExamRecipe(models.Model):
     max_number_choices = models.IntegerField(default=5)
     frozen = models.BooleanField(default=False)
     course = models.ForeignKey(Course)
+    public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.private_title
@@ -137,6 +138,7 @@ class Exam(models.Model):
     generated_set = models.ForeignKey(GeneratedSet)
     title = models.CharField(max_length=250)
     form = models.CharField(max_length=10)
+    public = models.BooleanField(default=False)
     
     def __str__(self):
         return "{title} (Form {form})".format(title=self.title,form=self.form)
